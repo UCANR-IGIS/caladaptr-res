@@ -1,0 +1,17 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+EXPLORE DATA CATALOG
+
+How many raster series are there?
+
+Download some data
+
+Finding the Right Slug
+https://api.cal-adapt.org/api/series/ --> click on 'Filters'
+https://berkeley-gif.github.io/caladapt-docs/data-catalog.html
+
+
+

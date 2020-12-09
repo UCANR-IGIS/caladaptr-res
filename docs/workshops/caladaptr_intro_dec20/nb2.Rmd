@@ -1,0 +1,197 @@
+---
+title: "Notebook 2: Data Munging Techniques"
+output: html_notebook
+---
+
+# Setup
+
+First we load the packages we need for this exercise, which include `caladaptr`, `dplyr`, and `sf`:
+
+```{r}
+library(caladaptr)
+library(sf)
+library(dplyr)
+library(lubridate)
+library(units)
+library(ggplot2)
+library(tidyr)
+```
+
+`dplyr` in particular has a number of very generic function names, so we tell R which one we want it to use using the conflicted package:
+
+```{r}
+library(conflicted)
+conflict_prefer("filter", "dplyr", quiet = TRUE)
+conflict_prefer("count", "dplyr", quiet = TRUE)
+conflict_prefer("select", "dplyr", quiet = TRUE)
+```
+
+We can also customize the color of the output of caladaptr functions:
+
+```{r}
+options(ca_accent1 = crayon::yellow$bold)
+options(ca_accent2 = crayon::yellow)
+options(ca_accent3 = crayon::cyan$bold)
+options(ca_accent4 = crayon::cyan)
+options(ca_message = crayon::yellow)
+options(ca_success = crayon::green)
+```
+
+# Grab 10 years of daily data for a point
+
+In this example, we'll explore daily projected climate data for a point location. We select the UC [Lindcove Research and Extension Center](http://lrec.ucanr.edu/), a field station in the San Joaquin Valley which has been a leading center for citrus research for decades. The trees are getting old and need to be replaced soon so its worth asking - is citrus production still going to viable in this part of California mid-century? 
+
+## Create the API Request
+
+Let's start by getting 20 years worth of daily data for the 4 priority GCMs and 2 RCPs. 
+
+```{r}
+lrec_prj_cap <- ca_loc_pt(coords = c(-119.060, 36.359), id = 1) %>% 
+  ca_period("day") %>% 
+  ca_gcm(my_gcms) %>% 
+  ca_scenario(c("rcp45", "rcp85")) %>% 
+  ca_cvar(c("tasmin", "tasmax")) %>% 
+  ca_years(start = 2040, end = 2060)
+  
+lrec_prj_cap
+```
+
+```{r}
+plot(lrec_prj_cap)
+```
+
+## Fetch Data
+
+Now we're ready to fetch data:
+
+```{r}
+lrec_prj_tbl <- lrec_prj_cap %>% ca_getvals_tbl()
+
+## backup: lrec_prj_tbl <- readRDS("data/lrec_prj_tbl.rds")
+
+dim(lrec_prj_tbl)
+head(lrec_prj_tbl)
+```
+
+Histogram Per Month
+
+First add columns for Fahrenheit and month.
+
+```{r}
+lrec_prj_tempf_tbl <- lrec_prj_tbl %>% 
+  mutate(temp_f = set_units(val, degF), month = month(dt), year = year(dt))
+head(lrec_prj_tempf_tbl)
+```
+For each month, let make a box plot of the temperature values for each emission scenario, treating all GCMs as equally likely:
+
+```{r}
+ggplot(lrec_prj_tempf_tbl, aes(x = as.factor(month), y = as.numeric(temp_f))) + 
+  geom_boxplot() +
+  facet_grid(scenario ~ .) +
+  labs(title = "Daily Temperature Range by Month", x = "month", y = "temp (F)",
+       subtitle = "Lindcove REC, 4 GCMs combined, 2040-2060")
+```
+
+# Count the number of extreme heat days per year
+
+An extreme heat day is generally identified when the maximum temperature exceeds a threshhold. The threshhold can be chosen based on historical patterns, or a biophysical process. For this example, we'll select 105.
+
+Let's count the total number of days the temperature exceeded 105. We start by adding a logical column whether the temperature exceeded our threshhold. We'll also throw away the minimum temperature values. 
+
+```{r}
+lrec_prj_hot_tbl <- lrec_prj_tempf_tbl %>% 
+  filter(cvar == "tasmax") %>% 
+  mutate(really_hot = (temp_f >= set_units(105, degF))) %>% 
+  select(-spag, -val, -month)
+
+head(lrec_prj_hot_tbl)
+```
+
+We can count the number of extreme heat days with a simple expression:
+
+```{r}
+num_hot_days <- lrec_prj_hot_tbl %>%
+  group_by(scenario, really_hot) %>% 
+  count()
+
+num_hot_days
+```
+
+We can improve the readability of this table by making each scenario a separate column. This is an example of [pivoting](https://tidyr.tidyverse.org/articles/pivot.html), which you can handle using `tidyr::pivot_wider`.
+
+```{r}
+num_hot_days %>% pivot_wider(names_from = scenario, values_from = n)
+```
+
+# Count Consecutive Extreme Heat Days
+
+Sometimes what matters most is not just the number of extreme heat days, but the number of consecutive extreme heat days lasting *n* or more days (i.e., an extreme heat spell). We can identify consecutive extreme heat days by using `rle` (run-length encoding), which simply finds groups of repeating values in a vector (as a primitive form of compression). But we have to chop up our data into 'runs' (year + gcm + scenario)"
+
+```{r}
+head(lrec_prj_hot_tbl)
+table(lrec_prj_hot_tbl$gcm)
+
+xx <- lrec_prj_hot_tbl %>% 
+  select(year, gcm, scenario, dt, really_hot) %>% 
+  arrange(dt) %>% 
+  group_split(year, gcm, scenario) %>% 
+  map(~{rle(.x$really_hot)})
+
+21 * 4 * 2
+# 168 - that's how many indivdual runs we have
+
+xx <- lrec_prj_hot_tbl %>% 
+  select(year, gcm, scenario, dt, really_hot) %>% 
+  arrange(dt) %>% 
+  group_by(year, gcm, scenario) %>% 
+  summarise(my_rle = purrr::map(cur_data()$really_hot, rle)) %>% 
+  ungroup()
+        
+dim(xx)
+
+names(xx)         
+table(xx$really_hot)
+
+
+yy <- lrec_prj_hot_tbl %>% 
+  select(year, gcm, scenario, dt, really_hot) %>% 
+  arrange(dt) %>% 
+  group_split(year, gcm, scenario)
+
+class(yy)   # list
+
+yrle <- map(yy, ~{rle(.x$really_hot)})
+
+class(yrle)
+length(yrle)
+yrle[[1]]
+
+zz <- lrec_prj_hot_tbl %>% 
+  select(year, gcm, scenario, dt, really_hot) %>% 
+  group_by(year, gcm, scenario) %>% 
+  arrange(dt) %>% 
+  summarise(my_rle = list(rle(really_hot)))
+
+## Thanks to 
+## https://stackoverflow.com/questions/61991055/using-rle-function-along-with-dplyr-group-by-command-to-mapping-grouping-v
+
+zz %>% mutate(heat_spells = sum( my_rle[[1]]$lengths[my_rle[[1]]$values] >= 2))    ## looks good
+
+i <- 5
+zz[i, "my_rle", drop = TRUE][[1]]$lengths
+zz[i, "my_rle", drop = TRUE][[1]]$values
+sum(zz[i, "my_rle", drop = TRUE][[1]]$lengths[zz[i, "my_rle", drop = TRUE][[1]]$values] >= 2)
+```
+
+
+Count the number of extreme precp events in Fresno
+
+Techniques For Working With Daily Time Series Data
+ - counting the number of threshhold events
+ - counting the number of consecutive threshhold events
+ - summing up the accumultated precip / heat in consecutive events
+ - running averages
+
+ - 30 year sliding window average
+
+Creating an ensemble ribbon - requires pivot_wider()
