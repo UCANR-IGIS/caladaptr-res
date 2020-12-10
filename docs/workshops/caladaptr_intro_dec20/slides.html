@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Andy Lyons December 11, 2020" />
+  <title>Working with Cal-Adapt Data in R</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+              </style>
+  <script src="lib/header-attrs-2.5/header-attrs.js"></script>
+  <link href="lib/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="lib/slidy-2/scripts/slidy.js"></script>
+  <script src="lib/slidy_shiny-1/slidy_shiny.js"></script>
+  <link href="lib/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="lib/pagedtable-1.1/js/pagedtable.js"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Working with Cal-Adapt Data in R</h1>
+  <p class="author">
+Andy Lyons<br/>December 11, 2020
+  </p>
+  <p class="date"><p style="margin:3em auto; border:none; text-align:center;">
+<img src='images/caladaptr-logo_beta.svg' style='height:60px; margin-left:75px;'>
+</p>
+<p style="text-align:center;">
+<img src='images/igis-anr_horiz-stacked_320x80.png' style='height:80px;'/><img src='images/gif-logo-col_300x118.png' style='height:75px; margin-left:100px;'/><img src='images/cec_logo_400x354x256.png' style='height:100px; margin-left:100px;'/><img src='images/scg-logo_460x230.png' style='height:100px; margin-left:100px;'/>
+</p></p>
+</div>
+<div id="about-me" class="slide section level1">
+<h1>About Me…</h1>
+<style type="text/css">
+h1 {
+  color:darkgreen;
+}
+h1.title {
+  color:black;
+  font-size:130%;
+}
+h2 {
+  color:#444;
+  font-size: 1.2em;
+}
+.indented1 {
+  margin-left:1em;
+}
+div.indented2 {
+  margin-left:2em;
+}
+
+table.borderme {
+  border:4px solid #246ABF;
+  border-collapse:collapse;
+}
+
+table.borderme td {
+  border: 1px solid #eee;
+}
+
+table.shademe td {
+  background:#eee;
+  padding:8px;
+}
+
+div.li-single li {
+  margin-bottom:0.1em;
+} 
+.test_delete {
+  line-height:0.7em;
+}
+pre {
+  font-weight:normal;
+  font-size:80%;
+}
+</style>
+<STYLE type='text/css' scoped>
+PRE.fansi SPAN {padding-top: .25em; padding-bottom: .25em};
+</STYLE>
+<p><img src="images/anr_montage-wide_1120x520.png" /></p>
+</div>
+<div id="introductions" class="slide section level1">
+<h1>Introductions</h1>
+</div>
+<div id="workshop-outline" class="slide section level1">
+<h1>Workshop Outline</h1>
+<h2 id="outline">Outline</h2>
+<div class="indented2 li-single">
+<ul>
+<li>Section 1: Intro
+<ul>
+<li>Notebook 1: Explore Merced’s Climate</li>
+</ul></li>
+<li>Section 2: Using Climate Data Wisely
+<ul>
+<li>Notebook 2: Explore Trends in Your Favorite California City</li>
+</ul></li>
+<li>Section 3: Merging and Mapping
+<ul>
+<li>Notebook 3</li>
+</ul></li>
+<li>Section 4: Large Data: SQLite and Rasters</li>
+<li>Section 5: Wrap Up</li>
+</ul>
+<p><br />
+</p>
+<ul>
+<li>Break</li>
+<li>Choose Your Own Adventure</li>
+</ul>
+</div>
+<p><br />
+</p>
+</div>
+<div id="goals" class="slide section level1">
+<h1>Goals</h1>
+<div class="indented2 li-single">
+<ul>
+<li>Introduce the new tools<br />
+</li>
+<li>Invite to you try them out<br />
+</li>
+<li>Entice you get involved in testing and feedback!</li>
+</ul>
+</div>
+<p>Find bugs</p>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

@@ -235,7 +235,6 @@ lrec_ens_year_tbl <-
   select(cvar, gcm, scenario, year, temp_f)
 
 ## backup: lrec_ens_year_tbl <- readRDS("data/lrec_ens_year_tbl.rds")
-saveRDS(lrec_ens_year_tbl, "data/lrec_ens_year_tbl.rds")  #######################################
 
 lrec_ens_year_tbl
 ```

@@ -1,0 +1,14 @@
+base
+knitr
+kableExtra
+magrittr
+dplyr
+tidyr
+lubridate
+DiagrammeR
+caladaptr
+sf
+tmap
+units
+ggplot2
+chillR
