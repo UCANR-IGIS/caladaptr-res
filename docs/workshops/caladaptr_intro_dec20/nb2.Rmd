@@ -253,7 +253,7 @@ head(lrec_ens_min_max)
 Now we can plot them as a `geom_ribbon()`:
 
 ```{r}
-ggplot() +
+my_plot <- ggplot() +
   geom_ribbon(data = lrec_ens_min_max, 
               mapping = aes(x = year, ymin = as.numeric(tasmin), ymax = as.numeric(tasmax)), 
               fill = "gray70") +
@@ -264,4 +264,5 @@ ggplot() +
        subtitle = "2040-2060",
        caption = "Average of 4 GCMs with 32-GCM ensemble range in background")
 
+my_plot
 ```

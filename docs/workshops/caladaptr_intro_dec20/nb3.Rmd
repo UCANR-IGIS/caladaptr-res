@@ -1,17 +1,241 @@
 ---
-title: "R Notebook"
+title: "Notebook 3: Join Tables and Make Maps"
 output: html_notebook
 ---
 
-EXPLORE DATA CATALOG
+# Introduction
 
-How many raster series are there?
+In this exercise we'll practice joining climate data tables from Cal-Adapt to other tables so we can create indices and map results. Our exercise will focus on census tracts in Kern County, and the end goal will be to create maps with a composite index of census tract cumulative impact score from CalEnviroScreen (a measure of exposure to pollution) and the anticipatd increase in temperature from historic condition to the end-of-century under RCP8.5.
 
-Download some data
+# Setup
 
-Finding the Right Slug
-https://api.cal-adapt.org/api/series/ --> click on 'Filters'
-https://berkeley-gif.github.io/caladapt-docs/data-catalog.html
+First we load the packages we need for this exercise, which include `caladaptr`, `dplyr`, and `sf`:
+
+```{r message = FALSE}
+library(caladaptr)
+library(sf)
+library(dplyr)
+library(lubridate)
+library(units)
+library(ggplot2)
+library(tidyr)
+library(scales)
+library(tmap)
+```
+
+# Get All the Census Tracts for Kern County
+
+Start by downloading all the census tracts:
+
+```{r}
+tracts_sf <- ca_aoipreset_geom("censustracts")
+head(tracts_sf)
+```
+
+We can pull out just the tracts for Kern County by [decomposing the tract id](https://transition.fcc.gov/form477/Geo/more_about_census_tracts.pdf). All census tracts in Kern County will have an idea number that starts with "6029" (06 is for California, 029 is Kern County's FIPs code).
+
+```{r}
+kern_tracts_sf <- tracts_sf %>%
+  filter(tract %>% as.character() %>%  stringr::str_starts("6029"))
+```
+
+View the attribute table. You'll notice the census tracts have values from CalEnviroScreen, including the cumulative impact score (ciscore), which we'll come back to you later.
+
+```{r}
+head(kern_tracts_sf)
+```
+
+For mapping, we'll also import the county boundary for Kern:
+
+```{r}
+kern_bnd_sf <- ca_aoipreset_geom("counties") %>% 
+  filter(fips == "06029")
+```
+
+Plot them to make sure everything looks right:
+
+```{r message = FALSE}
+library(tmap)
+tmap_mode("plot")
+tm_shape(kern_tracts_sf) +
+  tm_polygons() +
+tm_shape(kern_bnd_sf) +
+  tm_borders(col = "red", lty = 2) +
+tm_layout(main.title = "Census Tracts in Kern County, CA")
+```
+
+Now we can create two API requests for the historic values and end of century values:
+
+```{r}
+## Create an API request for historic values of tasmax, using a 32 model ensemble
+kern_trcts_hist_cap <- ca_loc_aoipreset(type = "censustracts",
+                                   idfld = "tract",
+                                   idval = kern_tracts_sf %>% pull(tract)) %>%
+  ca_cvar("tasmax") %>%
+  ca_period("year") %>%
+  ca_gcm("ens32max") %>%
+  ca_scenario("historical") %>%
+  ca_years(start = 1985, end = 2005) %>%
+  ca_options(spatial_ag = "mean")
+
+kern_trcts_hist_cap
+plot(kern_trcts_hist_cap)
+```
+
+Fetch the historic data:
+
+```{r message = FALSE}
+kern_trcts_hist_tbl <- kern_trcts_hist_cap %>% ca_getvals_tbl(quiet = TRUE)
+
+## backup: kern_trcts_hist_tbl <- readRDS("data/kern_trcts_hist_tbl.rds")
+
+dim(kern_trcts_hist_tbl)
+head(kern_trcts_hist_tbl)
+```
+
+Next compute the average temperature for each tract.
+
+```{r}
+kern_trcts_mean_temp_hist <- kern_trcts_hist_tbl %>%
+  group_by(tract) %>%
+  summarise(mean_temp_hist = mean(val))
+
+kern_trcts_mean_temp_hist
+```
+
+Do the same for the end-of-century period with RCP85.
+
+```{r}
+kern_trcts_prj_cap <- ca_loc_aoipreset(type = "censustracts",
+                                        idfld = "tract",
+                                        idval = kern_tracts_sf %>% pull(tract)) %>%
+  ca_cvar("tasmax") %>%
+  ca_period("year") %>%
+  ca_gcm("ens32max") %>%
+  ca_scenario("rcp85") %>%
+  ca_years(start = 2070, end = 2099) %>%
+  ca_options(spatial_ag = "mean")
+
+kern_trcts_prj_cap
+```
+
+Fetch values:
+
+```{r message = FALSE}
+kern_trcts_prj_tbl <- kern_trcts_prj_cap %>% ca_getvals_tbl(quiet = TRUE)
+
+## backup: kern_trcts_prj_tbl <- readRDS("data/kern_trcts_prj_tbl.rds")
+
+dim(kern_trcts_prj_tbl)
+head(kern_trcts_prj_tbl)
+```
+
+Compute the mean for each tract:
+
+```{r}
+kern_trcts_mean_temp_prj <- kern_trcts_prj_tbl %>%
+  group_by(tract) %>%
+  summarise(mean_temp_prj = mean(val))
+
+```
+
+Now we can join the tables:
+
+```{r}
+dim(kern_tracts_sf)
+dim(kern_trcts_mean_temp_hist)
+dim(kern_trcts_mean_temp_prj)
+
+kern_tracts_plus_temps_sf <-
+  kern_tracts_sf %>%
+  left_join(kern_trcts_mean_temp_hist, by = "tract") %>%
+  left_join(kern_trcts_mean_temp_prj, by = "tract") %>%
+  mutate(temp_increase = mean_temp_prj - mean_temp_hist) %>%
+  select(tract, ciscore, temp_increase)
+
+head(kern_tracts_plus_temps_sf)
+```
+
+Let's make a choropleth map of the Cumulative Impact score as well as the mean temp_increase:
+
+```{r}
+library(tmap)
+tmap_mode("plot")
+
+tm_shape(kern_tracts_plus_temps_sf) +
+  tm_polygons (col = "ciscore",
+               n = 10,
+               style = "cont",
+               palette = "YlOrRd",
+               colorNA = "grey50",
+               legend.reverse = TRUE,
+               title = "CI Score"
+  ) +
+  tm_layout(main.title = "Kern County Cummulative Impact Score\nCalEnviroScreen",
+            main.title.size = 0.9,
+            legend.position = c("left", "bottom")) +
+  tm_scale_bar(position = c("right", "bottom"))
+```
+
+Mean temp increase:
+
+```{r}
+tm_shape(kern_tracts_plus_temps_sf) +
+  tm_polygons (col = "temp_increase",
+               n = 10,
+               style = "cont",
+               palette = "YlOrRd",
+               colorNA = "grey50",
+               legend.reverse = TRUE,
+               title = "Mean Temp Increase (K)"
+  ) +
+  tm_layout(main.title = "Kern County Mean Temp Increases\nHistoric Period - End of Century, 32-ens GCM, RCP85",
+            main.title.size = 0.9,
+            legend.position = c("left", "bottom")) +
+  tm_scale_bar(position = c("right", "bottom"))
+
+
+```
+
+To plot CI score and mean temp increase together, we can rescale each one 0..1 and then multiply them together. 
+
+```{r}
+kern_tracts_plus_temps_idx_sf <-
+  kern_tracts_plus_temps_sf %>%
+  mutate(ciscore_01 = scales::rescale(ciscore),
+         temp_increase_01 = scales::rescale(as.numeric(temp_increase))) %>%
+  mutate(csi_temp_idx = ciscore_01 * temp_increase_01)
+
+head(kern_tracts_plus_temps_idx_sf)
+```
+
+Plot our index:
+
+```{r}
+tm_shape(kern_tracts_plus_temps_idx_sf) +
+  tm_polygons (col = "csi_temp_idx",
+               n = 10,
+               style = "cont",
+               palette = "YlOrRd",
+               colorNA = "grey50",
+               legend.reverse = TRUE,
+               title = "CI Score x Temp Increase"
+  ) +
+  tm_layout(main.title = "Kern County Cummulative Impact Score * End-of-Century Temp Increase \nCalEnviroScreen",
+            main.title.size = 0.9,
+            legend.position = c("left", "bottom")) +
+  tm_scale_bar(position = c("right", "bottom"))
+```
+
+# Conclusion
+
+In this example we saw how to join data from Cal-Adapt to other tables using the feature id column. This gives us the ability to combine different types of location-based information for analysis and visualization.
+
+
+
+
+
+
 
 
 
