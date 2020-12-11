@@ -664,13 +664,21 @@ Crate an API request:
 pin_cap <- ca_loc_sf(loc = pinnacles_bnd_sf,
                      idfld = "UNIT_CODE") %>% 
   ca_slug("ET_month_MIROC5_rcp45") %>%
-  ca_years(start = 2040, end = 2060)
+  ca_years(start = 2040, end = 2060) %>% 
+  ca_options(spatial_ag = "mean")
 
 plot(pin_cap, locagrid = TRUE)
 ```
 
-# Using Climate Data *Wisely*
 
+Fetch data:
+
+```{r cache = TRUE}
+pin_tbl <- pin_cap %>% ca_getvals_tbl()
+head(pin_tbl)
+```
+
+# Using Climate Data *Wisely*
 
 <div style="border:3px solid gray; background-color:#DAF7A6;">
 
@@ -893,6 +901,17 @@ Upcoming Vignette will have details
 
 Once you get Cal-Adapt data into R, there's a lot you can do with it!
 
-Ho
+How to learn more:
 
+<div class = "indented2">
+
+- Web site: <https://ucanr-igis.github.io/caladaptr>
+
+- Office Hours: http://igis.ucanr.edu/Office_Hours/
+
+- Send me your use case!
+
+- Future workshops
+
+</div>
 
