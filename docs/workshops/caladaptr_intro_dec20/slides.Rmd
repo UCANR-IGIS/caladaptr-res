@@ -84,6 +84,16 @@ p.warning {
   background-color:salmon;
   padding:10px;
 }
+a.extlink:after {
+  background-image: url('images/extlink.svg');
+  display:inline-block;
+  margin-left:0.3em;
+  margin-bottom:0.3em;
+  background-size:0.5em 0.5em;
+  width:0.5em; 
+  height:0.5em;
+  content:"";
+}
 ```
 
 <script type="text/javascript">w3c_slidy.mouse_click_enabled = false;</script>
@@ -114,7 +124,7 @@ Interest in working with Cal-Adapt data in R
 **Section 1: Intro**  
 
 <div class = "indented2">
-- Notebook 1: Explore Merced’s Past and Future Climate
+- <a href="nb1.nb.html" class="extlink">Notebook 1: Explore Merced’s Past and Future Climate</a>
 </div>
 
 **Section 2: Finding Cal-Adapt Data & Using it Wisely**   
@@ -122,13 +132,13 @@ Interest in working with Cal-Adapt data in R
 **Section 3: Data Munging Methods** 
 
 <div class = "indented2">
-- Notebook 2: Data Munging Techniques
+- <a href="nb2.nb.html" class="extlink">Notebook 2: Data Munging Techniques</a>
 </div>
 
 **Section 4: Joining Tables and Mapping**  
 
 <div class = "indented2">
-- Notebook 3: Join Tables and Make Maps   
+- <a href="nb3.nb.html" class="extlink">Notebook 3: Join Tables and Make Maps</a>
 </div>
 
 **Section 5: Techniques for Querying Large Data**  
