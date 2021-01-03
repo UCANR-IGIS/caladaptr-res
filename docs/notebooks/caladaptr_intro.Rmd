@@ -56,7 +56,7 @@ if (!require(devtools)) {install.packages("devtools"); library(devtools)}
 # 
 # devtools::install_github("ucanr-igis/caladaptr")
 library(caladaptr)
-## Make sure you have version 0.4.1 caladaptr or later. 
+## Make sure you have version 0.4.5 caladaptr or later. 
 packageVersion("caladaptr")
 ```
 
