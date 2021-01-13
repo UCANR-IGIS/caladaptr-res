@@ -18,8 +18,8 @@ ylab_lst <- list(tasmin = "temp (F)",
                  tasmax = "temp (F)",
                  pr = "precip (kg/m2/s)")
 
-
 ui <- fluidPage(
+  tags$head(includeHTML("gtag_timeseries.js")),
   use_busy_spinner(spin = "atom", position = "bottom-left"),
   
   titlePanel(title = div(img(src="https://ucanr-igis.github.io/caladaptr/reference/figures/logo.gif", height = "75px"), "Demo App: Plot a Time Series of Annual Climate Data"), 
@@ -28,7 +28,7 @@ ui <- fluidPage(
   fluidRow(
     column(12,
            HTML("<p>This <a href='https://shiny.rstudio.com/'>R Shiny</a> app demonstrates how to use <a href='https://ucanr-igis.github.io/caladaptr/'>caladaptR</a> to fetch data from Cal-Adapt. To use, select a point in California or Nevada on the map, and set the options for the climate data you want. Then click the Plot button.<br/>[<a href='https://github.com/UCANR-IGIS/caladaptr-res/blob/main/shiny/timeseries/app.R'>Source code</a> | <a href='https://github.com/UCANR-IGIS/caladaptr-res/blob/main/shiny/timeseries/timeseries_reactivity.png'>Reactivity map</a>].</p>"))
-    ),
+  ),
   
   fluidRow(
     column(3,
@@ -36,12 +36,12 @@ ui <- fluidPage(
            selectInput("cvar", label = "Climate variable:", choices = cvars[1:3], selected = cvars[1], multiple = FALSE),
            selectInput("gcm", label = "GCMs:", choices = gcms, selected = gcms[1:4], multiple = TRUE),
            selectInput("scenario", label = "Emissions scenario:", choices = scenarios[1:2], selected = scenarios[1], multiple = FALSE)
-           ),
+    ),
     column(9,
            p(strong("Click on the map to select a location:")),
            leafletOutput("mymap"),
            textOutput("txtCoords")
-           )
+    )
   ),
   fluidRow(column(9,
                   offset = 3,
@@ -52,7 +52,7 @@ ui <- fluidPage(
                   textOutput("txtTblMsg"),
                   plotOutput("timeseriesPlot"),
                   p())
-           )
+  )
 )
 
 server <- function(input, output, session) {
@@ -64,7 +64,7 @@ server <- function(input, output, session) {
       addTiles() %>% 
       setView(-120.2, 36.4, zoom=6)
   })
-
+  
   ## This will run every time cmd_plot is clicked
   pt_cap <- eventReactive(input$cmd_plot, {
     
@@ -89,27 +89,27 @@ server <- function(input, output, session) {
         ca_years(start = input$year[1], end = input$year[2])
       
     }
-
+    
   })
-
+  
   ## The following will run whenever input$mymap_click changes
   ## (i.e., someone clicks on the map)
   observe({
-   req(!is.null(input$mymap_click))
+    req(!is.null(input$mymap_click))
     
-   myclick <- input$mymap_click
-   
-   ## Update the value of pt_coords with the coordinates 
-   pt_coords(c(myclick$lng, myclick$lat))
-
-   # ## Clear existing markers and add a marker at the new location
-   leafletProxy('mymap') %>% 
-     clearMarkers() %>%
-     addMarkers(lng = pt_coords()[1], lat = pt_coords()[2])
-   
-   ## Clear the message in txtCapMsg
-   output$txtCapMsg <- renderText(NULL)
-
+    myclick <- input$mymap_click
+    
+    ## Update the value of pt_coords with the coordinates 
+    pt_coords(c(myclick$lng, myclick$lat))
+    
+    # ## Clear existing markers and add a marker at the new location
+    leafletProxy('mymap') %>% 
+      clearMarkers() %>%
+      addMarkers(lng = pt_coords()[1], lat = pt_coords()[2])
+    
+    ## Clear the message in txtCapMsg
+    output$txtCapMsg <- renderText(NULL)
+    
   })
   
   output$txtCoords <- renderText({
@@ -121,7 +121,7 @@ server <- function(input, output, session) {
            round(pt_coords()[1], 4), 
            ", ", 
            round(pt_coords()[2], 4), ")")
-    })
+  })
   
   ## The following will update whenever pt_cap is updated
   ## (which is turn is updated when the plot button is clicked)
