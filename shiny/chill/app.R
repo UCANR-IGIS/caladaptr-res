@@ -157,13 +157,13 @@ ui <- function(request) {
              tags$p("3. Select the climate data to use as the ", tags$u("historic baseline"), class = "step topborder"),
              sliderInput("base_year", "Year range:", min = 1950, max = 2005, value = c(1975, 2005), sep = "", step = 1) %>% 
                shinytag_add_class("iblock") %>% 
-               helper(type = "inline",
+               helper(type = "markdown",
                       icon = "info-circle",
-                      title = "Time Period for Baseline Historic Climate",
-                      content = "Select 20-30 years of historical data to even out the bumps.",
+                      content = "years_select",
                       buttonLabel = "OK",
                       size = "m"),
-             selectInput("base_gcm", label = "GCMs:", choices = gcms, selected = gcms[1:4], multiple = TRUE) %>% 
+             htmlOutput("htmlout_basetime_msg") %>% shinytag_add_class("error-msg"),
+             selectInput("base_gcm", label = "GCMs:", choices = gcms[1:10], selected = gcms[1:4], multiple = TRUE) %>% 
                shinytag_add_class("iblock") %>% 
                helper(type = "markdown",
                       icon = "info-circle",
@@ -179,13 +179,13 @@ ui <- function(request) {
              tags$p("4. Select the climate data to use for the ", tags$u("projected future"), class = "step topborder"),
              sliderInput("prj_year", "Year range:", min = 2006, max = 2099, value = c(2040, 2060), sep = "", step = 1) %>% 
                shinytag_add_class("iblock") %>% 
-               helper(type = "inline",
+               helper(type = "markdown",
                       icon = "info-circle",
-                      title = "Time Period for Projected Future Climate",
-                      content = "Select 20-30 years of modeled data to even out the bumps.",
+                      content = "year_select",
                       buttonLabel = "OK",
                       size = "m"),
-             selectInput("prj_gcm", label = "GCMs:", choices = gcms, selected = gcms[1:4], multiple = TRUE) %>% 
+             htmlOutput("htmlout_prjtime_msg") %>% shinytag_add_class("error-msg"),
+             selectInput("prj_gcm", label = "GCMs:", choices = gcms[1:10], selected = gcms[1:4], multiple = TRUE) %>% 
                shinytag_add_class("iblock") %>% 
                helper(type = "markdown",
                       icon = "info-circle",
@@ -324,19 +324,24 @@ ui <- function(request) {
 server <- function(input, output, session) {
   
   ## Create a reactiveVal object which is where we'll 
-  ## store  the coordinates when someone clicks the map
+  ## store  the coordinates when someone clicks the map or enters coordinates
+  ## into the text box
   pt_coords <- reactiveVal()
   
   ## Create reactiveVal objects for the API requests
   pt_prj_cap <- reactiveVal()
   pt_base_cap <- reactiveVal()
+
+  ## Create reactiveVal objects for the number of points clicked on the map
+  ## (Used to generate a default location name that is different than
+  ## earlier ones)
   pt_num <- reactiveVal(0)
   
-  ## Add an observer to watch out for clicks on the shinyhelper buttons
-  ## md files will be located in the default 'helpfiles' subdir
+  ## Add an observer to watch out for clicks on the shinyhelper buttons.
+  ## The md files will be located in the default 'helpfiles' subdir
   observe_helpers()
   
-  ## This will set the initial map extent (and never called again after that)
+  ## Set the initial map extent (called once but never called again after that)
   output$mymap <- renderLeaflet({
     leaflet() %>%
       addTiles() %>% 
@@ -346,6 +351,7 @@ server <- function(input, output, session) {
   ## The following will run whenever input$mymap_click changes
   observeEvent(input$mymap_click, {
     
+    ## Get the coordinates
     myclick <- input$mymap_click
     
     ## Update the value of pt_coords with the coordinates 
@@ -356,14 +362,14 @@ server <- function(input, output, session) {
       clearMarkers() %>%
       addMarkers(lng = pt_coords()[1], lat = pt_coords()[2])
     
-    ## Increment the point number
-    isolate(pt_num(pt_num() + 1))
-
     ## Update the coordinates input box
     updateTextInput(session, 
                     inputId = "txtin_coords",
                     value = paste0(round(pt_coords()[1], 5), ", ", round(pt_coords()[2], 5))
     )
+    
+    ## Increment the point number
+    pt_num(pt_num() + 1)
     
     ## Update the default location name text input
     updateTextInput(session, 
@@ -381,9 +387,9 @@ server <- function(input, output, session) {
     
   })
 
+  ## Update the default value of the location name and nullify any current results when 
+  ## the user modifies input$txtin_coords (i.e., a new character is typed)
   observe({
-    ## This will run every time input$txtin_coords changes (i.e., a new character is typed)
-
     ## Update the default location name text input
     updateTextInput(session, 
                     inputId = "txtin_ptname",
@@ -396,6 +402,8 @@ server <- function(input, output, session) {
     
   })
   
+  ## Show the manually typed in coordinates in the leaflet map
+  ## This is run when the action button is clicked.
   observeEvent(input$cmd_showonmap, {
     
     ## Parse out the coordinates
@@ -409,9 +417,10 @@ server <- function(input, output, session) {
       output$htmlout_coords_msg <- renderUI(NULL)
 
       ## See if these coordinates are actually new or not      
-      
+      ## If they're not new, no action is needed (the user is just clicking the button for no reason)
       if (!isTRUE(all.equal(pt_coords(), c(mycoords[1], mycoords[2]), tolerance = 0.0001))) {
 
+        ## Update pt_coords() - this will trigger other stuff
         pt_coords(c(mycoords[1], mycoords[2]))
 
         # ## Clear existing markers, add a marker at the new location, and pan
@@ -428,6 +437,26 @@ server <- function(input, output, session) {
     
   })
   
+  ## Render the error messages for short time periods - historic period
+  output$htmlout_basetime_msg <- renderUI({
+    req(input$base_year)
+    if (diff(input$base_year) < 10) {
+      HTML("Caution: this time period may be too short to be representative of climate. See info button for details.")
+    } else {
+      NULL
+    }
+  })
+  
+  ## Render the error messages for short time periods - projected future
+  output$htmlout_prjtime_msg <- renderUI({
+    req(input$prj_year)
+    if (diff(input$prj_year) < 10) {
+      HTML("Caution: this time period may be too short to be representative of climate. See info button for details.")
+    } else {
+      NULL
+    }
+  })
+  
   ## Render the coordinates in the report section
   output$txtout_rpt_coords <- renderText({
     req(pt_coords())
@@ -435,6 +464,7 @@ server <- function(input, output, session) {
            ", ", round(pt_coords()[2], 4))
   })
   
+  ## Fetch data and start the analysis
   observeEvent(input$cmd_fetch, {
 
     ## First thing is to check whether pt_coords() is up to date.
@@ -486,12 +516,15 @@ server <- function(input, output, session) {
         ca_scenario(input$prj_scenario) %>% 
         ca_period("day") %>% 
         ca_cvar(c("tasmax", "tasmin")) %>% 
-        ca_years(start = input$prj_year[1], end = input$prj_year[2])
-      
-      ## Only update pt_prj_cap() if it is different than the curent settings.
+        ca_dates(start = paste(input$prj_year[1] - 1, which(input$chill_month == month.abb), "01", sep = "-"), 
+                 end = paste(input$prj_year[2], which(input$chill_month == month.abb) - 1, "30", sep = "-"))
+        
+      ## Only update pt_prj_cap() if it is different than the current settings.
+      ## (otherwise it'll trigger fetching data all over again)
       ## The following works even if pt_prj_cap() is NULL (not yet initialized)
+      
       if (!identical(cur_prj_cap, pt_prj_cap())) {
-        pt_prj_cap(cur_prj_cap)
+        pt_prj_cap(cur_prj_cap)  ## (this will trigger pt_prj_hourly_chill_tbl)
       }
 
       ## Create an API request object for baseline climate
@@ -500,12 +533,13 @@ server <- function(input, output, session) {
         ca_scenario(input$base_scenario) %>% 
         ca_period("day") %>% 
         ca_cvar(c("tasmax", "tasmin")) %>% 
-        ca_years(start = input$base_year[1], end = input$base_year[2])
+        ca_dates(start = paste(input$base_year[1] - 1, which(input$chill_month == month.abb), "01", sep = "-"), 
+               end = paste(input$base_year[2], which(input$chill_month == month.abb) - 1, "30", sep = "-"))
       
-      ## Only update pt_prj_cap() if it is different than the curent settings.
-      ## The following works even if pt_prj_cap() is NULL (not yet initialized)
+      ## Only update pt_base_cap() if it is different than the current settings.
+      ## The following works even if pt_base_cap() is NULL (not yet initialized)
       if (!identical(cur_base_cap, pt_base_cap())) {
-        pt_base_cap(cur_base_cap)
+        pt_base_cap(cur_base_cap)   ## (this will trigger pt_base_hourly_chill_tbl)
       }
           
     }
@@ -523,7 +557,7 @@ server <- function(input, output, session) {
     progress <- Progress$new()
     on.exit(progress$close())
     
-    progress$set(value = 0, message = "Fetching data from Cal-Adapt: ", detail = "Projected min and max daily temp")
+    progress$set(value = 0, message = "Fetching data from Cal-Adapt: ", detail = "Projected daily min and max temp")
     
     ## Get values
     pt_prj_dtemp_tbl <- ca_getvals_tbl(pt_prj_cap(), quiet = TRUE, shiny_progress = progress) 
@@ -543,6 +577,9 @@ server <- function(input, output, session) {
       pivot_wider(names_from = cvar, values_from = temp_c) %>%
       rename(Tmax = tasmax, Tmin = tasmin)
 
+    ## recover some memory
+    rm(pt_prj_dtemp_tbl)
+    
     ## Interpolate Hourly Temperatures in 'long' format
     ## This uses 'make_hourly_temps_long', a modified version of chillr::make_hourly_temps
     progress$set(message = "Processing Projected Data:", detail = "Interpolating hourly temps")
@@ -552,6 +589,9 @@ server <- function(input, output, session) {
       mutate(date_hour = lubridate::make_datetime(Year, Month, Day, Hour, tz = "America/Los_Angeles")) %>% 
       rename(temp_c = Temp) %>% 
       arrange(date_hour)
+
+    ## recover some memory
+    rm(pt_prj_ymd_gs_wide_tbl) 
 
     ## Compute hourly chill portions
     progress$set(message = "Processing Projected Data:", detail = "Computing hourly chill portions")
@@ -573,7 +613,7 @@ server <- function(input, output, session) {
     ## Create the message
     progress <- Progress$new()
     on.exit(progress$close())
-    progress$set(message = "Fetching data from Cal-Adapt: ", detail = "Historic min and max daily temp", value = 0)
+    progress$set(message = "Fetching data from Cal-Adapt: ", detail = "Historic daily min and max temp", value = 0)
     
     pt_base_dtemp_tbl <- ca_getvals_tbl(pt_base_cap(), quiet = TRUE, shiny_progress = progress) 
     
@@ -592,6 +632,9 @@ server <- function(input, output, session) {
       pivot_wider(names_from = cvar, values_from = temp_c) %>%
       rename(Tmax = tasmax, Tmin = tasmin)
 
+    ## recover some memory
+    rm(pt_base_dtemp_tbl)
+    
     ## Compute hourly temperatures
     progress$set(message = "Processing Historic Data:", detail = "Interpolating hourly temps")
     pt_base_hrtmp_long <- make_hourly_temps_long(latitude = pt_coords()[2],
@@ -601,6 +644,9 @@ server <- function(input, output, session) {
       rename(temp_c = Temp) %>% 
       arrange(date_hour)
 
+    ## Recover some memory
+    rm(pt_base_ymd_gs_wide_tbl)
+    
     ## Compute hourly chill portions
     progress$set(message = "Processing Historic Data:", detail = "Computing hourly chill portions")
     
@@ -858,16 +904,22 @@ server <- function(input, output, session) {
     req(pt_base_hourly_chill_tbl())
     ## Convert the month to an integer
     chill_month_int <- which(month.abb == isolate(input$chill_month))
+    
     ## Create a tibble containing accumulated seasonal chill portions by day
-    base_daily_chill_tbl <- pt_base_hourly_chill_tbl() %>%
-      filter(Hour == 0) %>% 
-      mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
-      mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
-             gs_gcm = paste(gs, gcm, sep = "_")) %>%
-      select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn)
+    # base_daily_chill_tbl <- pt_base_hourly_chill_tbl() %>%
+    #   filter(Hour == 0) %>% 
+    #   mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
+    #   mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
+    #          gs_gcm = paste(gs, gcm, sep = "_")) %>%
+    #   select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn)
 
     ## Generate the plot
-    ggplot(data = base_daily_chill_tbl,
+    ggplot(data = pt_base_hourly_chill_tbl() %>%
+             filter(Hour == 0) %>% 
+             mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
+             mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
+                    gs_gcm = paste(gs, gcm, sep = "_")) %>%
+             select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn),
            aes(x = date_plot, y = accum_chill_prtn)) +
       geom_line(aes(color=gs_gcm), show.legend = FALSE) +
       geom_hline(color = "black", aes(yintercept = isolate(as.numeric(input$req_chill))), size = 1) +
@@ -894,15 +946,20 @@ server <- function(input, output, session) {
     chill_month_int <- which(month.abb == isolate(input$chill_month))
     
     ## Create a tibble containing accumulated seasonal chill portions by day
-    prj_daily_chill_tbl <- pt_prj_hourly_chill_tbl() %>%
-      filter(Hour == 0, scenario == "rcp45") %>% 
-      mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
-      mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
-             gs_gcm = paste(gs, gcm, sep = "_")) %>%
-      select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn)
+    # prj_daily_chill_tbl <- pt_prj_hourly_chill_tbl() %>%
+    #   filter(Hour == 0, scenario == "rcp45") %>% 
+    #   mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
+    #   mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
+    #          gs_gcm = paste(gs, gcm, sep = "_")) %>%
+    #   select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn)
     
     ## Generate the plot
-    ggplot(data = prj_daily_chill_tbl,
+    ggplot(data = pt_prj_hourly_chill_tbl() %>%
+             filter(Hour == 0, scenario == "rcp45") %>% 
+             mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
+             mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
+                    gs_gcm = paste(gs, gcm, sep = "_")) %>%
+             select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn),
            aes(x = date_plot, y = accum_chill_prtn)) +
       geom_line(aes(color=gs_gcm), show.legend = FALSE) +
       geom_hline(color = "black", aes(yintercept = isolate(as.numeric(input$req_chill))), size = 1) +
@@ -928,15 +985,20 @@ server <- function(input, output, session) {
     chill_month_int <- which(month.abb == isolate(input$chill_month))
     
     ## Create a tibble containing accumulated seasonal chill portions by day
-    prj_daily_chill_tbl <- pt_prj_hourly_chill_tbl() %>%
-      filter(Hour == 0, scenario == "rcp85") %>% 
-      mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
-      mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
-             gs_gcm = paste(gs, gcm, sep = "_")) %>%
-      select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn)
+    # prj_daily_chill_tbl <- pt_prj_hourly_chill_tbl() %>%
+    #   filter(Hour == 0, scenario == "rcp85") %>% 
+    #   mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
+    #   mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
+    #          gs_gcm = paste(gs, gcm, sep = "_")) %>%
+    #   select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn)
     
     ## Generate the plot
-    ggplot(data = prj_daily_chill_tbl,
+    ggplot(data = pt_prj_hourly_chill_tbl() %>%
+             filter(Hour == 0, scenario == "rcp85") %>% 
+             mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
+             mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
+                    gs_gcm = paste(gs, gcm, sep = "_")) %>%
+             select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn),
            aes(x = date_plot, y = accum_chill_prtn)) +
       geom_line(aes(color=gs_gcm), show.legend = FALSE) +
       geom_hline(color = "black", aes(yintercept = isolate(as.numeric(input$req_chill))), size = 1) +
