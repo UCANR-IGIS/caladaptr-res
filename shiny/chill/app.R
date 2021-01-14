@@ -111,7 +111,7 @@ ui <- function(request) {
                   <li>This is a pilot app for demonstration purposes only.</li>
                   <li>This calculator uses climate data from Cal-Adapt, which is available for the <a href='https://ucanr-igis.github.io/caladaptr-res/workshops/caladaptr_intro_dec20/slides_files/figure-slidy/unnamed-chunk-6-1.png' target='_blank'>California and Nevada</a> area (western USA) only.</li>
                   <li>This calculator uses <u>chill portions</u> rather than <u>chill hours</u>, because chill portions do a better job at predicting tree phenology. <a href='http://fruitsandnuts.ucdavis.edu/Weather_Services/chilling_accumulation_models/about_chilling_units/' target='_blank' rel='noopener'>More info</a>.</li>
-                  <li>RStudio users can run this app directly from RStudio by downloading the <a href='https://github.com/UCANR-IGIS/caladaptr-res/blob/main/shiny/chill' target='_blank' rel='noopener'>source code</a>.</li>
+                  <li>RStudio users can run this app directly from RStudio by downloading the <a href='https://github.com/UCANR-IGIS/caladaptr-res/blob/main/shiny/chill' target='_blank' rel='noopener'>source code</a>. Or you can run <details style='display:inline-block;'><summary style='cursor: pointer;'>this command</summary><code>shiny::runUrl(\"https://github.com/ucanr-igis/caladaptr-res/raw/main/shiny/shiny_chill.zip\")</code></details>.</li>
                   <li>For additional details on the R code, see this <a href='https://ucanr-igis.github.io/caladaptr-res/notebooks/chill.nb.html' target='_blank' rel='noopener'>R Notebook</a>.</li>
                   <li>If the calculator unexpectedly disconnects while processing, the most likely reason is an out-of-memory error on the server. Refresh the page, reduce the number of GCMs or years, and try again. Or you can download the app and run it locally from RStudio.</li>
                   <li>Questions or suggestions? Please email <a href='mailto:caladaptr@gmail.com?subject=Chill Portions Shiny App'>Feedback and Support</a>.</li>
@@ -145,7 +145,7 @@ ui <- function(request) {
     fluidRow(
       column(12, 
              tags$p("2. Give this point a name for the report (optional)", class = "step topborder"),
-             textInput("txtin_ptname", "Location name: ", width = "660px") %>% 
+             textInput("txtin_ptname", "Location name: ", width = "680px", placeholder = "My Farm") %>% 
                shinytag_wrapchild2div("display:inline-block;") %>% 
                shinytag_add_class("space_above_below"),
              tags$p())
@@ -390,11 +390,13 @@ server <- function(input, output, session) {
   ## Update the default value of the location name and nullify any current results when 
   ## the user modifies input$txtin_coords (i.e., a new character is typed)
   observe({
+    
     ## Update the default location name text input
-    updateTextInput(session, 
-                    inputId = "txtin_ptname",
-                    value = paste0("Pt", isolate(pt_num()), " (", input$txtin_coords, ")")
-    )
+    if (input$txtin_coords != "") {
+      updateTextInput(session, 
+                      inputId = "txtin_ptname",
+                      value = paste0("Pt", isolate(pt_num()), " (", input$txtin_coords, ")"))
+    }
     
     ## Nullify API requests (which will cascade and disable any results being shown)
     pt_prj_cap(NULL)
