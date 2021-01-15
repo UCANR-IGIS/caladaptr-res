@@ -7,7 +7,7 @@
 ## For more info about caladaptR, visit: https://ucanr-igis.github.io/caladaptr/
 ##
 ######################################################################
-## 1) Install packages needed by caladaptR
+## 1) Install packages needed by caladaptR (if you don't already have it installed)
 
 req_pkg <- c("assertthat", "backports", "chillR", "conflicted","crayon", "curl", "DBI",
              "dbplyr", "digest", "dplyr", "fastmatch", "ggplot2", "httr", "geojsonsf", "lubridate",
