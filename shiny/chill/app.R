@@ -1,4 +1,7 @@
+## cat("\nTotal memory used at start is: ", round(as.numeric(pryr::mem_used()) / 1000000), "MB\n")
+
 ## Attach packages
+## MEOMORY HIT - THESE 8 PACKAGES TAKE 92 MB
 library(shiny)
 library(leaflet)
 library(caladaptr)
@@ -18,9 +21,10 @@ library(dplyr)
 ## functions explicitly (e.g., scales::percent).
 
 ## In the case of DT, I choose to explicitly call those functions
-## because there are identical functions in shiny which I don't want.
+## because there are identical functions in shiny which I explicitly don't want.
 
-requireNamespace("chillR")
+## MEMORY HIT: THESE 4 PACKAGES CHEW 100 MB
+# requireNamespace("chillR")
 requireNamespace("DT")
 requireNamespace("lubridate")
 requireNamespace("scales")
@@ -30,9 +34,11 @@ requireNamespace("scales")
 ## to ShinyApps.io doesn't automatically install these dependencies,
 ## so to get the app to deploy I have to pretend like this script needs them.
 
-requireNamespace("date")
-requireNamespace("vars")
-requireNamespace("chron")
+# MEMORY HIT: THESE THREE NAMESPACES CHEW 10 MB
+# UPDATE: NO LONGER NEEDED B/C I NO LONGER LOAD CHILLR DIRECTLY
+# requireNamespace("date")
+# requireNamespace("vars")
+# requireNamespace("chron")
 
 ## Set up conflict resolution
 requireNamespace("conflicted")
@@ -47,7 +53,7 @@ shinytag_add_class <- function(x, additional_class) {
   x
 }
 
-## Utility function to modify a Shiny tag with 2 children, wrapping the 2nd child in a DIV
+## Utility function to modify a Shiny tag with 2 children, wrapping the 2nd child in a DIV with a style attribute.
 ## If style = "display:inline-block;", this will have the effect of making the label inline.
 shinytag_wrapchild2div <- function(x, style) {
   if (length(x$children) != 2) stop("This function is designed to modify a shiny.tag with two children")
@@ -55,8 +61,21 @@ shinytag_wrapchild2div <- function(x, style) {
   x
 }
 
+## Utility function to print memory usage to the console
+# requireNamespace("pryr")
+# report_memory <- function(x) {
+#   cat("\n", x, "\n", sep = "")
+#   cat(" - total memory used: ", round(as.numeric(pryr::mem_used()) / 1000000), " MB\n", sep = "")
+#   cat(" - objects in memory: ", paste(ls(), collapse = ", "), "\n", sep = "")
+#   cat(" - memory used by objects is: ", as.numeric(pryr::object_size(ls())) / 1000000, " MB\n", sep = "")
+# }
+
 ## Load a custom version of chillr::make_hourly_temps
-source('make_hourly_temps_long.R')
+source('ca_make_hourly_temps.R')
+source('chillr_daylength.R')
+source('chillr_dynamic_model.R')
+
+## report_memory("Memory usages after packages are loaded")
 
 ui <- function(request) {
 
@@ -79,7 +98,8 @@ ui <- function(request) {
     ),
     
     ## We put this tag in the body of the HTML document, rather than the head, so it doesn't
-    ## get over-written by shinyhelper.css
+    ## get over-written by shinyhelper.css. This is needed to move the shinyhelp info buttons
+    ## closer to the label rather than the far right edge of the column
     tags$style(type="text/css",
                ".shinyhelper-container {display: inline-block; position: relative; margin-left: 1em;"),
     
@@ -106,16 +126,17 @@ ui <- function(request) {
              
              tags$p("Introduction", class = "step topborder"),
              HTML("<p>This calculator can be used to compute end-of-season <a href='http://fruitsandnuts.ucdavis.edu/Weather_Services/chilling_accumulation_models/about_chilling_units/' target='_blank' rel='noopener'>chill portions</a> under projected climate scenarios. The calculator draws upon downscale projected climate data from the California 4th Climate Change assessment hosted on <a href='https://cal-adapt.org/' target='_blank' rel='noopener'>Cal-Adapt.org</a>.</p>"),
-             HTML("<p>Notes:</p>
+             HTML("<details>
+                  <summary style='color:blue; cursor:pointer; outline:none;'>Notes</summary>
                   <ul>
                   <li>This is a pilot app for demonstration purposes only.</li>
-                  <li>This calculator uses climate data from Cal-Adapt, which is available for the <a href='https://ucanr-igis.github.io/caladaptr-res/workshops/caladaptr_intro_dec20/slides_files/figure-slidy/unnamed-chunk-6-1.png' target='_blank'>California and Nevada</a> area (western USA) only.</li>
-                  <li>This calculator uses <u>chill portions</u> rather than <u>chill hours</u>, because chill portions do a better job at predicting tree phenology. <a href='http://fruitsandnuts.ucdavis.edu/Weather_Services/chilling_accumulation_models/about_chilling_units/' target='_blank' rel='noopener'>More info</a>.</li>
-                  <li>RStudio users can run this app directly from RStudio by downloading the <a href='https://github.com/UCANR-IGIS/caladaptr-res/blob/main/shiny/chill' target='_blank' rel='noopener'>source code</a>. Or you can run <details style='display:inline-block;'><summary style='cursor: pointer;'>this command</summary><code>shiny::runUrl(\"https://github.com/ucanr-igis/caladaptr-res/raw/main/shiny/shiny_chill.zip\")</code></details>.</li>
-                  <li>For additional details on the R code, see this <a href='https://ucanr-igis.github.io/caladaptr-res/notebooks/chill.nb.html' target='_blank' rel='noopener'>R Notebook</a>.</li>
-                  <li>If the calculator unexpectedly disconnects while processing, the most likely reason is an out-of-memory error on the server. Refresh the page, reduce the number of GCMs or years, and try again. Or you can download the app and run it locally from RStudio.</li>
-                  <li>Questions or suggestions? Please email <a href='mailto:caladaptr@gmail.com?subject=Chill Portions Shiny App'>Feedback and Support</a>.</li>
-                  </ul>")
+                  <li>This calculator uses downscaled climate data from Cal-Adapt, which is available for California, Nevada, and a <a href='https://ucanr-igis.github.io/caladaptr-res/workshops/caladaptr_intro_dec20/slides_files/figure-slidy/unnamed-chunk-6-1.png' target='_blank'>little bit of neighboring states</a> in the western USA.</li>
+                  <li>This calculator uses chill <i>portions</i> rather than chill <i>hours</i>, because chill portions do a better job at predicting tree phenology. <a href='http://fruitsandnuts.ucdavis.edu/Weather_Services/chilling_accumulation_models/about_chilling_units/' target='_blank' rel='noopener'>More info</a>.</li>
+                  <li>RStudio users can run this and other demo Shiny apps directly from RStudio. See this <a href='https://github.com/UCANR-IGIS/caladaptr-res/blob/main/shiny/caladaptr_shinyapps_setup.R' target='_blank' rel='noopener'>setup script</a>. For additional details on the R code, see this <a href='https://ucanr-igis.github.io/caladaptr-res/notebooks/chill.nb.html' target='_blank' rel='noopener'>R Notebook</a>.</li>
+                  <li>If the calculator unexpectedly disconnects while processing, the most likely reason is an out-of-memory error on the server. Refresh the page, reduce the number of GCMs or years, and try again. Or you can run the app locally from RStudio (recommended).</li>
+                  <li>Questions or suggestions? Please email for <a href='mailto:caladaptr@gmail.com?subject=Chill Portions Shiny App'>feedback and support</a>.</li>
+                  </ul>
+                  </details>")
       )
     ),
     
@@ -323,12 +344,13 @@ ui <- function(request) {
 
 server <- function(input, output, session) {
   
-  ## Create a reactiveVal object which is where we'll 
-  ## store  the coordinates when someone clicks the map or enters coordinates
-  ## into the text box
+  ## Create a reactiveVal object which is where we'll store  the coordinates 
+  ## when someone clicks the map *or* enters coordinates into the text box
   pt_coords <- reactiveVal()
   
-  ## Create reactiveVal objects for the API requests
+  ## Create reactiveVal objects to store the API requests.
+  ## The data fetching reactiveVal objects will update when these
+  ## API requests are modified
   pt_prj_cap <- reactiveVal()
   pt_base_cap <- reactiveVal()
 
@@ -405,7 +427,7 @@ server <- function(input, output, session) {
   })
   
   ## Show the manually typed in coordinates in the leaflet map
-  ## This is run when the action button is clicked.
+  ## This is run when the 'Show on Map' action button is clicked.
   observeEvent(input$cmd_showonmap, {
     
     ## Parse out the coordinates
@@ -432,14 +454,14 @@ server <- function(input, output, session) {
           flyTo(pt_coords()[1], pt_coords()[2], zoom = input$mymap_zoom)
         
       } else {
-        #cat("Coordinates have not changed. Nothing to do. \n")
+        #cat("Coordinates have not changed since the last time this button was clicked. Nothing to do. \n")
       }
 
     }
     
   })
   
-  ## Render the error messages for short time periods - historic period
+  ## Render an error messages for time periods that are too short - historic period
   output$htmlout_basetime_msg <- renderUI({
     req(input$base_year)
     if (diff(input$base_year) < 10) {
@@ -449,7 +471,7 @@ server <- function(input, output, session) {
     }
   })
   
-  ## Render the error messages for short time periods - projected future
+  ## Render an error messages for time periods that are too short - projected future
   output$htmlout_prjtime_msg <- renderUI({
     req(input$prj_year)
     if (diff(input$prj_year) < 10) {
@@ -468,6 +490,8 @@ server <- function(input, output, session) {
   
   ## Fetch data and start the analysis
   observeEvent(input$cmd_fetch, {
+
+    ## report_memory("Memory usage as we start a new fetch")
 
     ## First thing is to check whether pt_coords() is up to date.
     ## If someone manually entered coordinates but did not click the
@@ -526,7 +550,7 @@ server <- function(input, output, session) {
       ## The following works even if pt_prj_cap() is NULL (not yet initialized)
       
       if (!identical(cur_prj_cap, pt_prj_cap())) {
-        pt_prj_cap(cur_prj_cap)  ## (this will trigger pt_prj_hourly_chill_tbl)
+        pt_prj_cap(cur_prj_cap)  ## (this will trigger pt_prj_hourly_chill_tbl to update)
       }
 
       ## Create an API request object for baseline climate
@@ -553,6 +577,8 @@ server <- function(input, output, session) {
   ## It will *not* run however when the app first opens (because pt_prj_cap() will be NULL)
   pt_prj_hourly_chill_tbl <- eventReactive(pt_prj_cap(), {
     
+    ## report_memory("Memory usage as we're about to update pt_prj_hourly_chill_tbl")
+    
     ## Create a progress object that we can pass to ca_getvals_tbl()
     ## Make sure it closes when we exit this reactive, even if there's an error
     ## Create the message
@@ -571,7 +597,7 @@ server <- function(input, output, session) {
       mutate(Year = as.integer(substr(dt, 1, 4)), 
              Month = as.integer(substr(dt, 6, 7)),
              Day = as.integer(substr(dt, 9, 10)),
-             temp_c = set_units(val, degC)) %>% 
+             temp_c = as.numeric(set_units(val, degC))) %>% 
       mutate(gs = case_when(Month < which(input$chill_month == month.abb) ~ Year,
                             Month >= which(input$chill_month == month.abb) ~ as.integer(Year + 1))) %>% 
       filter(!is.na(gs)) %>% 
@@ -583,13 +609,11 @@ server <- function(input, output, session) {
     rm(pt_prj_dtemp_tbl)
     
     ## Interpolate Hourly Temperatures in 'long' format
-    ## This uses 'make_hourly_temps_long', a modified version of chillr::make_hourly_temps
+    ## This uses 'ca_make_hourly_temps', a modified version of chillr::make_hourly_temps
     progress$set(message = "Processing Projected Data:", detail = "Interpolating hourly temps")
-    pt_prj_hrtmp_long <- make_hourly_temps_long(latitude = pt_coords()[2],
-                                            year_file = pt_prj_ymd_gs_wide_tbl,
-                                            keep_sunrise_sunset = FALSE) %>% 
+    pt_prj_hrtmp_long <- pt_prj_ymd_gs_wide_tbl %>% 
+      ca_make_hourly_temps(latitude = pt_coords()[2]) %>% 
       mutate(date_hour = lubridate::make_datetime(Year, Month, Day, Hour, tz = "America/Los_Angeles")) %>% 
-      rename(temp_c = Temp) %>% 
       arrange(date_hour)
 
     ## recover some memory
@@ -600,15 +624,18 @@ server <- function(input, output, session) {
     
     ## Return a tibble with chill portions
     pt_prj_hrtmp_long %>% 
-      mutate(temp_c = as.numeric(temp_c)) %>% 
       group_by(gs, gcm, scenario) %>% 
-      mutate(accum_chill_prtn = chillR::Dynamic_Model(temp_c))
-
+      mutate(accum_chill_prtn = Dynamic_Model(Temp))
+    
+    ## report_memory("Memory when we're done creating chill portions by hour (projected)")
+    
   }, ignoreNULL = TRUE)
 
   ## The following will update whenever pt_base_cap is updated
   ## (which is turn is updated when the plot button is clicked)
   pt_base_hourly_chill_tbl <- eventReactive(pt_base_cap(), {
+    
+    ## report_memory("Memory usage as we're about to update pt_base_hourly_chill_tbl")
     
     ## Create a progress object that we can pass to ca_getvals_tbl()
     ## Make sure it closes when we exit this reactive, even if there's an error
@@ -626,7 +653,7 @@ server <- function(input, output, session) {
       mutate(Year = as.integer(substr(dt, 1, 4)), 
              Month = as.integer(substr(dt, 6, 7)),
              Day = as.integer(substr(dt, 9, 10)),
-             temp_c = set_units(val, degC)) %>% 
+             temp_c = as.numeric(set_units(val, degC))) %>% 
       mutate(gs = case_when(Month < which(input$chill_month == month.abb) ~ Year,
                             Month >= which(input$chill_month == month.abb) ~ as.integer(Year + 1))) %>% 
       filter(!is.na(gs)) %>% 
@@ -637,15 +664,16 @@ server <- function(input, output, session) {
     ## recover some memory
     rm(pt_base_dtemp_tbl)
     
+    ## report_memory("Memory usage right before we call ca_make_hourly_temps for baseline")
+    
     ## Compute hourly temperatures
     progress$set(message = "Processing Historic Data:", detail = "Interpolating hourly temps")
-    pt_base_hrtmp_long <- make_hourly_temps_long(latitude = pt_coords()[2],
-                                            year_file = pt_base_ymd_gs_wide_tbl,
-                                            keep_sunrise_sunset = FALSE) %>% 
+    
+    pt_base_hrtmp_long <- pt_base_ymd_gs_wide_tbl %>% 
+      ca_make_hourly_temps(latitude = pt_coords()[2]) %>% 
       mutate(date_hour = lubridate::make_datetime(Year, Month, Day, Hour, tz = "America/Los_Angeles")) %>% 
-      rename(temp_c = Temp) %>% 
       arrange(date_hour)
-
+    
     ## Recover some memory
     rm(pt_base_ymd_gs_wide_tbl)
     
@@ -654,10 +682,11 @@ server <- function(input, output, session) {
     
     ## Return the tibble with hourly chill portions column
     pt_base_hrtmp_long %>% 
-      mutate(temp_c = as.numeric(temp_c)) %>% 
       group_by(gs, gcm, scenario) %>% 
-      mutate(accum_chill_prtn = chillR::Dynamic_Model(temp_c))
-
+      mutate(accum_chill_prtn = Dynamic_Model(Temp))
+    
+    ## report_memory("Memory usage when we're done creating pt_base_hourly_chill_tbl")
+    
   }, ignoreNULL = TRUE)
 
   ## Output status text (for testing)
@@ -819,6 +848,8 @@ server <- function(input, output, session) {
   output$hist_eos_chill_base <- renderPlot({
     req(!is.null(base_eos_chill_tbl()))
     
+    ## report_memory("Memory usage right before rendering the histogram for baseline")
+    
     # eos_chill_base_tbl <- base_eos_chill_tbl() %>% 
     #   filter(scenario == "historical")
     
@@ -848,6 +879,7 @@ server <- function(input, output, session) {
   ## Output the RCP45 histogram
   output$hist_eos_chill_rcp45 <- renderPlot({
     req(prj_eos_chill_tbl())
+    ## report_memory("Memory usage right before rendering the histogram for rcp45")
     eos_chill_45_tbl <- prj_eos_chill_tbl() %>% 
       filter(scenario == "rcp45")
     if (nrow(eos_chill_45_tbl) == 0) {
@@ -876,6 +908,7 @@ server <- function(input, output, session) {
   ## Output the RCP85 histogram
   output$hist_eos_chill_rcp85 <- renderPlot({
     req(!is.null(prj_eos_chill_tbl()))
+    ## report_memory("Memory usage right before rendering the histogram for rcp85")
     eos_chill_85_tbl <- prj_eos_chill_tbl() %>% 
       filter(scenario == "rcp85")
     if (nrow(eos_chill_85_tbl) == 0) {
@@ -904,16 +937,10 @@ server <- function(input, output, session) {
   ## Render the chill portion time series for the historical period
   output$plot_chillts_hist <- renderPlot({
     req(pt_base_hourly_chill_tbl())
+    ## report_memory("Memory usage right before rendering time series plot for historical")
+    
     ## Convert the month to an integer
     chill_month_int <- which(month.abb == isolate(input$chill_month))
-    
-    ## Create a tibble containing accumulated seasonal chill portions by day
-    # base_daily_chill_tbl <- pt_base_hourly_chill_tbl() %>%
-    #   filter(Hour == 0) %>% 
-    #   mutate(year_plot = if_else(Month >= chill_month_int, 1970, 1971)) %>%
-    #   mutate(date_plot = lubridate::make_date(year_plot, Month, Day),
-    #          gs_gcm = paste(gs, gcm, sep = "_")) %>%
-    #   select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn)
 
     ## Generate the plot
     ggplot(data = pt_base_hourly_chill_tbl() %>%
@@ -924,7 +951,7 @@ server <- function(input, output, session) {
              select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn),
            aes(x = date_plot, y = accum_chill_prtn)) +
       geom_line(aes(color=gs_gcm), show.legend = FALSE) +
-      geom_hline(color = "black", aes(yintercept = isolate(as.numeric(input$req_chill))), size = 1) +
+      geom_hline(color = "black", aes(yintercept = as.numeric(input$req_chill)), size = 1) +
       scale_x_date(date_breaks = "1 month", date_labels = "%b") +
       labs(title = "Historical: Chill Portion Accumulation",
            subtitle = paste0(isolate(input$base_year[1]), " - ", isolate(input$base_year[2])), 
@@ -943,7 +970,7 @@ server <- function(input, output, session) {
   ## Render the chill portion time series for RCP45
   output$plot_chillts_rcp45 <- renderPlot({
     req(pt_prj_hourly_chill_tbl())
-    
+    ## report_memory("Memory usage right before rendering time series plot for rcp45")
     ## Convert the month to an integer
     chill_month_int <- which(month.abb == isolate(input$chill_month))
     
@@ -964,7 +991,7 @@ server <- function(input, output, session) {
              select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn),
            aes(x = date_plot, y = accum_chill_prtn)) +
       geom_line(aes(color=gs_gcm), show.legend = FALSE) +
-      geom_hline(color = "black", aes(yintercept = isolate(as.numeric(input$req_chill))), size = 1) +
+      geom_hline(color = "black", aes(yintercept = as.numeric(input$req_chill)), size = 1) +
       scale_x_date(date_breaks = "1 month", date_labels = "%b") +
       labs(title = "RCP 4.5: Chill Portion Accumulation",
            subtitle = paste0(isolate(input$prj_year[1]), " - ", isolate(input$prj_year[2])), 
@@ -982,6 +1009,7 @@ server <- function(input, output, session) {
   ## Render the chill portion time series for RCP85
   output$plot_chillts_rcp85 <- renderPlot({
     req(pt_prj_hourly_chill_tbl())
+    ## report_memory("Memory usage right before rendering time series plot for rcp85")
     
     ## Convert the month to an integer
     chill_month_int <- which(month.abb == isolate(input$chill_month))
@@ -1003,7 +1031,7 @@ server <- function(input, output, session) {
              select(scenario, gs, gcm, gs_gcm, date_plot, accum_chill_prtn),
            aes(x = date_plot, y = accum_chill_prtn)) +
       geom_line(aes(color=gs_gcm), show.legend = FALSE) +
-      geom_hline(color = "black", aes(yintercept = isolate(as.numeric(input$req_chill))), size = 1) +
+      geom_hline(color = "black", aes(yintercept = as.numeric(input$req_chill)), size = 1) +
       scale_x_date(date_breaks = "1 month", date_labels = "%b") +
       labs(title = "RCP 8.5: Chill Portion Accumulation",
            subtitle = paste0(isolate(input$prj_year[1]), " - ", isolate(input$prj_year[2])), 
