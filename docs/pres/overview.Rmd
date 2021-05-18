@@ -15,13 +15,15 @@ output:
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(caladaptr)
+library(DiagrammeR)  ## has a conflict with leaflet, must go high up in the pecking order
 library(knitr)
 library(kableExtra)
 library(magrittr)
 library(dplyr)
 library(tidyr)
 library(sf)
-library(lubridate)
+library(leaflet)
 ```
 
 ```{css echo = FALSE}
@@ -122,7 +124,15 @@ Projected Climate Data:
 
 <div style="clear:both;"></div>
 
-![](images/loca_grid_extent_600x646x256.png)
+<!---    ![](images/loca_grid_extent_600x646x256.png)  --->
+
+Extent of LOCA downscaled climate data layers:
+
+```{r data_area, echo = FALSE, cache = TRUE, eval = TRUE}
+loca_area_sf <- st_read(system.file("extdata", "loca_area.geojson", package = "caladaptr"), quiet = TRUE)
+leaflet(loca_area_sf) %>% addTiles() %>% addPolygons()
+```
+
 
 \
 
@@ -184,7 +194,6 @@ More info:
 
 - `caladaptr` is an **API client** package  
 - main job is to provide low-level functions for **querying** and **importing** Cal-Adapt data via the API  
-- intended audience is **experienced R users**  
 - uses modern R programming standards:  
 
 <div class = "indented1">
@@ -196,20 +205,34 @@ More info:
 
 </div>
 
-## Functions 
+\
+
+## Main Uses 
 
 <div class = "indented2 li-single">
 - Retrieve values from *any* Cal-Adapt raster series  
-- Query with user-provided points, lines, and polygons  
-- Query built-in preset areas-of-interest  
+- Query with **user-provided** points, lines, and polygons  
+- Query built-in **preset** areas-of-interest  
 - Download climate variables as **data frames** (tibbles) or **rasters** (stars)
+</div>
+
+\
+
+## Prerequisites
+
+The user is expected to know:
+
+<div class = "indented2 li-single">
+- how to **work with data** in R  
+- what **data** you're looking for   
+- how to use climate projections **wisely**  
 </div>
 
 # caladaptR workflow
 
 In general, there are **five** steps to using caladaptR:
 
-```{r echo = FALSE}
+```{r workflow, echo = FALSE, cache = TRUE}
 library(DiagrammeR)
 grViz("digraph flowchart {
   node [fontname = Helvetica, shape = rectangle]
@@ -223,7 +246,7 @@ grViz("digraph flowchart {
   tab1 -> tab2 -> tab3 -> tab4 -> tab5;
   }
 
-  [1]: '1) Determine your location(s) of interest\\nand assemble the required values/objects\\n\\n(e.g., points, preset area-of-interest, own polygon)'
+  [1]: '1) Determine your location(s) of interest,\\nassemble the required spatial objects\\n\\npreset area-of-interest, points, polygon)'
   [2]: '2) Create an API Request object'
   [3]: '3) Feed the API Request into a function that fetches data'
   [4]: '4) Munge the results into the format you require\\n\\n(e.g., filtering, sorting, joining, reshaping,\\nadd calculated columns, etc.)'
@@ -256,7 +279,7 @@ cap1
 
 cap1 %>% ca_preflight()
 
-plot(cap1)
+plot(cap1, locagrid = TRUE)
 ```
 
 4. Fetch data:
@@ -276,38 +299,69 @@ cap1_tbl %>% slice(1:10)
 No problem!
 
 ```{r cap1_db, eval = FALSE}
-cap1_db <- ca_getvals_db(cap1,
-                         db_fn = "c:/data/mydata.sqlite",
-                         db_tbl = "temp_min_max")
+cap1_db <- cap1 %>% 
+  ca_getvals_db(db_fn = "c:/data/mydata.sqlite", db_tbl = "temp_min_max")
 ```
 
-- downloaded values will be saved into SQLite database  
+<div style="margin-left:1em;">
+- downloaded values will be saved into SQLite database as you go  
 - slow connection? No problem - it will chug away on its own   
 - disconnected? No problem - it will pick up where it left off     
-- additional functions help you view contents of the SQLite database, manage indices, etc.
+- additional caladaptR functions help you view contents of the SQLite database, manage indices, etc.  
+- can use standard dplyr style functions thanks to:
 
-![](images/dbplyr_240x277.png)
+<a href="https://dbplyr.tidyverse.org/" target="_blank" rel="noopener"><img src="images/dbplyr_240x277.png" style="height:200px;"/><br/>https://dbplyr.tidyverse.org/</a>
+</div>
 
 # Need Rasters?
 
-No problem! Data can be downloaded as stars.
+No problem!
 
 ```{r cap1_rst, eval = FALSE}
-cap1_tifs <- ca_getrst_stars(cap1,
-                             sidecar_write = TRUE)
+cap1_tifs <- cap1 %>% 
+  ca_getrst_stars(out_dir = "c:/data/tifs")
 ```
 
+<div style="margin-left:1em;">
+- maximum size: county (San Bernardino County)     
 - climate variables are downloaded as TIFs  
-- sidecar file saves the temporal details  
-- read tifs back into R with `ca_read_stars()`   
+- an additional sidecar file saves the temporal details  
+- read TIFs back into R with `ca_read_stars()`   
+
+</div>
+
+\
+
+<a href="https://r-spatial.github.io/stars/" target="_blank" rel="noopener"><img src="images/stars_cube_384x200x256.png"/><br/>https://r-spatial.github.io/stars/</a>
 
 # Shiny Apps
 
-![](images/shiny-hex_87x100.png) &rarr; browser based GUIs
+<div style="display:inline-block; border:none; width:100px; line-height:90px; vertical-align:middle;"><img src="images/shiny-hex_87x100.png" style="display:inline;"/></div>
+<div style="display:inline-block; border:none; vertical-align:middle; line-height:90px;">&rarr; browser based GUIs</div>
 
+See samples:
 
-caladaptr.app
+<div style="margin-left:2em;">
 
+- caladaptR [website](https://ucanr-igis.github.io/caladaptr/)  
+- [caladaptr.apps](https://github.com/ucanr-igis/caladaptr.apps/) package  
+
+<div style="margin:0 2em;">
+```{r apps, eval = FALSE}
+## Install caladaptr.apps and all dependent packages
+remotes::install_github("ucanr-igis/caladaptr.apps")
+library(caladaptr.apps)
+
+## Launch the time series app
+ca_launch("timeseries")
+
+## Launch the projected chill portions app
+ca_launch("chill")
+```
+</div>
+
+- Online: [Projected Chill Portions](https://ucanr-igis.shinyapps.io/chill2/)
+</div>
 
 # Learning More
 
