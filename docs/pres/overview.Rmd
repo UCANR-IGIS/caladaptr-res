@@ -124,15 +124,14 @@ Projected Climate Data:
 
 <div style="clear:both;"></div>
 
-<!---    ![](images/loca_grid_extent_600x646x256.png)  --->
-
 Extent of LOCA downscaled climate data layers:
 
-```{r data_area, echo = FALSE, cache = TRUE, eval = TRUE}
+![](images/loca_grid_extent_600x646x256.png)
+
+```{r data_area, echo = FALSE, cache = TRUE, eval = FALSE}
 loca_area_sf <- st_read(system.file("extdata", "loca_area.geojson", package = "caladaptr"), quiet = TRUE)
 leaflet(loca_area_sf) %>% addTiles() %>% addPolygons()
 ```
-
 
 \
 
