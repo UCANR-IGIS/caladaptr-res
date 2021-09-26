@@ -12,30 +12,39 @@
 
 ## Define the required packages (these are all on CRAN)
 
-req_pkg <- c("backports", "conflicted","crayon", "curl", "DBI",
-             "dbplyr", "digest", "dplyr", "fastmatch", "ggplot2", "httr", "geojsonsf", "lifecycle", "lubridate",
-             "magrittr", "purrr", "remotes", "rmarkdown", "RSQLite", "scales", "sf", "shiny", "stars", 
-             "tibble", "tidyr", "tmap", "units", "usethis", "zip")
+pkg_req <- c("backports", "conflicted","crayon", "curl", "DBI",
+             "dbplyr", "digest", "dplyr", "fastmatch", "ggplot2", "httr", "geojsonsf", "leaflet",
+             "lifecycle", "lubridate", "magrittr", "purrr", "remotes", "rmarkdown", "RSQLite", 
+             "scales", "sf", "shiny", "stars", "tibble", "tidyr", "tmap", "units", "usethis", "zip")
 
-## Install a fresh version of *all* required packages (recommended)
+## OPTION 1. Install a fresh version of *all* required packages (recommended)
 ##  - if it asks you to restart R more than once, select 'no'.
 ##  - if it asks whether you want to install from source, select 'no'
 
-install.packages(req_pkg, dependencies = TRUE)
 
-## OR uncomment the next line to just install missing packages:
-# install.packages(setdiff(req_pkg, rownames(installed.packages())), dependencies = TRUE)
+install.packages(pkg_req, dependencies = TRUE)
 
-## Install caladaptr
-## (If it asks you whether you want to update a zillion packages, you can generally skip these
-## unless its one of the above.)
+## OPTION 2. Install only missing packages
+## Uncomment and run the two next lines to just install missing packages:
+# (pkg_missing <- setdiff(pkg_req, rownames(installed.packages())))
+# install.packages(pkg_missing, dependencies = TRUE)
+
+## INSTALL caladaptr
+##   - If it asks you whether you want to update a zillion packages, you can generally skip these
+##   - Windows users *must* have RTools installed to install packages on GitHub
 
 remotes::install_github("ucanr-igis/caladaptr")
+
+## Install caladaptr.apps
+
+remotes::install_github("ucanr-igis/caladaptr.apps")
 
 ## Load caladaptr
 
 library(caladaptr)
 
+## DID IT WORK?
+##
 ## Try to fetch some climate data
 
 library(ggplot2); library(units); library(dplyr)
@@ -45,7 +54,7 @@ ca_example_apireq(1) %>%
   mutate(temp_f = set_units(val, degF)) %>%
   ggplot(aes(x = as.Date(dt), y = as.numeric(temp_f))) +
   geom_line(aes(color=gcm)) +
-  labs(title = "Annual Max Temp for Sacramento", x = "year", y = "temp (F)")
+  labs(title = "Daily Max Temp Averaged by Year, Sacramento, RCP4.5", x = "year", y = "temp (F)")
 
 ## See a plot? Done!
 

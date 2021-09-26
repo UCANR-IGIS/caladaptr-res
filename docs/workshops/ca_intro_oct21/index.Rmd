@@ -1,0 +1,54 @@
+---
+title: "<img src='./images/caladaptr-hexlogo_173x200.gif' style='width:130px; height:150px; float:right;'/><span style='color:#777; font-size:60%; font-style:italic;'>Workshop:</span><br/>Working with Cal-Adapt Climate Data in R"
+date: "<p>October 1, 2021</p><p>10:00a - 12:00p PDT</p>"
+output:
+  html_document:
+    self_contained: no
+    lib_dir: lib
+---
+
+```{css echo = FALSE}
+h1 {
+  font-size: 130%;
+  font-weight:bold;
+}
+p {
+  font-size: 120%;
+}
+```
+
+```{r include=FALSE}
+#library(htmltools)
+```
+
+\
+
+# [Welcome!](welcome.html)
+
+# Introduction and Overview
+
+- Slides
+
+# Creating an API Request and Fetching Values
+
+- presentation
+
+- exercise
+
+# 
+
+<hr/>
+
+<div>
+
+<img src="images/cal-adapt-logo.svg" style="height:60px; width:204px; float:right;">
+
+<a href="http://igis.ucanr.edu/" target="_blank"><img src="./images/igis-logo_550x58x256.png" style="width:550px; height:58px;"/></a>
+
+</div>
+<div style="clear:both;"></div>
+
+
+
+
+
