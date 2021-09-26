@@ -11,7 +11,7 @@
 
 
 
-<title>Welcome</title>
+<title>Welcome to Working with Cal-Adapt Data in R!</title>
 
 <script src="lib/header-attrs-2.10/header-attrs.js"></script>
 <script src="lib/jquery-1.11.3/jquery.min.js"></script>
@@ -163,7 +163,7 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Welcome</h1>
+<h1 class="title toc-ignore">Welcome to Working with Cal-Adapt Data in R!</h1>
 
 </div>
 
@@ -175,7 +175,6 @@ h1 {
   margin-top:2em;
 }
 h1.title {
-  display:none;
   font-size: 18px;
   font-weight: bold;
   color: black;
@@ -200,11 +199,7 @@ p {
 </style>
 <p><br />
 </p>
-<div id="welcome-to-working-with-cal-adapt-data-in-r" class="section level2">
-<h2>Welcome to Working with Cal-Adapt Data in R</h2>
-<p>We look forward to seeing you at the workshop!</p>
-<p>Please read the information below as it contains some important logistics info as well as what you need to prepare in order to complete the hands-on exercises.</p>
-</div>
+<p>We look forward to seeing you at the workshop. Please read the information below as it contains some important logistics info as well as what you need to prepare in order to complete the hands-on exercises.</p>
 <div id="schedule" class="section level1">
 <h1>Schedule</h1>
 <p>The workshop will be held on:</p>
@@ -220,14 +215,14 @@ p {
 </div>
 <div id="workshop-format" class="section level1">
 <h1>Workshop Format</h1>
-<p>The workshop will include a mix of presentation and short hands-on exercises using R Notebooks. The R Notebooks will include a combination of working code that you just have to run, and a few pieces that require you to write your own code. Answers will be provided. Doing the exercises is encouraged but not required.</p>
-<p>The material will be sequenced from general to specific, and people are welcome to drop-off whenever they’d like. The final 30 minutes will be a semi-structured exercise.</p>
+<p>The workshop will include a mix of presentations and short hands-on exercises using R Notebooks. The R Notebooks will include a combination of working code that you just have to run, and a few pieces that require you to write your own code. Answers will be provided. Doing the exercises is encouraged but not required.</p>
+<p>The material will be sequenced from a general overview to writing code. People are welcome to drop-off whenever they’d like. The final 30 minutes will be a semi-structured exercise.</p>
 </div>
 <div id="prerequisites" class="section level1">
 <h1>Prerequisites</h1>
 <p>This workshop presumes some very basic familiarity with R and RStudio. Most of the code examples will be ready-to-run so don’t fret if you’re a bit rusty. If you’ve never used R before, you’re welcome to watch but we won’t have time to trouble-shoot basic setup or syntax problems.</p>
 <p>Anyone who wants to participate in the hands-on exercises should have R setup <strong>before the workshop</strong>. You may either create a free RStudio Cloud account (recommended), or install all the required packages on RStudio Desktop. See below for details. Both options are easy, but will not be able to provide assistance for computer setup during the workshop.</p>
-<p>Familiarity with climate data is helpful but not required. The workshop will include a high-level overview of the datasets on Cal-Adapt, but not in any depth. If you’re unfamiliar with climate data and terms like <em>GCM</em>, <em>RCP</em>, etc., consider watching the excellent webinar <a href="https://youtu.be/DGBzmyejws0" target="_blank" rel="noopener">Introduction to Climate Data</a> from the Cal-Adapt team.</p>
+<p>Familiarity with climate data is helpful but not required. The workshop will include a high-level overview of the datasets on Cal-Adapt, but not in any depth. If you’re unfamiliar with climate data and terms like <em>GCM</em>, <em>RCP</em>, etc., consider watching the excellent webinar <a href="https://youtu.be/DGBzmyejws0" target="_blank" rel="noopener"><em>An Introduction to Climate Data</em></a> from the Cal-Adapt team.</p>
 </div>
 <div id="setting-up-rstudio" class="section level1">
 <h1>Setting up RStudio</h1>
@@ -235,13 +230,13 @@ p {
 <div class="indented1">
 <div id="rstudio-cloud" class="section level2">
 <h2>RStudio Cloud</h2>
-<p>The easiest way to do the workshop exercises is using <strong>RStudio Cloud</strong>. This is recommended for beginners and anyone who hasn’t touched R in a while because you don’t have to update R and RStudio, install packages, download data, or any other setups. All the workshop materials will be waiting for you in a VM prepared by the instructor. If you never used RStudio Cloud before, it’s well-developed and looks and feels nearly identical to RStudio desktop.</p>
-<p>You can create a free account on <a href="https://rstudio.cloud/" target="_blank" rel="noopener">RStudio Cloud</a> using an email address or your Google or GitHub credentials. The free plan offers 15 hours of usage per month, which is more than enough for the workshop. Once your account is setup, you’re done for now. The day before the workshop, the instructor will send out a link for the workshop VM, which you can click on to make a copy of it in your own RStudio Cloud workspace. All the required packages, R notebooks, and data will be ready to go.</p>
+<p>The easiest way to do the workshop exercises is using <strong>RStudio Cloud</strong>. This is recommended for beginners and anyone who hasn’t touched R in a while because you don’t have to update R and RStudio, install packages, download data, or any other set up. All the workshop materials will be waiting for you in a VM prepared by the instructor. If you never used RStudio Cloud before, it’s well-developed and looks and feels nearly identical to RStudio Desktop.</p>
+<p>You can create a free account on <a href="https://rstudio.cloud/" target="_blank" rel="noopener"><strong>RStudio Cloud</strong></a> using an email address or your Google or GitHub credentials. The free plan offers 25 hours of usage per month, which is more than enough for the workshop. Once your account is setup, you’re done for now. The day before the workshop, the instructor will send out a link for the workshop VM, which you can click on to make a copy of it in your own RStudio Cloud workspace. All the required packages, R notebooks, and data will be ready to go.</p>
 </div>
 <div id="rstudio-desktop" class="section level2">
 <h2>RStudio Desktop</h2>
 <p>If its been more than 6 months since you updated <a href="https://cran.r-project.org/" target="_blank" rel="noopener"><strong>R</strong></a> or <a href="https://rstudio.com/products/rstudio/download/" target="_blank" rel="noopener"><strong>RStudio Desktop</strong></a>, please update them both. You should be using R version 3.6 or later. Windows users also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank" rel="noopener">RTools</a> in order to install packages from GitHub (which includes caladaptr).</p>
-<p>After you’ve updated R and RStudio, please run <a href="https://raw.githubusercontent.com/ucanr-igis/caladaptr-res/master/scripts/caladaptr_setup.r" target="_blank" rel="noopener">this script</a> to install all the needed packages including <code>caladaptr</code> and <code>caladaptr.apps</code>. You can copy-paste the commands into RStudio and run the commands. This could take 15 minutes or longer so don’t wait until the day of the workshop to start. The setup script also fetches some data using the Cal-Adapt API, so if you see a plot at the end it means its working.</p>
+<p>After you’ve updated R and RStudio, please run <a href="https://github.com/ucanr-igis/caladaptr-res/blob/main/scripts/caladaptr_setup.r" target="_blank" rel="noopener">this script</a> to install all the needed packages including <code>caladaptr</code> and <code>caladaptr.apps</code>. You can copy-paste the commands into RStudio and run the commands. This could take 15 minutes or longer so don’t wait until the day of the workshop to start. The setup script also fetches some data using the Cal-Adapt API, so if you see a plot at the end it means its working.</p>
 <p>If you get an error message installing any of the packages, please contact the instructor.</p>
 </div>
 </div>

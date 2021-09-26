@@ -1,5 +1,5 @@
 ---
-title: "Welcome"
+title: "Welcome to Working with Cal-Adapt Data in R!"
 output: 
   html_document: 
     self_contained: no
@@ -13,7 +13,6 @@ h1 {
   margin-top:2em;
 }
 h1.title {
-  display:none;
   font-size: 18px;
   font-weight: bold;
   color: black;
@@ -38,8 +37,6 @@ p {
 ```
 
 \
-
-## Welcome to Working with Cal-Adapt Data in R!
 
 We look forward to seeing you at the workshop. Please read the information below as it contains some important logistics info as well as what you need to prepare in order to complete the hands-on exercises.
 
@@ -72,7 +69,7 @@ This workshop presumes some very basic familiarity with R and RStudio. Most of t
 
 Anyone who wants to participate in the hands-on exercises should have R setup **before the workshop**. You may either create a free RStudio Cloud account (recommended), or install all the required packages on  RStudio Desktop. See below for details. Both options are easy, but will not be able to provide assistance for computer setup during the workshop.
 
-Familiarity with climate data is helpful but not required. The workshop will include a high-level overview of the datasets on Cal-Adapt, but not in any depth. If you're unfamiliar with climate data and terms like *GCM*, *RCP*, etc., consider watching the excellent webinar [Introduction to Climate Data](https://youtu.be/DGBzmyejws0){target="_blank" rel="noopener"} from the Cal-Adapt team.
+Familiarity with climate data is helpful but not required. The workshop will include a high-level overview of the datasets on Cal-Adapt, but not in any depth. If you're unfamiliar with climate data and terms like *GCM*, *RCP*, etc., consider watching the excellent webinar [*An Introduction to Climate Data*](https://youtu.be/DGBzmyejws0){target="_blank" rel="noopener"} from the Cal-Adapt team.
 
 # Setting up RStudio
 
@@ -82,15 +79,15 @@ If you would like to do the hands-on exercises, you have two options. You can ru
 
 ## RStudio Cloud
 
-The easiest way to do the workshop exercises is using **RStudio Cloud**. This is recommended for beginners and anyone who hasn't touched R in a while because you don't have to update R and RStudio, install packages, download data, or any other setups. All the workshop materials will be waiting for you in a VM prepared by the instructor. If you never used RStudio Cloud before, it's well-developed and looks and feels nearly identical to RStudio desktop.
+The easiest way to do the workshop exercises is using **RStudio Cloud**. This is recommended for beginners and anyone who hasn't touched R in a while because you don't have to update R and RStudio, install packages, download data, or any other set up. All the workshop materials will be waiting for you in a VM prepared by the instructor. If you never used RStudio Cloud before, it's well-developed and looks and feels nearly identical to RStudio Desktop.
 
-You can create a free account on [RStudio Cloud](https://rstudio.cloud/){target="_blank" rel="noopener"} using an email address or your Google or GitHub credentials. The free plan offers 15 hours of usage per month, which is more than enough for the workshop. Once your account is setup, you're done for now. The day before the workshop, the instructor will send out a link for the workshop VM, which you can click on to make a copy of it in your own RStudio Cloud workspace. All the required packages, R notebooks, and data will be ready to go.
+You can create a free account on [**RStudio Cloud**](https://rstudio.cloud/){target="_blank" rel="noopener"} using an email address or your Google or GitHub credentials. The free plan offers 25 hours of usage per month, which is more than enough for the workshop. Once your account is setup, you're done for now. The day before the workshop, the instructor will send out a link for the workshop VM, which you can click on to make a copy of it in your own RStudio Cloud workspace. All the required packages, R notebooks, and data will be ready to go.
 
 ## RStudio Desktop
 
 If its been more than 6 months since you updated [**R**](https://cran.r-project.org/){target="_blank" rel="noopener"} or [**RStudio Desktop**](https://rstudio.com/products/rstudio/download/){target="_blank" rel="noopener"}, please update them both. You should be using R version 3.6 or later. Windows users also need to install [RTools](https://cran.r-project.org/bin/windows/Rtools/){target="_blank" rel="noopener"} in order to install packages from GitHub (which includes caladaptr).
 
-After you've updated R and RStudio, please run [this script](https://raw.githubusercontent.com/ucanr-igis/caladaptr-res/master/scripts/caladaptr_setup.r){target="_blank" rel="noopener"} to install all the needed packages including `caladaptr` and `caladaptr.apps`. You can copy-paste the commands into RStudio and run the commands. This could take 15 minutes or longer so don't wait until the day of the workshop to start. The setup script also fetches some data using the Cal-Adapt API, so if you see a plot at the end it means its working.
+After you've updated R and RStudio, please run [this script](https://github.com/ucanr-igis/caladaptr-res/blob/main/scripts/caladaptr_setup.R){target="_blank" rel="noopener"} to install all the needed packages including `caladaptr` and `caladaptr.apps`. You can copy-paste the commands into RStudio and run the commands. This could take 15 minutes or longer so don't wait until the day of the workshop to start. The setup script also fetches some data using the Cal-Adapt API, so if you see a plot at the end it means its working.
 
 If you get an error message installing any of the packages, please contact the instructor. 
 
