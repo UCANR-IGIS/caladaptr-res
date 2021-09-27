@@ -1,4 +1,4 @@
-######################################################################
+###################################################################################
 ## caladaptR Workshop Setup
 ##
 ## Please run the following lines of code *before* the workshop starts
@@ -6,9 +6,8 @@
 ##
 ## If you have any difficulties please email the instructor.
 ##
-## For more info about caladaptr, visit:
-## https://ucanr-igis.github.io/caladaptr/
-######################################################################
+## For more info about caladaptr, visit: https://ucanr-igis.github.io/caladaptr/
+###################################################################################
 
 ## Define the required packages (these are all on CRAN)
 
@@ -20,7 +19,6 @@ pkg_req <- c("backports", "conflicted","crayon", "curl", "DBI",
 ## OPTION 1. Install a fresh version of *all* required packages (recommended)
 ##  - if it asks you to restart R more than once, select 'no'.
 ##  - if it asks whether you want to install from source, select 'no'
-
 
 install.packages(pkg_req, dependencies = TRUE)
 

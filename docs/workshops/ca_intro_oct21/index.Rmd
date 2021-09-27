@@ -23,19 +23,45 @@ p {
 
 \
 
-# [Welcome!](welcome.html)
+# I\.Introduction
 
-# Introduction and Overview
+- [Welcome Letter](welcome.html)
+
+- [Computer Setup](welcome.html)
 
 - Slides
 
-# Creating an API Request and Fetching Values
+# II\. Creating an API Request and Fetching Values
 
-- presentation
+- Slides
 
-- exercise
+- Notebook
 
-# 
+# III\. Custom Geoms
+
+- Slides
+
+- Notebook
+
+# IV\. Large Queries
+
+- Slides
+
+- Notebook
+
+# V\. Downloading Rasters
+
+- Slides
+
+- Notebook
+
+# VI\. Shiny
+
+- Slides
+
+- Notebook
+
+\
 
 <hr/>
 
