@@ -1,0 +1,23 @@
+h1 {
+  font-weight: bold;
+  font-size: 24px;
+  color: darkolivegreen;
+  border-top: 3px solid dimgrey;
+  margin-top: 1em;
+  padding-top: 0.5em;
+}
+h1.title {
+  color: black;
+  border: none;
+}
+h2 {
+  font-weight: bold;
+  font-size: 22px;
+  color: dimgray;
+}
+
+h3 {
+  font-weight: bold;
+  font-size: 18px;
+  color: black;
+}
