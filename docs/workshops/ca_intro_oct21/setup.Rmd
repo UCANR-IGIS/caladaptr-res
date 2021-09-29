@@ -55,7 +55,7 @@ You can create a free account on [RStudio Cloud](https://rstudio.cloud/){target=
 
 ## RStudio Desktop
 
-You can also run RStudio on your laptop. If its been more than 6 months since you updated [R](https://cran.r-project.org/){target="_blank" rel="noopener"} or [RStudio Desktop](https://rstudio.com/products/rstudio/download/){target="_blank" rel="noopener"}, please update them both. You should be using R version 3.6 or later. 
+You can also run RStudio on your laptop. If its been more than 3 months since you updated [R](https://cran.r-project.org/){target="_blank" rel="noopener"} or [RStudio Desktop](https://rstudio.com/products/rstudio/download/){target="_blank" rel="noopener"}, please update them both. You should be using R version 3.6 or later. 
 
 Windows users also need to install [RTools](https://cran.r-project.org/bin/windows/Rtools/){target="_blank" rel="noopener"} in order to install packages from GitHub (which includes caladaptR). As far as we know, all of the packages we'll be using (including caladaptR) should work fine on Windows, MacOS, and Linux.
 
