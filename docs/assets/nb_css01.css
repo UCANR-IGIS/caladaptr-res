@@ -26,3 +26,7 @@ h4 {
   font-size: 16px;
   color: ForestGreen;
 }
+img.centered {
+  display:block; 
+  margin:1em auto;
+}
