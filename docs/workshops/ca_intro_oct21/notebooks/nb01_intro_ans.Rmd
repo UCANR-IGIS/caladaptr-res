@@ -1,0 +1,389 @@
+---
+title: "Getting Started with caladaptR"
+output:
+  html_notebook: 
+    css: https://ucanr-igis.github.io/caladaptr-res/assets/nb_css01.css
+    includes:
+      after_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_footer01.html
+---
+
+# Overview
+
+This Notebook will demonstrate how you can use caladaptR to:
+
+- create a Cal-Adapt API request object for i) a point location, and ii) a county
+- fetch data from the Cal-Adapt server    
+- plot the data  
+
+By the end of the Notebook, you will have a time series plot of projected maximum annual temperature for a point location using the four recommended GCMs for California under RCP 4.5.
+
+![](https://ucanr-igis.github.io/caladaptr-res/images/pt-tasmax-plot_400x268x256.png){class='centered'}
+
+\
+
+# Setup
+
+The first thing we do is to load caladaptR and the other package we're going to need. (If you haven't installed these yet, see this [setup script](https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_oct21/scripts/caladaptr_setup.R)). 
+
+```{r chunk01, message=TRUE, warning=FALSE, results='hold'}
+library(caladaptr)
+library(units)
+library(ggplot2)
+library(dplyr)
+library(sf)
+library(tidyr)
+library(conflicted)
+conflict_prefer("filter", "dplyr", quiet = TRUE)
+conflict_prefer("count", "dplyr", quiet = TRUE)
+conflict_prefer("select", "dplyr", quiet = TRUE)
+```
+
+# Part I. Get data for a point location
+
+## 1\. Create the API Request 
+
+The first step in getting climate variables back is to create a Cal-Adapt API request object. This involves stringing together a series of functions that specify the pieces of the request. 
+
+The following will create an API request for projected temperature data from Scripps:
+
+```{r chunk02}
+pt1_cap <- ca_loc_pt(coords = c(-119.168765, 35.487802)) %>%
+  ca_gcm(gcms[1:4]) %>%                                 
+  ca_scenario(c("rcp45", "rcp85")) %>%
+  ca_period("year") %>%
+  ca_years(start = 2030, end = 2080) %>%
+  ca_cvar(c("tasmin", "tasmax"))
+```
+
+\
+
+**Pro Tip:**
+
+- the order of the constructor functions doesn't matter
+
+- when entering coordinates, they must be i) in decimal degrees, and ii) formatted as *longitude, latitude* (in that order!)
+
+- this example creates an API request for modeled climate data; for other datasets you might use different constructor functions
+
+- you don't have to memorize a bunch of keywords. `caladaptr` has several built-in constants that contain the values you can pass to API construction functions, including `gcms`, `scenarios`, `cvars`, and `periods`.
+
+\
+
+#### Your turn
+
+Enter the following constants to see what they contain `gcms`, `scenarios`, `cvars`, and `periods` [Answer](https://bit.ly/3kRUP5Y).
+
+```{r chunk03}
+gcms
+
+scenarios
+
+cvars
+
+periods
+```
+
+**Pro Tip:**
+
+- not every combination of GCM, scenario, climate variable, and period has a data set
+
+- these constants are useful for constructing API requests for modeled climate data; they may not be needed for other datasets
+
+\
+
+## 2\. Examine an API Request
+
+To see what's in an API request object, type its name at the console:
+
+```{r chunk04}
+pt1_cap
+```
+
+**Pro Tip:**
+
+- you can customize the colors with `ca_settings()`. Let `console_colors` = `"dark"` or `light` depending on your RStudio color background.
+
+```{r chunk05}
+ca_settings(console_colors = "dark")
+pt1_cap
+```
+
+\
+
+You can double-check if your API request is complete by passing it to `ca_preflight()`:
+
+```{r chunk06}
+pt1_cap %>% ca_preflight()
+```
+
+\
+
+To verify the location in an API request, you can plot it:
+
+```{r chunk07}
+plot(pt1_cap)
+```
+
+**Pro Tip:**
+
+- To view the LOCA grid cells, add `locagrid = TRUE` to the plot command.
+
+```{r chunk08}
+plot(pt1_cap, locagrid = TRUE)
+```
+
+
+#### Your Turn:
+
+Where is this point located? [Answer](https://bit.ly/3uqUx96).
+
+Answer: in Shafter (outside Bakersfield), Kern County, CA
+
+\
+
+## 3\. Fetch Data
+
+Now it's time to fetch data by feeding our API request into `ca_getvals_tbl()`. The object returned will be a tibble (data frame):  
+
+```{r chunk09, cache = TRUE}
+pt1_tbl <- pt1_cap %>% ca_getvals_tbl()
+
+head(pt1_tbl)
+```
+
+\
+
+## 4\. Wrangle the Results for Plotting
+
+To produce the desired time series plot, we need to i) pull out just values for RCP 4.5, and ii) convert degrees to &#176;F. For the unit conversion, we can use the handy `set_units` function from the `units` package.
+
+```{r chunk10}
+pt1_rcp45_tbl <- pt1_tbl %>%
+  filter(scenario == "rcp45", cvar == "tasmax") %>%
+  mutate(temp_f = set_units(val, degF))
+
+pt1_rcp45_tbl %>% head()
+```
+
+\
+
+## 5\. Plot the Time Series
+
+Plot these with ggplot:
+
+```{r chunk11, cache = TRUE}
+ggplot(data = pt1_rcp45_tbl, aes(x = as.Date(dt), y = as.numeric(temp_f))) +
+  geom_line(aes(color=gcm)) +
+  labs(title = "Average Maximum Daily Temperature Per Year for RCP4.5", x = "year", y = "temp (F)")
+```
+
+#### Your Turn
+
+Modify the above to create a similar plot for RCP 8.5. [Answer](https://bit.ly/3F4Vity).
+
+```{r chunk12}
+pt1_rcp85_tbl <- pt1_tbl %>%
+  filter(scenario == "rcp85", cvar == "tasmax") %>%
+  mutate(temp_f = set_units(val, degF))
+
+ggplot(data = pt1_rcp85_tbl, aes(x = as.Date(dt), y = as.numeric(temp_f))) +
+  geom_line(aes(color=gcm)) +
+  labs(title = "Average Maximum Daily Temperature Per Year for RCP8.5", x = "year", y = "temp (F)")
+```
+
+# Part II. Retrieve County Data 
+
+In this section, we'll fetch and retrieve average daily minimum temperature by year for a single county, and create a time-series plot showing the difference between RCP85 and RCP45:
+
+![](https://ucanr-igis.github.io/caladaptr-res/images/cnty_tasmin_diff_400x269x256.png){class='centered'}
+
+## Preset Areas-of-Interest
+
+For this exercise, we need to use a **Preset Area-of-Interest**. 
+
+The Cal-Adapt API has a number of 'preset' areas-of-interest (also called boundary layers) that you can use cookie-cutter style when retrieving climate data. The advantage of using an AOI Preset is that you don't need to import a GIS layer to query according to these common features. You just need to know the name or ID number of the feature(s) you're interested in.
+
+The following AOI Presets are available:
+
+```{r chunk13, cache = FALSE}
+aoipreset_types
+```
+
+**Pro Tip:**
+
+ - all of the Preset AOIs can be imported into R as sf objects with `ca_aoipreset_geom()`.
+
+\
+
+## 1\. Find the FIPS code for Kings County
+
+To use an AOI Preset, you need to specify which feature(s) you're interested in by providing the value(s) for one of the id fields. The specific columns available for identifying features vary according to preset. You can view the id columns and their values for an AOI Preset using the built-in `aoipreset_idval` constant. For example the counties layer allows you to specify a county by name, fips code, or id. Remember that everything in R is case-sensitive!
+
+```{r chunk14, cache = TRUE}
+aoipreset_idval$counties
+```
+
+You can find county fips codes on Google - just be sure to use the 6-character version which includes the state. Alternately, you can View the attribute table of the counties preset layer: 
+
+```{r chunk15, message = FALSE}
+# ca_aoipreset_geom("counties") %>% View()
+```
+
+For this example, we'll look at **Kings County** (FIPS = `06031`).
+
+\
+
+## 2\. Create the API Request
+
+Let's create an API request for Kings County. Note below the inclusion of `ca_options()` to specify how we want to aggregate the pixels that fall within the country. This is required whenever you query polygon features.
+
+```{r chunk16, cache = TRUE}
+cnty_cap <- ca_loc_aoipreset(type="counties", idfld = "fips", idval = "06031") %>%
+  ca_gcm(gcms[1:4]) %>%
+  ca_scenario(c("rcp45", "rcp85")) %>%
+  ca_period("year") %>%
+  ca_years(start = 2030, end = 2080) %>%
+  ca_cvar(c("tasmin")) %>%
+  ca_options(spatial_ag = "max")
+
+cnty_cap
+
+cnty_cap %>% ca_preflight()
+```
+
+**Pro Tip:**
+
+- An API request can have more than one location. If using AOI Presets, pass multiple values to `idval`, or omit `idval` completely and all features in the layer will be queried.
+
+\
+
+As before, we can plot the API request to double-check we got the right location: 
+
+```{r chunk17, cache = TRUE}
+plot(cnty_cap, locagrid = TRUE)
+```
+
+\
+
+## 3\. Fetch Data
+
+Fetch data with `ca_getvals_tbl()`:
+
+```{r chunk18, cache = TRUE}
+cnty_tbl <- cnty_cap %>% ca_getvals_tbl() 
+
+cnty_tbl %>% head()
+```
+
+\
+
+## 4\. Wrangle Results for Plotting
+
+To compute the difference between RCP 8.5 and RCP 4.5, we need to split them into separate columns. This is an example of going from a 'long' format to a 'wide' format. Fortunately, the tidyr package has a function called `pivot_wider` that can do this in single command. While we're at it we'll convert the temp to degrees Fahrenheit:
+
+```{r chunk19, cache = TRUE}
+cnty_diff_rcp85_45_tbl <- cnty_tbl %>% 
+  mutate(temp_f = set_units(val, degF)) %>% 
+  select(fips, gcm, scenario, dt, temp_f) %>% 
+  pivot_wider(names_from = scenario, values_from = temp_f)
+
+head(cnty_diff_rcp85_45_tbl)
+```
+
+\
+
+## 5\. Plot 
+
+Now we're ready to make the plot. Since we're mainly interested in the trend, we'll add a smoothing line using `geom_smooth()`:
+
+```{r chunk20, cache = TRUE}
+ggplot(data = cnty_diff_rcp85_45_tbl, aes(x = as.Date(dt), y = as.numeric(rcp85 - rcp45))) +
+  geom_line(aes(color=gcm)) +
+  geom_smooth(method=lm, formula = y ~ x) +
+  labs(title = "Difference between RCP8.5 and RCP4.5 in the Average Daily \nMinimum Temperature for Kings County", x = "year", y = "temp (F)")
+```
+
+This plot shows that as time goes on, the difference between RCP4.5 and RCP8.5 gets bigger and bigger.
+
+\
+
+# Part III. Finding Data
+
+Half the battle of working with climate data is finding the name of the dataset you're interested in.
+
+## Searching the Cal-Adapt Data Catalog
+
+caladaptR comes with a copy of the Cal-Adapt raster series data catalog, which you can access with `ca_catalog_rs()`:
+
+```{r chunk21}
+# ca_catalog_rs() %>% View()
+```
+
+As you can see there are almost 950 datasets!
+
+\
+
+**Pro Tip:**
+
+- you can download a fresh copy of the Cal-Adapt raster series catalog with `ca_catalog_fetch()` 
+
+\
+
+One way you can search for datasets is to use the filter boxes above each column in the RStudio View pane. For example search for layers whose name contains the word 'snow'.
+
+caladaptR also has a search function `ca_catalog_search()`. You can this function to find datasets using a key word or phrase. You can also use this function to see the details for a specific slug, example:
+
+```{r chunk22}
+ca_catalog_search("swe_day_ens32avg_rcp45")
+```
+
+\
+
+#### Your Turn
+
+How many datasets are from gridMET? [Answer](https://bit.ly/3m7zMvA).
+
+```{r chunk23}
+ca_catalog_search("gridmet", quiet = TRUE) %>% length()
+```
+
+
+\
+
+## Specifying Datasets in API Request Objects
+
+Many of the raster series datasets are **LOCA downscaled modeled climate variables** (including all Scripps) and **their derivatives** (i.e., VIC). These data can be specified using the constructor functions: `ca_gcm()` + `ca_scenario()` + `ca_cvar()` + `ca_period()`.
+
+**Livneh data** (observed historical variables based on spatially interpolated measurements) can be specified with `ca_livneh()` + `ca_cvar()` + `ca_period()`.
+
+**Everything else** can be specified by slug, using `ca_slug()`.
+
+\
+
+#### Your Turn
+
+Import the `tmmn_year_avg_gridmet` (slug) dataset for Del Norte, Siskyou, and Modoc counties. What are the units for this dataset? [Answer](https://bit.ly/3F95voG)
+
+```{r chunk24}
+## Get the fips code for Del Norte, Siskyou, and Modoc counties
+ca_aoipreset_geom("counties") %>% 
+  st_drop_geometry() %>% 
+  filter(name %in% c("Del Norte", "Siskiyou", "Modoc")) %>% 
+  select(name, state_name, fips)
+
+north_cap <- ca_loc_aoipreset(type = "counties", idfld = "fips", 
+                              idval = c("06015", "06049", "06093")) %>% 
+  ca_slug("tmmn_year_avg_gridmet") %>% 
+  ca_options(spatial_ag = "mean")
+
+north_cap %>% ca_preflight()
+
+plot(north_cap)
+
+north_tbl <- north_cap %>% ca_getvals_tbl()
+
+north_tbl %>% head()
+```
+
+The units are **Kelvin**.
+
