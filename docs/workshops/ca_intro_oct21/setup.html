@@ -214,11 +214,27 @@ p {
 </div>
 <div id="workshop-data-and-materials" class="section level1">
 <h1>Workshop Data and Materials</h1>
-<p>All workshop materials will be posted <a href="https://ucanr-igis.github.io/caladaptr-res/workshops/ca_intro_oct21/" target="_blank" rel="noopener">on this website</a>. The day before the workshop the instructor will send additional info including:</p>
+<p>All workshop materials will be posted <a href="https://ucanr-igis.github.io/caladaptr-res/workshops/ca_intro_oct21/" target="_blank" rel="noopener">on this website</a>.</p>
+<p>To download the R Notebooks and other files we’ll be using during the workshop, please do one of the following:</p>
+<p><strong>RStudio Cloud users</strong></p>
 <ul>
-<li><p>For people using their laptops: a R command to run to download the notebooks and a small amount of data</p></li>
-<li><p>For people using RStudio Cloud: a link to a VM they can click on to make a copy in their own workspace</p></li>
+<li>click on this link: <a href="https://rstudio.cloud/project/2709500" target="_blank" rel="noopener">https://rstudio.cloud/project/2709500</a><br />
+</li>
+<li>after the project opens in your RStudio Cloud workspace, click the ‘Save a permanent copy’ button<br />
+</li>
+<li>then you’re done</li>
 </ul>
+<p><br />
+</p>
+<p><strong>RStudio Desktop users</strong></p>
+<ul>
+<li>run the following command at the console, substituting where you want the workshop folder to go (total size ~120MB):</li>
+</ul>
+<div class="indented1">
+<pre class="r"><code>zip_url &lt;- &quot;https://ucdavis.box.com/shared/static/vhp9fldkt8xv1wqb3ejdqllgpo7wfrt4.zip&quot;
+usethis::use_course(zip_url, destdir = &quot;c:/path/goes/here&quot;) 
+## omit destdir to put the workshop folder on the desktop</code></pre>
+</div>
 </div>
 <div id="using-two-monitors" class="section level1">
 <h1>Using Two Monitors</h1>
