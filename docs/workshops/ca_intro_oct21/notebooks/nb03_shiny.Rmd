@@ -1,0 +1,43 @@
+---
+title: "caladaptR in Shiny"
+output:
+  html_notebook: 
+    css: https://ucanr-igis.github.io/caladaptr-res/assets/nb_css01.css
+    includes:
+      after_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_footer01.html
+---
+
+# Overview
+
+This Notebook will give an overview of using caladaptR in Shiny.
+
+An easy way to run sample Shiny apps powered by Cal-Adapt is using the `caladaptr.apps` package. After loading the package, you can launch an app with `ca_lauch()`:
+
+```{r}
+library(caladaptr.apps)
+
+## Run the following to launch the timeseries sample app:
+# ca_launch("timeseries")
+```
+
+\
+
+**Pro Tip:**
+
+- when you're done using a Shiny app, close the browser tab and click the 'Stop' button above the RStudio console.
+
+\
+
+To see the Shiny app code side-by-side the app, add `display.mode = "showcase"`.
+
+```{r}
+# ca_launch("timeseries", display.mode = "showcase")
+```
+
+\
+
+# Build a simple Shiny app
+
+Livecode demo
+
+\

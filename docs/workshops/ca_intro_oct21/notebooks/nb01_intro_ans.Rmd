@@ -4,6 +4,7 @@ output:
   html_notebook: 
     css: https://ucanr-igis.github.io/caladaptr-res/assets/nb_css01.css
     includes:
+      before_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_hdrsoln.html
       after_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_footer01.html
 ---
 
