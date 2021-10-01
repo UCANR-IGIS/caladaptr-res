@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="October 1, 2021 Andy Lyons " />
+  <title>Working with Climate Data in R with caladaptR</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+          </style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="lib/header-attrs-2.10/header-attrs.js"></script>
+  <link href="lib/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="lib/slidy-2/scripts/slidy.js"></script>
+  <script src="lib/slidy_shiny-1/slidy_shiny.js"></script>
+  <link href="lib/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="lib/pagedtable-1.1/js/pagedtable.js"></script>
+  <script src="lib/kePrint-0.0.1/kePrint.js"></script>
+  <link href="lib/lightable-0.0.1/lightable.css" rel="stylesheet" />
+  <script src="lib/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+  <script src="lib/viz-1.8.2/viz.js"></script>
+  <link href="lib/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+  <script src="lib/grViz-binding-1.0.6.1/grViz.js"></script>
+  <script src="lib/jquery-1.12.4/jquery.min.js"></script>
+  <link href="lib/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+  <script src="lib/leaflet-1.3.1/leaflet.js"></script>
+  <link href="lib/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+  <script src="lib/proj4-2.6.2/proj4.min.js"></script>
+  <script src="lib/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+  <link href="lib/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+  <script src="lib/leaflet-binding-2.0.4.1/leaflet.js"></script>
+  <script src="lib/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+  <script src="lib/leaflet-providers-plugin-2.0.4.1/leaflet-providers-plugin.js"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">Working with Climate Data in R with caladaptR</h1>
+  <p class="author">
+October 1, 2021<br/>Andy Lyons<br/><a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr-hexlogo_173x200.gif' style='height:120px; width:104px; padding:1em;'/></a>
+  </p>
+  <p class="date"><div style="width:900px; margin:0 auto;">
+<img src='images/igis-logo_550x58x256.png' style='padding:1em; float:left;'/><img src='images/cal-adapt-logo.svg' style='height:60px; padding:1em; float:right;'/>
+</div></p>
+</div>
+<div id="about-me" class="slide section level1">
+<h1>About Me…</h1>
+<style type="text/css">
+div.slide.titlepage h1 {
+  padding-top:5%;
+}
+
+h1 {
+  color:darkgreen;
+}
+h1.title {
+  color:black;
+  font-size:130%;
+}
+h2 {
+  color:#444;
+  font-size: 1.2em;
+}
+span.revlabel {
+  border-radius:3px;
+  font-size:60%;
+  padding:2px 4px;
+  margin-right:1em;
+  background-color:MediumSeaGreen;
+  color:white;
+}
+span.chk {
+  color:DarkGreen;
+}
+
+.indented1 {
+  margin-left:1em;
+}
+div.indented2 {
+  margin-left:2em;
+}
+p.date {
+  text-align:left;
+}
+table.borderme {
+  border:2px solid #246ABF;
+  border-collapse:collapse;
+}
+
+table.borderme td {
+  border: 1px solid #eee;
+}
+
+table.shademe td {
+  background:#eee;
+  padding:8px;
+}
+
+div.li-single li {
+  margin-bottom:0.1em;
+} 
+.test_delete {
+  line-height:0.7em;
+}
+pre {
+  font-weight:normal;
+  font-size:80%;
+}
+div.space_images > p > img {
+  margin-bottom:4em;
+}
+div.code-sample {
+  font-family: monospace;
+  font-weight: normal;
+  color:DarkOliveGreen;
+  margin-left:0;
+  margin-bottom:2em;
+}
+</style>
+<script type="text/javascript">
+w3c_slidy.mouse_click_enabled = false;
+</script>
+<p><img src="images/anr_montage-wide_1120x520.png" /></p>
+</div>
+<div id="thanks-also-to" class="slide section level1">
+<h1>Thanks also to …</h1>
+<div class="indented2 li-single">
+<ul>
+<li>Brian Galey<br />
+</li>
+<li>Lucy Andrews</li>
+<li>Eric Lehmer</li>
+<li>Shruti Mukhtyar</li>
+<li>Nancy Thomas<br />
+</li>
+<li>Shane Feirer<br />
+</li>
+<li>Maggi Kelly<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+<center>
+<img src="images/gif-logo-col_300x118.png" /> <img src="images/scg-logo_390x180.png" style="height:118px; margin-left:3em;" /> <img src="images/cec_logo_400x354x256.png" style="height:118px; margin-left:3em;" />
+</center>
+</div>
+<div id="about-you" class="slide section level1">
+<h1>About You</h1>
+<div class="space_images">
+<p><img src="slides01_files/figure-slidy/roster_plots-1.png" width="768" /><img src="slides01_files/figure-slidy/roster_plots-2.png" width="768" /><img src="slides01_files/figure-slidy/roster_plots-3.png" width="768" /><img src="slides01_files/figure-slidy/roster_plots-4.png" width="768" /></p>
+</div>
+</div>
+<div id="goals" class="slide section level1">
+<h1>Goals</h1>
+<p><strong>1) Get familiar with caladaptR</strong></p>
+<p><strong>2) Hands-on practice with:</strong></p>
+<ol style="list-style-type: lower-alpha">
+<li>importing Cal-Adapt into R via the API<br />
+</li>
+<li>data wrangling techniques to prep data for visualization or analysis<br />
+</li>
+<li>techniques for dealing with large volumes of data</li>
+</ol>
+<p><strong>3) More caladaptR users!</strong></p>
+<ol style="list-style-type: lower-alpha">
+<li>use-cases for analyses and visualization<br />
+</li>
+<li>ideas for code recipes, features, and documentation</li>
+</ol>
+<p><br />
+</p>
+<h2 id="learning-strategy">Learning Strategy</h2>
+<p><img src="images/cookbook_cover_300x360x256.png" style="margin-left:2em; border:1px solid grey;" /></p>
+<p><br />
+</p>
+<div style="text-align:center; width:400px; margin-left:100px; border-bottom:2px solid black;">
+<p>+ foundational concepts<br />
++ code recipes<br />
++ working examples<br />
++ practice</p>
+</div>
+<div style="text-align:center; width:400px; margin-left:100px;">
+<p><strong>functional pRoficiency!</strong></p>
+</div>
+</div>
+<div id="cal-adapt" class="slide section level1">
+<h1>Cal-Adapt</h1>
+<p>Cal-Adapt is California’s <strong>official portal</strong> for <strong>peer-reviewed</strong> climate data.</p>
+<p>Datasets are selected with guidance and priorities from California State agencies.</p>
+<p>Modeled Climate Data:</p>
+<div style="width:400px; float:left; margin-left:3em;">
+<ul>
+<li>temperature <span class="revlabel">6 km</span><br />
+</li>
+<li>precipitation <span class="revlabel">6 km</span><br />
+</li>
+<li>snow water equivalent <span class="revlabel">6 km</span><br />
+</li>
+<li>relative humidity <span class="revlabel">6 km</span><br />
+</li>
+<li>surface solar radiation <span class="revlabel">6 km</span><br />
+</li>
+<li>wind speed</li>
+</ul>
+</div>
+<div style="width:400px; float:left;">
+<ul>
+<li>wildfire risk</li>
+<li>drought scenarios</li>
+<li>streamflow</li>
+<li>sea level rise</li>
+<li>other derived variables</li>
+</ul>
+</div>
+<div style="clear:both;">
+
+</div>
+<p>See also: <a href="https://beta.cal-adapt.org/help/get-started/climate-data-and-other-data-on-caladapt/" target="_blank" rel="noopener"><em>What climate data does Cal-Adapt provide?</em></a>.</p>
+<p>Spatial extent of LOCA downscaled climate data layers:</p>
+<p><img src="images/loca_grid_extent_600x646x256.png" /></p>
+<p><br />
+</p>
+<p><img src="images/ca_4cca_732x200.png" style="height:90px;"/> <img src="images/cec_logo_400x354x256.png" style="margin-left:2em; height:110px;"/> <img src="images/scg-logo_390x180.png" style="margin-left:2em; height:80px;"/> <img src="images/gif-logo-col_300x118.png" style="margin-left:2em; height:80px;"/></p>
+</div>
+<div id="cal-adapt-data" class="slide section level1">
+<h1>Cal-Adapt Data</h1>
+<p><img src="images/caladapt_data_1000x489.png" /></p>
+</div>
+<div id="options-for-accessing-cal-adapt-data" class="slide section level1">
+<h1>Options for Accessing Cal-Adapt Data</h1>
+<table class="borderme table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;width: 15em; font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+Feature
+</td>
+<td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+Cal-Adapt website
+</td>
+<td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+Cal-Adapt FTP
+</td>
+<td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+caladapt-py
+</td>
+<td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+caladaptR
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+Download rasters
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+Statewide
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+User area-of-interest
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+10 recommended GCMs
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+All 32 GCMs
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+Query features
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+Points (user-provided)
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+Lines (user-provided)
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+Polygons (user-provided)
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+Polygons (presets, boundary layers)
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+Other
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+Extract underlying tables from preset charts
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+</tbody>
+</table>
+<p>More info:</p>
+<div class="indented2">
+<ul>
+<li><a href="https://cal-adapt.org/blog/2019/webinar-june-2019" target="_blank" rel="noopener"><em>Accessing Climate Data through Cal-Adapt</em></a>, Cal-Adapt Quarterly Webinar, June 2019</li>
+</ul>
+</div>
+</div>
+<div id="why-you-might-want-to-work-with-cal-adapt-data-in-r" class="slide section level1">
+<h1>Why you might want to work with Cal-Adapt data in R</h1>
+<h2 id="custom-visualization">Custom Visualization</h2>
+<h2 id="integrate-results-with-other-data">Integrate results with other data</h2>
+<div class="indented2 li-single">
+<ul>
+<li>census data<br />
+</li>
+<li>biodiversity / habitat<br />
+</li>
+<li>economic data
+</div></li>
+</ul>
+<h2 id="take-advantage-of-other-r-packages">Take advantage of other R packages</h2>
+<h2 id="run-custom-models">Run custom models</h2>
+<h2 id="research">Research</h2>
+<h2 id="custom-decision-support">Custom decision support</h2>
+</div>
+<div id="caladaptr" class="slide section level1">
+<h1>caladaptR</h1>
+<p><img src="images/caladaptr_role_480x432x256.png" /></p>
+<h2 id="key-features">Key Features</h2>
+<div class="indented2 li-single">
+<ul>
+<li><code>caladaptr</code> is an <strong>API client</strong> package<br />
+</li>
+<li>main job is to provide low-level functions for <strong>querying</strong> and <strong>importing</strong> Cal-Adapt data via the API<br />
+</li>
+<li>uses modern R programming standards:</li>
+</ul>
+<div class="indented1">
+<ul>
+<li>pipe friendly functions<br />
+</li>
+<li>accepts and returns standard data classes (e.g., tibble, sf, stars)</li>
+<li>units encoded in the results</li>
+<li>follows development guidelines from <a href="https://devguide.ropensci.org/" target="_blank">rOpenSci</a><br />
+</li>
+</ul>
+</div>
+</div>
+<p><br />
+</p>
+<h2 id="main-uses">Main Uses</h2>
+<div class="indented2 li-single">
+<ul>
+<li>Retrieve values from <em>any</em> Cal-Adapt raster series<br />
+</li>
+<li>Query with <strong>user-provided</strong> points and polygons<br />
+</li>
+<li>Query built-in <strong>preset</strong> areas-of-interest<br />
+</li>
+<li>Download climate variables as <strong>tibbles</strong> (data frames) or <strong>rasters</strong> (tiffs &amp; stars)</li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>caladaptR users need to know:</p>
+<div class="indented2 li-single">
+<ul>
+<li>how to <strong>work with data</strong> in R<br />
+</li>
+<li>what <strong>data</strong> you’re looking for<br />
+</li>
+<li>how to use climate projections <strong>wisely</strong><br />
+</li>
+</ul>
+</div>
+</div>
+<div id="caladaptr-workflow" class="slide section level1">
+<h1>caladaptR workflow</h1>
+<p>In general, there are <strong>five</strong> steps to using caladaptR:</p>
+<div id="htmlwidget-82022937662ed258a789" style="width:768px;height:576px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-82022937662ed258a789">{"x":{"diagram":"digraph flowchart {\n  node [fontname = Helvetica, shape = rectangle]\n  tab1 [label = \"1) Determine your location(s) of interest,\nassemble the required spatial objects\n\npreset area-of-interest, points, polygon)\"]\n  tab2 [label = \"2) Create an API Request object\"]\n  tab3 [label = \"3) Feed the API Request into a function that fetches data\"]\n  tab4 [label = \"4) Munge the results into the format you require\n\n(e.g., filtering, sorting, joining, reshaping,\nadd calculated columns, etc.)\"]\n  tab5 [label = \"5) Continue on with your analysis or visualization\"]\n\n  # edge definitions with the node IDs\n  tab1 -> tab2 -> tab3 -> tab4 -> tab5;\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="large-queries" class="slide section level1">
+<h1>Large Queries</h1>
+<div class="code-sample">
+<p>cap1_rtbl &lt;- cap1 %&gt;% <strong>ca_getvals_db</strong>(db_fn = “c:/data/mydata.sqlite”, db_tbl = “temp_min_max”)</p>
+</div>
+<div style="margin-left:1em;">
+<ul>
+<li>downloaded values will be saved into SQLite database as you go<br />
+</li>
+<li>slow connection? No problem - it will chug away on its own<br />
+</li>
+<li>disconnected? No problem - it will pick up where it left off<br />
+</li>
+<li>get back a remote tibble connected to the SQLite database<br />
+</li>
+<li>additional caladaptR functions help you view contents of the SQLite database, manage indices, etc.<br />
+</li>
+<li>standard dplyr verbs work thanks to <a href="https://dbplyr.tidyverse.org/" target="_blank" rel="noopener">dbplyr</a></li>
+</ul>
+</div>
+<p>See also <a href="https://ucanr-igis.github.io/caladaptr/articles/large-queries.html" target="_blank" rel="noopener"><em>Large Queries</em></a> vignette</p>
+</div>
+<div id="rasters" class="slide section level1">
+<h1>Rasters</h1>
+<div class="code-sample">
+<p>cap1_tifs &lt;- cap1 %&gt;% <strong>ca_getrst_stars</strong>(out_dir = “c:/data/tifs”)</p>
+</div>
+<div style="margin-left:1em;">
+<ul>
+<li>downloaded climate data as TIFs</li>
+<li>temporal details saved in sidecar file<br />
+</li>
+<li>read TIFs back into R with <code>ca_read_stars()</code><br />
+</li>
+<li>combine multiple 3D TIFs into a single 6D stars object<br />
+</li>
+<li>large geoms: block → download TIFs → mosaic</li>
+<li>analyze with <a href="%3Ehttps://r-spatial.github.io/stars/" target="_blank" rel="noopener">stars</a>:
+<ul>
+<li>dplyr style filtering<br />
+</li>
+<li>raster algebra<br />
+</li>
+<li>custom pixel summaries</li>
+<li>spatial manipulations<br />
+</li>
+<li>plotting</li>
+</ul></li>
+</ul>
+</div>
+<p><a href="https://r-spatial.github.io/stars/" target="_blank" rel="noopener"><img src="images/stars_cube_384x200x256.png"/></a>{style=“display:block; margin:1em auto; border:1px solid grey;”}</p>
+<p>See also <a href="https://ucanr-igis.github.io/caladaptr/articles/rasters-pt1.html" target="_blank" rel="noopener"><em>Raster Vignettes</em></a></p>
+</div>
+<div id="shiny-apps" class="slide section level1">
+<h1>Shiny Apps</h1>
+<div style="display:inline-block; border:none; width:100px; line-height:90px; vertical-align:middle;">
+<img src="images/shiny-hex_87x100.png" style="display:inline;"/>
+</div>
+<div style="display:inline-block; border:none; vertical-align:middle; line-height:90px; margin-bottom:2em;">
+→ browser based GUIs
+</div>
+<p>Samples:</p>
+<div style="margin-left:2em;">
+<ul>
+<li>caladaptR <a href="https://ucanr-igis.github.io/caladaptr/">website</a><br />
+</li>
+<li><a href="https://github.com/ucanr-igis/caladaptr.apps/">caladaptr.apps</a> package</li>
+</ul>
+<div style="margin:0 2em;">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Install caladaptr.apps and all dependent packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;ucanr-igis/caladaptr.apps&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caladaptr.apps)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Launch the time series app</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ca_launch</span>(<span class="st">&quot;timeseries&quot;</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Launch the projected chill portions app</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ca_launch</span>(<span class="st">&quot;chill&quot;</span>)</span></code></pre></div>
+</div>
+<ul>
+<li>Online: <a href="https://ucanr-igis.shinyapps.io/chill2/">Projected Chill Portions</a></li>
+</ul>
+</div>
+</div>
+<div class="slide section level1">
+
+<p><img src="images/caladaptpy-logo.svg" style="height:80px;" /></p>
+<p><a href="https://ucanr-igis.github.io/caladapt-py/" class="uri">https://ucanr-igis.github.io/caladapt-py/</a></p>
+<div class="indented1 li-single">
+<ul>
+<li>Jupytr Notebooks<br />
+</li>
+<li>ArcGIS Pro toolbox<br />
+</li>
+<li>workshop this fall</li>
+</ul>
+</div>
+<p><br />
+</p>
+<center>
+<img src="images/python_toolbox_351x333.png" /> <img src="images/voxel_694x540.jpg" style="margin-left:2em; height:333px;" />
+</center>
+</div>
+<div id="resources" class="slide section level1">
+<h1>Resources</h1>
+<h2 id="httpsucanr-igis.github.iocaladaptr"><a href="https://ucanr-igis.github.io/caladaptr/" class="uri">https://ucanr-igis.github.io/caladaptr/</a></h2>
+<div class="indented1 li-single">
+<ul>
+<li>documentation<br />
+</li>
+<li>Articles (tutorials and technical guides)</li>
+<li>R notebooks<br />
+</li>
+<li>presentations<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="works-in-progress">Works in progress…</h2>
+<div class="indented1 li-single">
+<ul>
+<li>code recipes<br />
+</li>
+<li>growing degree day R package<br />
+</li>
+<li>weather APIs<br />
+</li>
+<li>additional training material</li>
+<li>Shiny apps<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="help-wanted">Help wanted!</h2>
+<div class="indented1 li-single">
+<ul>
+<li>use-cases ⇒ code recipes and Shiny apps<br />
+</li>
+<li>beta testers<br />
+</li>
+<li>developers<br />
+</li>
+</ul>
+</div>
+</div>
+<div id="quick-example" class="slide section level1">
+<h1>Quick Example</h1>
+<ol style="list-style-type: decimal">
+<li>Load the package:</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caladaptr)</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Create an API request object:</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cap1 <span class="ot">&lt;-</span> <span class="fu">ca_loc_pt</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">121.4687</span>, <span class="fl">38.5938</span>)) <span class="sc">%&gt;%</span>  <span class="do">## specify a location</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_cvar</span>(<span class="fu">c</span>(<span class="st">&quot;tasmax&quot;</span>, <span class="st">&quot;tasmin&quot;</span>)) <span class="sc">%&gt;%</span>                   <span class="do">## climate variables</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_gcm</span>(gcms[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]) <span class="sc">%&gt;%</span>                                <span class="do">## GCM(s)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_scenario</span>(scenarios[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]) <span class="sc">%&gt;%</span>                      <span class="do">## emission scenarios(s)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_period</span>(<span class="st">&quot;year&quot;</span>) <span class="sc">%&gt;%</span>                                <span class="do">## temporal aggregation period</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_years</span>(<span class="at">start =</span> <span class="dv">2040</span>, <span class="at">end =</span> <span class="dv">2060</span>)                   <span class="do">## start and end dates</span></span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Check API request</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cap1</span></code></pre></div>
+<pre><code>## Cal-Adapt API Request
+## Location(s): 
+##   x: -121.469
+##   y: 38.594
+## Variable(s): tasmax, tasmin
+## Temporal aggregration period(s): year
+## GCM(s): HadGEM2-ES, CNRM-CM5, CanESM2, MIROC5
+## Scenario(s): rcp45, rcp85
+## Dates: 2040-01-01 to 2060-12-31
+## </code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cap1 <span class="sc">%&gt;%</span> <span class="fu">ca_preflight</span>()</span></code></pre></div>
+<pre><code>## General issues</code></pre>
+<pre><code>##  - none found</code></pre>
+<pre><code>## Issues for querying values</code></pre>
+<pre><code>##  - none found</code></pre>
+<pre><code>## Issues for downloading rasters</code></pre>
+<pre><code>##  - none found</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cap1, <span class="at">locagrid =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div id="htmlwidget-1f0c728be80c4f498596" style="width:768px;height:576px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1f0c728be80c4f498596">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"createMapPane","args":["tmap401",401]},{"method":"createMapPane","args":["tmap402",402]},{"method":"addProviderTiles","args":["Esri.NatGeoWorldMap",null,"Esri.NatGeoWorldMap",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addCircleMarkers","args":[38.5938,-121.4687,8.94427190999916,"X1","Query Location(s)",{"interactive":true,"className":"","pane":"tmap401","stroke":true,"color":"#666666","weight":1,"opacity":0.5,"fill":true,"fillColor":"#FF0000","fillOpacity":0.8},null,null,"<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>1<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>id<\/nobr><\/td><td align=\"right\"><nobr>1<\/nobr><\/td><\/tr><\/table><\/div>",null,"1",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addPolygons","args":[[[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.75,38.75,38.6875,38.6875,38.75]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.75,38.75,38.6875,38.6875,38.75]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.75,38.75,38.6875,38.6875,38.75]}]],[[{"lng":[-121.625,-121.5625,-121.5625,-121.625,-121.625],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.375,-121.3125,-121.3125,-121.375,-121.375],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.625,-121.5625,-121.5625,-121.625,-121.625],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.375,-121.3125,-121.3125,-121.375,-121.375],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.625,-121.5625,-121.5625,-121.625,-121.625],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.375,-121.3125,-121.3125,-121.375,-121.375],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.5,38.5,38.4375,38.4375,38.5]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.5,38.5,38.4375,38.4375,38.5]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.5,38.5,38.4375,38.4375,38.5]}]]],["X1.1","X2","X3","X4","X5","X6","X7","X8","X9","X10","X11","X12","X13","X14","X15","X16","X17","X18","X19","X20","X21"],"LOCA grid",{"interactive":false,"className":"","pane":"tmap402","stroke":true,"color":"#696969","weight":1,"opacity":1,"fill":true,"fillOpacity":0,"dashArray":"none","smoothFactor":1,"noClip":false},null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],["Query Location(s)","LOCA grid"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]}],"limits":{"lat":[38.4375,38.75],"lng":[-121.625,-121.3125]},"fitBounds":[38.0938,-121.9687,39.0938,-120.9687,[]]},"evals":[],"jsHooks":[]}</script>
+<ol start="4" style="list-style-type: decimal">
+<li>Fetch data:</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cap1_tbl <span class="ot">&lt;-</span> <span class="fu">ca_getvals_tbl</span>(cap1, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>View the results</li>
+</ol>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cap1_tbl <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["cvar"],"name":[2],"type":["fct"],"align":["left"]},{"label":["period"],"name":[3],"type":["fct"],"align":["left"]},{"label":["gcm"],"name":[4],"type":["fct"],"align":["left"]},{"label":["scenario"],"name":[5],"type":["fct"],"align":["left"]},{"label":["spag"],"name":[6],"type":["fct"],"align":["left"]},{"label":["dt"],"name":[7],"type":["chr"],"align":["left"]},{"label":["val"],"name":[8],"type":["units"],"align":["right"]}],"data":[{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2040-12-31","8":"298.7698 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2041-12-31","8":"298.7150 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2042-12-31","8":"298.5987 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2043-12-31","8":"299.6766 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2044-12-31","8":"299.5327 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2045-12-31","8":"298.2451 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2046-12-31","8":"298.2486 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2047-12-31","8":"298.7617 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2048-12-31","8":"299.6294 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2049-12-31","8":"298.6877 [K]"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>
