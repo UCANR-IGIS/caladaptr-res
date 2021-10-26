@@ -1,0 +1,5 @@
+# Table metadata for: ./data/cdist_la_temp_data.sqlite
+
+val_tbl: temp_data
+temp_data_sql: SELECT geoid, cvar, scenario, gcm, period, spag, dt, val FROM temp_data LEFT JOIN cvars ON temp_data.cvar_id = cvars.cvar_id LEFT JOIN scenarios ON temp_data.scenario_id = scenarios.scenario_id LEFT JOIN gcms ON temp_data.gcm_id = gcms.gcm_id LEFT JOIN periods ON temp_data.period_id = periods.period_id LEFT JOIN spags ON temp_data.spag_id = spags.spag_id
+
