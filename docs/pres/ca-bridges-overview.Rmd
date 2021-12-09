@@ -156,7 +156,7 @@ Modeled Climate Data:
 
 <div style="clear:both;"></div>
 
-See also: [*What climate data does Cal-Adapt provide?*](https://beta.cal-adapt.org/help/get-started/climate-data-and-other-data-on-caladapt/){target="_blank" rel="noopener"}.
+See also: [*What climate data does Cal-Adapt provide?*](https://beta.cal-adapt.org/help/get-started/climate-data-and-other-data-on-caladapt/){target="_blank" rel="noopener"}
 
 Spatial extent of LOCA downscaled climate data layers:
 
@@ -208,7 +208,7 @@ More info:
 - [*New Data Download Tool*](https://cal-adapt.org/blog/data-download){target="_blank" rel="noopener"}, Cal-Adapt Blog, June 2019
 </div>
 
-# Why you might want to work with Cal-Adapt data in R or Python
+# Why would you want to work with Cal-Adapt data in R or Python?
 
 Short answer: to mitigate 
 
@@ -357,7 +357,7 @@ Examples:
 
 - Copy of the Cal-Adapt data catalog
 
-- convenience functions
+- Convenience functions
 
 \
 
@@ -389,4 +389,6 @@ Examples:
 
 </div>
 
-<p style="clear:both; text-align:center; font-weight:bold; font-size:120%; width:980px;">Beta Testers Wanted!!</p>
+<p style="clear:both; text-align:center; font-weight:bold; font-size:120%; width:980px; margin-top:2em;">Beta Testers Wanted!!</p>
+
+<p style="text-align:center; font-size:120%; width:980px;">Sign-up for <a href="https://igis.ucanr.edu/Office_Hours/" target="_blank">Office Hours</a></p>
