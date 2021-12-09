@@ -6,8 +6,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
-  <meta name="author" content="Andy Lyons May 2021 " />
-  <title>Working with Climate Data in R with caladaptR</title>
+  <meta name="author" content=" Andy Lyons &amp; Shane Feirer" />
+  <title>Bridging Cal-Adapt with R, Python, and ArcGIS</title>
   <style type="text/css">
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -153,9 +153,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <script src="lib/kePrint-0.0.1/kePrint.js"></script>
   <link href="lib/lightable-0.0.1/lightable.css" rel="stylesheet" />
   <script src="lib/htmlwidgets-1.5.4/htmlwidgets.js"></script>
-  <script src="lib/viz-1.8.2/viz.js"></script>
-  <link href="lib/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-  <script src="lib/grViz-binding-1.0.6.1/grViz.js"></script>
   <script src="lib/jquery-1.12.4/jquery.min.js"></script>
   <link href="lib/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
   <script src="lib/leaflet-1.3.1/leaflet.js"></script>
@@ -169,16 +166,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </head>
 <body>
 <div class="slide titlepage">
-  <h1 class="title">Working with Climate Data in R with caladaptR</h1>
+  <h1 class="title">Bridging Cal-Adapt with R, Python, and ArcGIS</h1>
   <p class="author">
-Andy Lyons<br/>May 2021<br/><a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr_hex_173x200.gif' style='height:200px; width:173px; padding:1em;'/></a>
+<img src='images/bridge-graphic3_810x408.png' style='width:810px; height:408px;'/><br/>Andy Lyons &amp; Shane Feirer
   </p>
-  <p class="date"><div style="width:900px; margin:0 auto;">
-<img src='images/igis-anr_horizontal_550x58.png' style='padding:1em; float:left;'/><img src='images/cal-adapt-logo.svg' style='height:60px; padding:1em; float:right;'/>
-</div></p>
+  <p class="date"><img src='images/igis-logo_550x58x256.png' style='padding:1em; float:left;'/></p>
 </div>
-<div id="cal-adapt" class="slide section level1">
-<h1>Cal-Adapt</h1>
+<div id="about-us" class="slide section level1">
+<h1>About Us…</h1>
 <style type="text/css">
 div.slide.titlepage h1 {
   padding-top:5%;
@@ -217,7 +212,7 @@ p.date {
   text-align:left;
 }
 table.borderme {
-  border:2px solid #246ABF;
+  border:2px solid gray;
   border-collapse:collapse;
 }
 
@@ -240,14 +235,48 @@ pre {
   font-weight:normal;
   font-size:80%;
 }
+div.space_images > p > img {
+  margin-bottom:4em;
+}
+div.code-sample {
+  font-family: monospace;
+  font-weight: normal;
+  color:DarkOliveGreen;
+  margin-left:0;
+  margin-bottom:2em;
+}
 </style>
-<script type="text/javascript">w3c_slidy.mouse_click_enabled = false;</script>
-<STYLE type='text/css' scoped>
-PRE.fansi SPAN {padding-top: .25em; padding-bottom: .25em};
-</STYLE>
+<script type="text/javascript">
+w3c_slidy.mouse_click_enabled = false;
+</script>
+<p><img src="images/anr_montage-wide_1120x520.png" /></p>
+</div>
+<div id="thanks-also-to" class="slide section level1">
+<h1>Thanks also to …</h1>
+<div class="indented2 li-single">
+<ul>
+<li>Brian Galey<br />
+</li>
+<li>Lucy Andrews</li>
+<li>Eric Lehmer</li>
+<li>Shruti Mukhtyar</li>
+<li>Nancy Thomas<br />
+</li>
+<li>Maggi Kelly<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+<center>
+<img src="images/gif-logo-col_300x118.png" /> <img src="images/scg-logo_390x180.png" style="height:118px; margin-left:3em;" /> <img src="images/cec_logo_400x354x256.png" style="height:118px; margin-left:3em;" />
+</center>
+</div>
+<div id="cal-adapt" class="slide section level1">
+<h1>Cal-Adapt</h1>
 <p>Cal-Adapt is California’s <strong>official portal</strong> for <strong>peer-reviewed</strong> climate data.</p>
 <p>Datasets are selected with guidance and priorities from California State agencies.</p>
-<p>Projected Climate Data:</p>
+<p>Modeled Climate Data:</p>
 <div style="width:400px; float:left; margin-left:3em;">
 <ul>
 <li>temperature <span class="revlabel">6 km</span><br />
@@ -275,15 +304,16 @@ PRE.fansi SPAN {padding-top: .25em; padding-bottom: .25em};
 <div style="clear:both;">
 
 </div>
-<p>Extent of LOCA downscaled climate data layers:</p>
+<p>See also: <a href="https://beta.cal-adapt.org/help/get-started/climate-data-and-other-data-on-caladapt/" target="_blank" rel="noopener"><em>What climate data does Cal-Adapt provide?</em></a>.</p>
+<p>Spatial extent of LOCA downscaled climate data layers:</p>
 <p><img src="images/loca_grid_extent_600x646x256.png" /></p>
 <p><br />
 </p>
-<p><img src="images/ca_4cca_732x200.png" style="height:90px;"/> <img src="images/cec_logo_400x354x256.png" style="margin-left:2em; height:110px;"/> <img src="images/scg-logo_460x230.png" style="margin-left:2em; height:110px;"/> <img src="images/gif-logo-col_300x118.png" style="margin-left:2em; height:80px;"/></p>
+<p><img src="images/ca_4cca_732x200.png" style="height:90px;"/> <img src="images/cec_logo_400x354x256.png" style="margin-left:2em; height:110px;"/> <img src="images/scg-logo_390x180.png" style="margin-left:2em; height:80px;"/> <img src="images/gif-logo-col_300x118.png" style="margin-left:2em; height:80px;"/></p>
 </div>
 <div id="cal-adapt-data" class="slide section level1">
 <h1>Cal-Adapt Data</h1>
-<p><img src="images/caladapt_data_1000x489.png" /></p>
+<p><img src="images/caladapt_data_v2c_1000x480.png" /></p>
 </div>
 <div id="options-for-accessing-cal-adapt-data" class="slide section level1">
 <h1>Options for Accessing Cal-Adapt Data</h1>
@@ -300,7 +330,7 @@ Cal-Adapt website
 Cal-Adapt FTP
 </td>
 <td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
-caladaptPy
+caladapt-py
 </td>
 <td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
 caladaptR
@@ -333,6 +363,7 @@ Statewide
 <span class="chk">✔</span>
 </td>
 <td style="text-align:center;">
+<span class="chk">✔</span>
 </td>
 </tr>
 <tr>
@@ -345,7 +376,7 @@ User area-of-interest
 <td style="text-align:center;">
 </td>
 <td style="text-align:center;">
-planned
+<span class="chk">✔</span>
 </td>
 <td style="text-align:center;">
 <span class="chk">✔</span>
@@ -487,79 +518,78 @@ Extract underlying tables from preset charts
 </tr>
 </tbody>
 </table>
-<p><br />
-</p>
 <p>More info:</p>
 <div class="indented2">
 <ul>
-<li><a href="https://cal-adapt.org/blog/2019/webinar-june-2019" target="_blank" rel="noopener"><em>Accessing Climate Data through Cal-Adapt</em></a>, Cal-Adapt Quarterly Webinar, June 2019</li>
+<li><a href="https://cal-adapt.org/blog/data-download" target="_blank" rel="noopener"><em>New Data Download Tool</em></a>, Cal-Adapt Blog, June 2019</li>
 </ul>
 </div>
 </div>
+<div id="why-you-might-want-to-work-with-cal-adapt-data-in-r-or-python" class="slide section level1">
+<h1>Why you might want to work with Cal-Adapt data in R or Python</h1>
+<h2 id="custom-visualization">Custom Visualization</h2>
+<h2 id="integrate-results-with-other-data">Integrate results with other data</h2>
+<div class="indented2 li-single">
+<ul>
+<li>census data<br />
+</li>
+<li>biodiversity / habitat<br />
+</li>
+<li>economic data
+</div></li>
+</ul>
+<h2 id="take-advantage-of-other-r-packages">Take advantage of other R packages</h2>
+<h2 id="run-custom-models">Run custom models</h2>
+<h2 id="research">Research</h2>
+<h2 id="custom-decision-support">Custom decision support</h2>
+</div>
+<div class="slide section level1">
+
+<p><img src="images/caladaptpy-logo.svg" style="height:80px;" /></p>
+<p><a href="https://ucanr-igis.github.io/caladapt-py/" class="uri">https://ucanr-igis.github.io/caladapt-py/</a></p>
+<div class="indented1 li-single">
+<ul>
+<li>Jupytr Notebooks<br />
+</li>
+<li>ArcGIS Pro toolbox</li>
+</ul>
+</div>
+<p><img src="images/python_toolbox_351x333.png" /> <img src="images/voxel_694x540.jpg" style="height:333px; margin-left:2em;" /></p>
+<p><img src="images/youtube-icon_60x43x256.png" style="height:32px;" /> <a href="https://www.youtube.com/watch?v=rV4330_yScs&amp;t=7s" target="_blank" rel="noopener"><strong>Intro to Jupyter Notebooks in ArcGIS Pro</strong></a>, workshop Nov 2021</p>
+</div>
 <div id="caladaptr" class="slide section level1">
 <h1>caladaptR</h1>
-<p><img src="images/caladaptr_role_600x384.png" /></p>
-<h2 id="key-features">Key Features</h2>
+<p><img src="images/caladaptr_hex_173x200.png" style="float:right; padding:0.5em;" /></p>
+<p><img src="images/caladaptr_role_567x512.png" /></p>
 <div class="indented2 li-single">
 <ul>
 <li><code>caladaptr</code> is an <strong>API client</strong> package<br />
 </li>
 <li>main job is to provide low-level functions for <strong>querying</strong> and <strong>importing</strong> Cal-Adapt data via the API<br />
 </li>
-<li>uses modern R programming standards:</li>
-</ul>
-<div class="indented1">
-<ul>
-<li>pipe friendly functions<br />
+<li>uses modern R programming standards:<br />
 </li>
-<li>accepts and returns standard data classes (e.g., tibble, sf, raster)</li>
-<li>units encoded in the results</li>
-<li>follows development guidelines from <a href="https://devguide.ropensci.org/" target="_blank">rOpenSci</a><br />
-</li>
-</ul>
-</div>
-</div>
-<p><br />
-</p>
-<h2 id="main-uses">Main Uses</h2>
-<div class="indented2 li-single">
-<ul>
 <li>Retrieve values from <em>any</em> Cal-Adapt raster series<br />
 </li>
-<li>Query with <strong>user-provided</strong> points, lines, and polygons<br />
+<li>Query with <strong>user-provided</strong> points and polygons<br />
 </li>
 <li>Query built-in <strong>preset</strong> areas-of-interest<br />
 </li>
-<li>Download climate variables as <strong>data frames</strong> (tibbles) or <strong>rasters</strong> (stars)</li>
+<li>Download climate variables as <strong>tibbles</strong> (data frames) or <strong>rasters</strong> (tiffs &amp; stars)</li>
 </ul>
 </div>
 <p><br />
 </p>
-<h2 id="prerequisites">Prerequisites</h2>
-<p>The user is expected to know:</p>
-<div class="indented2 li-single">
-<ul>
-<li>how to <strong>work with data</strong> in R<br />
-</li>
-<li>what <strong>data</strong> you’re looking for<br />
-</li>
-<li>how to use climate projections <strong>wisely</strong><br />
-</li>
-</ul>
-</div>
-</div>
-<div id="caladaptr-workflow" class="slide section level1">
-<h1>caladaptR workflow</h1>
-<p>In general, there are <strong>five</strong> steps to using caladaptR:</p>
-<div id="htmlwidget-27cefd906c969aa19b18" style="width:768px;height:576px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-27cefd906c969aa19b18">{"x":{"diagram":"digraph flowchart {\n  node [fontname = Helvetica, shape = rectangle]\n  tab1 [label = \"1) Determine your location(s) of interest,\nassemble the required spatial objects\n\npreset area-of-interest, points, polygon)\"]\n  tab2 [label = \"2) Create an API Request object\"]\n  tab3 [label = \"3) Feed the API Request into a function that fetches data\"]\n  tab4 [label = \"4) Munge the results into the format you require\n\n(e.g., filtering, sorting, joining, reshaping,\nadd calculated columns, etc.)\"]\n  tab5 [label = \"5) Continue on with your analysis or visualization\"]\n\n  # edge definitions with the node IDs\n  tab1 -> tab2 -> tab3 -> tab4 -> tab5;\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="quick-example" class="slide section level1">
 <h1>Quick Example</h1>
+<p><img src="images/caladaptr_hex_173x200.png" style="float:right; padding:0.5em;" /></p>
 <ol style="list-style-type: decimal">
 <li>Load the package:</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caladaptr)</span></code></pre></div>
+<p><br />
+</p>
 <ol start="2" style="list-style-type: decimal">
 <li>Create an API request object:</li>
 </ol>
@@ -569,6 +599,8 @@ Extract underlying tables from preset charts
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_scenario</span>(scenarios[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]) <span class="sc">%&gt;%</span>                      <span class="do">## emission scenarios(s)</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_period</span>(<span class="st">&quot;year&quot;</span>) <span class="sc">%&gt;%</span>                                <span class="do">## temporal aggregation period</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_years</span>(<span class="at">start =</span> <span class="dv">2040</span>, <span class="at">end =</span> <span class="dv">2060</span>)                   <span class="do">## start and end dates</span></span></code></pre></div>
+<p><br />
+</p>
 <ol start="3" style="list-style-type: decimal">
 <li>Check API request</li>
 </ol>
@@ -583,7 +615,7 @@ Extract underlying tables from preset charts
 ## Scenario(s): rcp45, rcp85
 ## Dates: 2040-01-01 to 2060-12-31
 ## </code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cap1 <span class="sc">%&gt;%</span> <span class="fu">ca_preflight</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ca_preflight</span>(cap1)</span></code></pre></div>
 <pre><code>## General issues</code></pre>
 <pre><code>##  - none found</code></pre>
 <pre><code>## Issues for querying values</code></pre>
@@ -591,12 +623,16 @@ Extract underlying tables from preset charts
 <pre><code>## Issues for downloading rasters</code></pre>
 <pre><code>##  - none found</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cap1, <span class="at">locagrid =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<div id="htmlwidget-27cefd906c969aa19b18" style="width:768px;height:576px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-27cefd906c969aa19b18">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"createMapPane","args":["tmap401",401]},{"method":"createMapPane","args":["tmap402",402]},{"method":"addProviderTiles","args":["Esri.NatGeoWorldMap",null,"Esri.NatGeoWorldMap",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addCircleMarkers","args":[38.5938,-121.4687,8.94427190999916,"X1","Query Location(s)",{"interactive":true,"className":"","pane":"tmap401","stroke":true,"color":"#666666","weight":1,"opacity":0.5,"fill":true,"fillColor":"#FF0000","fillOpacity":0.8},null,null,"<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>1<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>id<\/nobr><\/td><td align=\"right\"><nobr>1<\/nobr><\/td><\/tr><\/table><\/div>",null,"1",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addPolygons","args":[[[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.75,38.75,38.6875,38.6875,38.75]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.75,38.75,38.6875,38.6875,38.75]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.75,38.75,38.6875,38.6875,38.75]}]],[[{"lng":[-121.625,-121.5625,-121.5625,-121.625,-121.625],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.375,-121.3125,-121.3125,-121.375,-121.375],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.625,-121.5625,-121.5625,-121.625,-121.625],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.375,-121.3125,-121.3125,-121.375,-121.375],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.625,-121.5625,-121.5625,-121.625,-121.625],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.375,-121.3125,-121.3125,-121.375,-121.375],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.5,38.5,38.4375,38.4375,38.5]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.5,38.5,38.4375,38.4375,38.5]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.5,38.5,38.4375,38.4375,38.5]}]]],["X1.1","X2","X3","X4","X5","X6","X7","X8","X9","X10","X11","X12","X13","X14","X15","X16","X17","X18","X19","X20","X21"],"LOCA grid",{"interactive":false,"className":"","pane":"tmap402","stroke":true,"color":"#696969","weight":1,"opacity":1,"fill":true,"fillOpacity":0,"dashArray":"none","smoothFactor":1,"noClip":false},null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],["Query Location(s)","LOCA grid"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]}],"limits":{"lat":[38.4375,38.75],"lng":[-121.625,-121.3125]},"fitBounds":[38.0938,-121.9687,39.0938,-120.9687,[]]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-59e8a7f2d235f1a2620a" style="width:768px;height:576px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-59e8a7f2d235f1a2620a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"createMapPane","args":["tmap401",401]},{"method":"createMapPane","args":["tmap402",402]},{"method":"addProviderTiles","args":["Esri.NatGeoWorldMap",null,"Esri.NatGeoWorldMap",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addCircleMarkers","args":[38.5938,-121.4687,8.94427190999916,"X1","Query Location(s)",{"interactive":true,"className":"","pane":"tmap401","stroke":true,"color":"#666666","weight":1,"opacity":0.5,"fill":true,"fillColor":"#FF0000","fillOpacity":0.8},null,null,"<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>1<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>id<\/nobr><\/td><td align=\"right\"><nobr>1<\/nobr><\/td><\/tr><\/table><\/div>",null,"1",{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addPolygons","args":[[[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.75,38.75,38.6875,38.6875,38.75]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.75,38.75,38.6875,38.6875,38.75]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.75,38.75,38.6875,38.6875,38.75]}]],[[{"lng":[-121.625,-121.5625,-121.5625,-121.625,-121.625],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.375,-121.3125,-121.3125,-121.375,-121.375],"lat":[38.6875,38.6875,38.625,38.625,38.6875]}]],[[{"lng":[-121.625,-121.5625,-121.5625,-121.625,-121.625],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.375,-121.3125,-121.3125,-121.375,-121.375],"lat":[38.625,38.625,38.5625,38.5625,38.625]}]],[[{"lng":[-121.625,-121.5625,-121.5625,-121.625,-121.625],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.375,-121.3125,-121.3125,-121.375,-121.375],"lat":[38.5625,38.5625,38.5,38.5,38.5625]}]],[[{"lng":[-121.5625,-121.5,-121.5,-121.5625,-121.5625],"lat":[38.5,38.5,38.4375,38.4375,38.5]}]],[[{"lng":[-121.5,-121.4375,-121.4375,-121.5,-121.5],"lat":[38.5,38.5,38.4375,38.4375,38.5]}]],[[{"lng":[-121.4375,-121.375,-121.375,-121.4375,-121.4375],"lat":[38.5,38.5,38.4375,38.4375,38.5]}]]],["X1.1","X2","X3","X4","X5","X6","X7","X8","X9","X10","X11","X12","X13","X14","X15","X16","X17","X18","X19","X20","X21"],"LOCA grid",{"interactive":false,"className":"","pane":"tmap402","stroke":true,"color":"#696969","weight":1,"opacity":1,"fill":true,"fillOpacity":0,"dashArray":"none","smoothFactor":1,"noClip":false},null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],["Query Location(s)","LOCA grid"],{"collapsed":true,"autoZIndex":true,"position":"topleft"}]}],"limits":{"lat":[38.4375,38.75],"lng":[-121.625,-121.3125]},"fitBounds":[38.0938,-121.9687,39.0938,-120.9687,[]]},"evals":[],"jsHooks":[]}</script>
+<p><br />
+</p>
 <ol start="4" style="list-style-type: decimal">
 <li>Fetch data:</li>
 </ol>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cap1_tbl <span class="ot">&lt;-</span> <span class="fu">ca_getvals_tbl</span>(cap1, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cap1_tbl <span class="ot">&lt;-</span> cap1 <span class="sc">%&gt;%</span> <span class="fu">ca_getvals_tbl</span>(<span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><br />
+</p>
 <ol start="5" style="list-style-type: decimal">
 <li>View the results</li>
 </ol>
@@ -607,116 +643,72 @@ Extract underlying tables from preset charts
   </script>
 </div>
 </div>
-<div id="need-big-data" class="slide section level1">
-<h1>Need Big Data?</h1>
-<p>No problem!</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cap1_db <span class="ot">&lt;-</span> cap1 <span class="sc">%&gt;%</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_getvals_db</span>(<span class="at">db_fn =</span> <span class="st">&quot;c:/data/mydata.sqlite&quot;</span>, <span class="at">db_tbl =</span> <span class="st">&quot;temp_min_max&quot;</span>)</span></code></pre></div>
-<div style="margin-left:1em;">
-<ul>
-<li>downloaded values will be saved into SQLite database as you go<br />
-</li>
-<li>slow connection? No problem - it will chug away on its own<br />
-</li>
-<li>disconnected? No problem - it will pick up where it left off<br />
-</li>
-<li>additional caladaptR functions help you view contents of the SQLite database, manage indices, etc.<br />
-</li>
-<li>can use standard dplyr style functions thanks to:</li>
-</ul>
-<p><a href="https://dbplyr.tidyverse.org/" target="_blank" rel="noopener"><img src="images/dbplyr_240x277.png" style="height:200px;"/><br/>https://dbplyr.tidyverse.org/</a></p>
-</div>
-</div>
-<div id="need-rasters" class="slide section level1">
-<h1>Need Rasters?</h1>
-<p>No problem!</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cap1_tifs <span class="ot">&lt;-</span> cap1 <span class="sc">%&gt;%</span> </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_getrst_stars</span>(<span class="at">out_dir =</span> <span class="st">&quot;c:/data/tifs&quot;</span>)</span></code></pre></div>
-<div style="margin-left:1em;">
-<ul>
-<li>maximum size: county (San Bernardino County)<br />
-</li>
-<li>climate variables are downloaded as TIFs<br />
-</li>
-<li>an additional sidecar file saves the temporal details<br />
-</li>
-<li>read TIFs back into R with <code>ca_read_stars()</code></li>
-</ul>
-</div>
-<p><br />
-</p>
-<p><a href="https://r-spatial.github.io/stars/" target="_blank" rel="noopener"><img src="images/stars_cube_384x200x256.png"/><br/>https://r-spatial.github.io/stars/</a></p>
-</div>
 <div id="shiny-apps" class="slide section level1">
 <h1>Shiny Apps</h1>
-<div style="display:inline-block; border:none; width:100px; line-height:90px; vertical-align:middle;">
-<img src="images/shiny-hex_87x100.png" style="display:inline;"/>
-</div>
-<div style="display:inline-block; border:none; vertical-align:middle; line-height:90px;">
-→ browser based GUIs
-</div>
-<p>See samples:</p>
-<div style="margin-left:2em;">
+<p><img src="images/shiny-hex_87x100.png" style="float:right; padding:0.5em;" /></p>
 <ul>
-<li>caladaptR <a href="https://ucanr-igis.github.io/caladaptr/">website</a><br />
-</li>
-<li><a href="https://github.com/ucanr-igis/caladaptr.apps/">caladaptr.apps</a> package</li>
+<li><p>The Shiny package allows you to create browser-based apps that run R in the background.</p></li>
+<li><p>You need to know to R, but you don’t need to know JavaScript, HTML, CSS, network protocols, etc.</p></li>
+<li><p>Can run them locally or online</p></li>
 </ul>
-<div style="margin:0 2em;">
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Install caladaptr.apps and all dependent packages</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;ucanr-igis/caladaptr.apps&quot;</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caladaptr.apps)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Launch the time series app</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ca_launch</span>(<span class="st">&quot;timeseries&quot;</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Launch the projected chill portions app</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ca_launch</span>(<span class="st">&quot;chill&quot;</span>)</span></code></pre></div>
-</div>
+<p><img src="images/chill-calculator_200x286x256.png" style="border:2px solid gray; float:left; margin-left:2em; margin-right:1em;" /></p>
+<p>Examples:</p>
+<div style="margin-left:3em;">
 <ul>
-<li>Online: <a href="https://ucanr-igis.shinyapps.io/chill2/">Projected Chill Portions</a></li>
+<li><a href="https://caladaptr.shinyapps.io/timeseries/">Plot Annual Time Series</a> (online)</li>
+<li><a href="https://ucanr-igis.shinyapps.io/chill/">Projected Chill Portions</a> (online)</li>
+<li><a href="https://github.com/ucanr-igis/caladaptr.apps/">caladaptr.apps</a> (R package)</li>
 </ul>
 </div>
+</div>
+<div id="other-features" class="slide section level1">
+<h1>Other Features</h1>
+<p><img src="images/caladaptr_hex_173x200.png" style="float:right; padding:0.5em;" /></p>
+<ul>
+<li><p>Support for large queries</p></li>
+<li><p>Download rasters</p></li>
+<li><p>Copy of the Cal-Adapt data catalog</p></li>
+<li><p>convenience functions</p></li>
+</ul>
+<p><br />
+</p>
 </div>
 <div id="learning-more" class="slide section level1">
 <h1>Learning More</h1>
-<p>Website: <a href="https://ucanr-igis.github.io/caladaptr/" class="uri">https://ucanr-igis.github.io/caladaptr/</a></p>
-<div style="width:320px; float:left;">
-
-<p><strong>Resources</strong></p>
-<div class="indented1">
+<div style="width:470px; float:left;">
+<center>
+<img src="images/caladaptr_hex_173x200.gif" />
+</center>
+<div class="indented1 li-single">
 <ul>
-<li>documentation<br />
-</li>
-<li>getting started guide<br />
-</li>
+<li><a href="https://ucanr.edu/blogs/blogcore/postdetail.cfm?postnum=51050" target="_blank" rel="noopener"><strong>Blog post</strong></a> with intro videos</li>
+<li><a href="https://ucanr-igis.github.io/caladaptr/" class="uri">https://ucanr-igis.github.io/caladaptr/</a>
+<ul>
+<li>Articles (tutorials and technical guides)</li>
 <li>R notebooks<br />
 </li>
-<li>presentations<br />
-
-</div></li>
+<li>workshop recordings</li>
+</ul></li>
+<li>next workshop: <strong>February 17, 2022</strong></li>
 </ul>
 </div>
-<div style="width:400px; float:left;">
-<p><strong>Get Involved</strong></p>
-<div class="indented1">
+</div>
+<div style="width:470px; display:grid;">
+<p>
+<center>
+<img src="images/caladaptpy-logo.svg" style="height:80px;" />
+</center>
+</p>
+<div class="indented1 li-single">
 <ul>
-<li>join <a href="https://lists.ucdavis.edu/sympa/subscribe/caladaptr" target="_blank" rel="noopener">email list</a><br />
-</li>
-<li>submit feature requests and bug reports via <a href="https://github.com/ucanr-igis/caladaptr/issues" target="_blank" rel="noopener">GitHub Issues</a><br />
-</li>
-<li>share ideas for code recipes and Shiny apps<br />
-</li>
+<li><a href="https://ucanr-igis.github.io/caladapt-py/" class="uri">https://ucanr-igis.github.io/caladapt-py/</a></li>
+<li>next workshop: <strong>February 18, 2022</strong></li>
 </ul>
 </div>
 </div>
-<div style="clear:both;">
-
-</div>
-<div style="display:inline-block; width:720px; text-align:center;">
-<p><img src='images/caladaptr_hex_173x200.gif' style='height:200px;'><br/> Andy Lyons<br/><a href="mailto:andlyons@ucanr.edu" class="email">andlyons@ucanr.edu</a></p>
-</div>
-<p><img src="images/igis-anr_horizontal_550x58.png"/></p>
+<p style="clear:both; text-align:center; font-weight:bold; font-size:120%; width:980px;">
+Beta Testers Wanted!!
+</p>
 </div>
 
   <!-- dynamically load mathjax for compatibility with self-contained -->
