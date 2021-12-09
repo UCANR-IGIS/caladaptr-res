@@ -113,9 +113,10 @@ w3c_slidy.mouse_click_enabled = false;
 
 <div class = "indented2 li-single">
 - Brian Galey  
-- Lucy Andrews 
-- Eric Lehmer
-- Shruti Mukhtyar
+- Eric Lehmer  
+- Shruti Mukhtyar  
+- Chris Henrick  
+- Lucy Andrews  
 - Nancy Thomas  
 - Maggi Kelly  
 </div>
