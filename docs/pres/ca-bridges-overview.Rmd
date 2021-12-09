@@ -210,6 +210,10 @@ More info:
 
 # Why you might want to work with Cal-Adapt data in R or Python
 
+Short answer: to mitigate 
+
+![](images/firehose_640x305.jpg)
+
 ## Custom Visualization 
  
 ## Integrate results with other data
@@ -330,17 +334,18 @@ cap1_tbl %>% slice(1:10)
 
 - Can run them locally or online
 
+<div style="float:left; margin-left:2em;">![](images/chill-calculator_200x286x256.png){style="border:2px solid gray;"}</div>
 
-![](images/chill-calculator_200x286x256.png){style="border:2px solid gray; float:left; margin-left:2em; margin-right:1em;"}
+<div style="margin-left:1em; float:left;">
 
 Examples:
 
-<div style="margin-left:3em;">
 - [Plot Annual Time Series](https://caladaptr.shinyapps.io/timeseries/) (online)
 - [Projected Chill Portions](https://ucanr-igis.shinyapps.io/chill/) (online)
 - [caladaptr.apps](https://github.com/ucanr-igis/caladaptr.apps/) (R package)
 </div>
 
+<div style="clear:both;"></div>
 
 # Other Features
 
