@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Welcome to Working with Cal-Adapt Data in R!</title>
+
+<script src="lib/header-attrs-2.11/header-attrs.js"></script>
+<script src="lib/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="lib/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="lib/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="lib/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Welcome to Working with Cal-Adapt Data in R!</h1>
+
+</div>
+
+
+<style type="text/css">
+h1 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top:2em;
+  color:navy;
+}
+h1.title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #007020;
+}
+h2 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top:2em;
+}
+p {
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+}
+.workshop-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+}
+
+.indented1 {
+  margin-left:1em;
+}
+</style>
+<p><br />
+</p>
+<p>We look forward to seeing you at the workshop. Please read the information below as it contains some important logistics info as well as what you need to prepare in order to complete the hands-on exercises.</p>
+<div id="schedule" class="section level1">
+<h1>Schedule</h1>
+<p>The workshop will be held on:</p>
+<div class="indented1" style="font-weight:bold;">
+<p>Thursday, February 17, 2022<br/> 11:00a - 1:00pm (PDT)</p>
+</div>
+<p>This workshop will be held on <strong>Zoom</strong>. The Zoom link will be emailed to everyone who registers. If you have not gotten the Zoom link within 24 hours of the workshop, please email the <a href="mailto:andlyons@ucanr.edu?subject=caladaptR%20Workshop">instructor</a>. You do <strong>not</strong> need a Zoom account to join the workshop.</p>
+<p>In addition, the instructor will hold drop-in <strong>Tech Support Office Hours</strong> on <strong>Wednesday February 16</strong> from <strong>4-5pm</strong> for anyone who has questions or needs help installing the packages for the workshop (see below). Office Hours will use the same Zoom link as the workshop. No sign-up is required, just drop in.</p>
+</div>
+<div id="registration" class="section level1">
+<h1>Registration</h1>
+<p>Registration is <strong>required</strong>. If you have not already done so, you may register for workshop <a href="https://forms.gle/WjprKGkj9bT2CBr58" target="_blank" rel="noopener">here</a>. Registration will close approximately <strong>1 hour</strong> before kick-off.</p>
+</div>
+<div id="workshop-format" class="section level1">
+<h1>Workshop Format</h1>
+<p>The workshop will include a mix of presentations and short hands-on exercises using R Notebooks. The R Notebooks will include a combination of working code that you just have to run, and a few pieces that require you to write your own code. Answers will be provided. Doing the exercises is encouraged but not required.</p>
+<p>The material will be sequenced from a general overview to writing code. People are welcome to drop-off whenever they’d like. The final 15-30 minutes will be a semi-structured exercise.</p>
+</div>
+<div id="prerequisites" class="section level1">
+<h1>Prerequisites</h1>
+<p>This workshop presumes some very basic familiarity with R and RStudio (at least enough to run the sample code). Most of the code examples will be ready-to-run so don’t fret if you’re a bit rusty. If you’ve never used R before, you’re welcome to watch but we won’t have time to trouble-shoot basic setup or syntax problems. In addition to caladaptR, we’ll be using dplyr, tmap, and stars.</p>
+<p>Familiarity with climate data is helpful but not required. The workshop will include a high-level overview of the datasets on Cal-Adapt, but not in any depth. If you’re unfamiliar with climate data and terms like <em>GCM</em>, <em>RCP</em>, etc., consider watching the excellent webinar <a href="https://youtu.be/DGBzmyejws0" target="_blank" rel="noopener"><em>An Introduction to Climate Data</em></a> from the Cal-Adapt team.</p>
+</div>
+<div id="setting-up-your-computer" class="section level1">
+<h1>Setting up Your Computer</h1>
+<p>Anyone who wants to participate in the hands-on exercises should have R setup <strong>before the workshop</strong>. You may either create a free <strong>RStudio Cloud</strong> account (recommended), or install all the required packages on RStudio Desktop on your laptop. Both options are easy. For details, see <a href="setup.html">Computer Setup</a>.</p>
+<p>If you need help, you can come to Tech Support Office Hours before the workshop (see above). Once the workshop starts, we will not be able to provide assistance with computer setup.</p>
+</div>
+<div id="questions" class="section level1">
+<h1>Questions?</h1>
+<p>If you have any questions please contact the <a href="mailto:andlyons@ucanr.edu">instructor</a>.</p>
+<p><br />
+</p>
+<p><br />
+</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+</body>
+</html>

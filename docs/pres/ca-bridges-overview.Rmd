@@ -157,7 +157,7 @@ Modeled Climate Data:
 
 <div style="clear:both;"></div>
 
-See also: [*What climate data does Cal-Adapt provide?*](https://beta.cal-adapt.org/help/get-started/climate-data-and-other-data-on-caladapt/){target="_blank" rel="noopener"}
+See also: [*What climate data does Cal-Adapt provide?*](https://cal-adapt.org/help/get-started/climate-data-and-other-data-on-caladapt/){target="_blank" rel="noopener"}
 
 Spatial extent of LOCA downscaled climate data layers:
 
