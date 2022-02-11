@@ -2,17 +2,19 @@
 ## INSTALL PACKAGES WE'LL BE USING FOR THE WORKSHOP
 ########################################################
 
-## Install sf before everything else (b/c on Linux it installs by itself fine, but not as a dependency)
+## Install sf before everything else
+## (b/c on Linux it installs by itself fine, but not as a dependency)
 if (!require(sf)) install.packages("sf")
 
-# Install other packages from CRAN (this can take a while)
-install.packages(c('tidyverse', 'conflicted', 'leaflet', 'rmarkdown', 'scales'))
+# Install other CRAN packages as needed
+pkgs_req <- c("tidyverse", "conflicted", "leaflet", "rmarkdown", "scales")
+pkgs_missing <- pkgs_req[!(pkgs_req %in% installed.packages()[,"Package"])]
+if (length(pkgs_missing)) install.packages(pkgs_missing, dependencies=TRUE)
 
-## Install packages from r-universe
-options(repos = c(ajlyons = 'https://ajlyons.r-universe.dev',
-                  CRAN = 'https://cloud.r-project.org'))
-
-## This can take a while on Linux because many of the dependencies have to be compiled
+## Install other packages from the r-universe
+## (this can take a while on Linux because many dependencies have to be compiled)
+options(repos = c(ajlyons = "https://ajlyons.r-universe.dev",
+                  CRAN = "https://cloud.r-project.org"))
 install.packages(c('caladaptr', 'caladaptr.apps', 'wrkshputils'))
 
 ########################################################
@@ -39,5 +41,5 @@ install.packages(c('caladaptr', 'caladaptr.apps', 'wrkshputils'))
     geom_line(aes(color=gcm)) +
     labs(title = "Daily Max Temp Averaged by Year, Bakersfield, RCP8.5", x = "year", y = "temp (F)")
   
-  ## If you see a plot - it's working!
+## If you see a plot - it's working!
 
