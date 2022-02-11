@@ -51,15 +51,15 @@ If you would like to do the hands-on exercises during the workshop (recommended 
 
 The easiest way to do the workshop exercises is using **RStudio Cloud**. This is recommended for beginners and anyone who hasn't touched R in a while. With RStudio Cloud, all you need to do is set up an account. You don't have to install or update R and RStudio, install packages, download data, or any other set up. All the workshop materials will be waiting for you in a VM prepared by the instructor. If you never used RStudio Cloud before, it's well-developed and looks and feels nearly identical to RStudio Desktop.
 
-You can create a free account on [RStudio Cloud](https://rstudio.cloud/){target="_blank" rel="noopener"} using an email address or your Google or GitHub credentials. The free plan offers 25 hours of usage per month, which is more than enough for the workshop. Once your account is setup, you're done for now. The day before the workshop, the instructor will send out a link for the workshop VM, which you can click on to make a copy of it in your own RStudio Cloud workspace. All the required packages, R notebooks, and data will be ready to go.
+You can create a free account on [RStudio Cloud](https://rstudio.cloud/){target="_blank" rel="noopener"} using an email address or your Google or GitHub credentials. The free plan offers 25 hours of usage per month, which is more than enough for the workshop. Once your account is setup, you're done for now.  If you want to verify its working, you can open [this project](https://rstudio.cloud/project/3576520){target="_blank" rel="noopener"} and open the sample script *caladaptr_test.R* to fetch and plot some Cal-Adapt climate data. 
+
+The day before the workshop, the instructor will send out a link for the workshop VM, which you can click on to make a copy of it in your own RStudio Cloud workspace. All the required packages, R notebooks, and data will be ready to go.
 
 ## RStudio Desktop
 
-You can also run RStudio on your laptop. If its been more than 3 months since you updated [R](https://cran.r-project.org/){target="_blank" rel="noopener"} or [RStudio Desktop](https://rstudio.com/products/rstudio/download/){target="_blank" rel="noopener"}, please update them both. You should be using R version 3.6 or later. 
+You can also run RStudio on your laptop. If its been more than 3 months since you updated [R](https://cran.r-project.org/){target="_blank" rel="noopener"} or [RStudio Desktop](https://rstudio.com/products/rstudio/download/){target="_blank" rel="noopener"}, please update them both. You should be using R version 4.0 or later. As far as we know, all of the packages we'll be using (including caladaptR) should work fine on Windows, MacOS, and Linux.
 
-Windows users also need to install [RTools](https://cran.r-project.org/bin/windows/Rtools/){target="_blank" rel="noopener"} in order to install packages from GitHub (which includes caladaptR). As far as we know, all of the packages we'll be using (including caladaptR) should work fine on Windows, MacOS, and Linux.
-
-After you've updated R and RStudio, please run [**this script**](https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_feb22/scripts/caladaptr_setup.R){target="_blank" rel="noopener"} to **install all the needed packages** including `caladaptr` and `caladaptr.apps`. You can copy-paste the commands into RStudio and run the commands. This could take 15 minutes or longer so don't wait until the day of the workshop to start. If you get an error message installing any of the packages, please contact the instructor. 
+After you've updated R and RStudio, please run [this script](https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_feb22/scripts/caladaptr_setup.R){target="_blank" rel="noopener"} to install all the needed packages including `caladaptr` and `caladaptr.apps`. You can copy-paste the commands into RStudio and run the commands. This could take 15 minutes or longer so don't wait until the day of the workshop to start. If you get an error message installing any of the packages, please contact the instructor. 
 
 The setup script also fetches some data using the Cal-Adapt API, so if you see a plot at the end it means its working.
 
@@ -88,7 +88,7 @@ To download the R Notebooks and other files we'll be using during the workshop, 
 
 **RStudio Cloud users**
 
-- click on this link: [*coming soon*](){target="_blank" rel="noopener"}  
+- click on this link: *coming soon* <!---- [](){target="_blank" rel="noopener"}  ---->
 - after the project opens in your RStudio Cloud workspace, click the 'Save a permanent copy' button  
 - click on the files pane in RStudio. The R Notebooks we'll be using will be in the 'Notebooks' directory.   
 
@@ -96,7 +96,9 @@ To download the R Notebooks and other files we'll be using during the workshop, 
 
 **RStudio Desktop users**
 
-*Coming soon*
+
+
+*coming soon*
 
 <!----------------------------------------
 - run the following command at the console, substituting where you want the workshop folder to go. The total size of the workshop data is ~120MB.
@@ -119,7 +121,7 @@ If you're truly limited to just one screen, check out [these tips](workspace_tip
 
 # Questions?
 
-If you have any questions please contact the [instructor](mailto:andlyons@ucanr.edu).
+If you have any questions please contact the [instructor](mailto:andlyons@ucanr.edu?subject=Climate Data Workshop).
 
 \
 
