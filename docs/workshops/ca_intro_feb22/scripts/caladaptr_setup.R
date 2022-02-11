@@ -1,61 +1,43 @@
-################################################################################################
-## caladaptR Workshop Setup
-##
-## Please run the following lines of code *before* the workshop starts
-## to install all the packages that we'll be using during the workshop.
-##
-## If you have any difficulties please email the instructor.
-##
-## For more info about caladaptr, visit: https://ucanr-igis.github.io/caladaptr/
-################################################################################################
+########################################################
+## INSTALL PACKAGES WE'LL BE USING FOR THE WORKSHOP
+########################################################
 
-## Define the required packages (these are all on CRAN)
+## Install sf before everything else (b/c on Linux it installs by itself fine, but not as a dependency)
+if (!require(sf)) install.packages("sf")
 
-pkg_req <- c("backports", "conflicted","crayon", "curl", "DBI",
-             "dbplyr", "digest", "dplyr", "fastmatch", "ggplot2", "httr", "geojsonsf", "leaflet",
-             "lifecycle", "lubridate", "magrittr", "purrr", "remotes", "rmarkdown", "RSQLite", 
-             "scales", "sf", "shiny", "stars", "tibble", "tidyr", "tmap", "units", "usethis", "zip")
+# Install other packages from CRAN (this can take a while)
+install.packages(c('tidyverse', 'conflicted', 'leaflet', 'rmarkdown', 'scales'))
 
-## See what's missing:
+## Install packages from r-universe
+options(repos = c(ajlyons = 'https://ajlyons.r-universe.dev',
+                  CRAN = 'https://cloud.r-project.org'))
 
-(pkg_missing <- setdiff(pkg_req, rownames(installed.packages())))
+## This can take a while on Linux because many of the dependencies have to be compiled
+install.packages(c('caladaptr', 'caladaptr.apps', 'wrkshputils'))
 
-## OPTION 1. Install a fresh version of *all* required packages
-##  - if it asks you to restart R more than once, select 'no'.
-##  - if it asks whether you want to install from source, select 'no'
+########################################################
+## To verify caladaptR is working properly, run the following:
+## (select all the lines and click the 'run' button)
+########################################################
 
-install.packages(pkg_req, dependencies = TRUE)
+library(caladaptr)
+library(ggplot2)
+library(units)
+library(dplyr)
 
-## OPTION 2. Install only missing packages
-## Uncomment and run the next line to just install missing packages:
-# install.packages(pkg_missing, dependencies = TRUE)
+bakersfield_cap <- ca_loc_pt(coords = c(-119.0, 35.4)) %>%
+  ca_gcm(gcms[1:4]) %>%
+  ca_scenario("rcp85") %>%
+  ca_period("year") %>%
+  ca_years(start = 2030, end = 2099) %>%
+  ca_cvar("tasmax")
 
-################################################################################################
-## INSTALL caladaptr and caladaptr.apps
-##  - These two packages are on GitHub (only), so you have to use remotes::install_github()
-##  - If it asks you whether you want to update a zillion packages, you can generally skip these
-##  - Windows users *must* have RTools installed to install packages from GitHub
-################################################################################################
-
-remotes::install_github("ucanr-igis/caladaptr")
-
-## Install caladaptr.apps
-
-remotes::install_github("ucanr-igis/caladaptr.apps")
-
-################################################################################################
-## DO A TEST 
-## To see if it worked, run the following:
-################################################################################################
-
-library(caladaptr); library(ggplot2); library(units); library(dplyr)
-
-ca_example_apireq(1) %>%
+bakersfield_cap %>% 
   ca_getvals_tbl() %>%
   mutate(temp_f = set_units(val, degF)) %>%
   ggplot(aes(x = as.Date(dt), y = as.numeric(temp_f))) +
   geom_line(aes(color=gcm)) +
-  labs(title = "Daily Max Temp Averaged by Year, Sacramento, RCP4.5", x = "year", y = "temp (F)")
+  labs(title = "Daily Max Temp Averaged by Year, Bakersfield, RCP8.5", x = "year", y = "temp (F)")
 
-## Do you see a plot? If so you're done!
+## If you see a plot - it's working!
 
