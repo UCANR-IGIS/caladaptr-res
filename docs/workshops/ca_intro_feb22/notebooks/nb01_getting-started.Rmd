@@ -1,0 +1,208 @@
+---
+title: "Getting Started with caladaptR"
+output:
+  html_notebook: 
+    css: https://ucanr-igis.github.io/caladaptr-res/assets/nb_css01.css
+    includes:
+      after_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_footer01.html
+---
+
+# Overview
+
+This Notebook will demonstrate how you can use caladaptR to:
+
+- create a Cal-Adapt API request object for a point location
+- fetch data from Cal-Adapt     
+- plot the data as a time series
+
+\
+
+# Setup
+
+The first thing we do is to load caladaptR and the other package we're going to need. (If you haven't installed these yet, see this [setup script](https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_oct21/scripts/caladaptr_setup.R)). 
+
+```{r chunk01, message=TRUE, warning=FALSE, results='hold'}
+library(caladaptr)
+library(units)
+library(ggplot2)
+library(dplyr)
+library(sf)
+library(tidyr)
+```
+
+We use the `conflicted` package to tell R which package we want it to use for some common function names:
+
+```{r chunk02, message=TRUE, warning=FALSE, results='hold'}
+library(conflicted)
+conflict_prefer("filter", "dplyr", quiet = TRUE)
+conflict_prefer("count", "dplyr", quiet = TRUE)
+conflict_prefer("select", "dplyr", quiet = TRUE)
+```
+
+\
+
+# Part I. Get temperature data for a point location
+
+In Part I, you generate a time series plot of projected maximum annual temperature like the one below for a point location using the four recommended GCMs for California and emissions scenario RCP 4.5.
+
+![](https://ucanr-igis.github.io/caladaptr-res/images/pt-tasmax-plot_400x268x256.png){class='centered'}
+
+
+## 1\. Create the API Request 
+
+The first step in getting climate variables back is to create a Cal-Adapt API request object. This involves stringing together a series of functions that specify the pieces of the request. 
+
+The following will create an API request for projected temperature data from Scripps:
+
+```{r chunk03}
+pt1_cap <- ca_loc_pt(coords = c(-119.168765, 35.487802)) %>%
+  ca_gcm(gcms[1:4]) %>%                                 
+  ca_scenario(c("rcp45", "rcp85")) %>%
+  ca_period("year") %>%
+  ca_years(start = 2030, end = 2080) %>%
+  ca_cvar(c("tasmin", "tasmax"))
+```
+
+\
+
+**Pro Tip:**
+
+- the order of the constructor functions doesn't matter
+
+- when entering coordinates, they must be i) in decimal degrees, and ii) formatted as *longitude, latitude* (in that order!)
+
+- this example creates an API request for modeled climate data; for other datasets you might use different constructor functions
+
+- you don't have to memorize a bunch of keywords. `caladaptr` has several built-in constants that contain the values you can pass to API construction functions, including `gcms`, `scenarios`, `cvars`, and `periods`.
+
+\
+
+#### Your turn
+
+Enter the following constants to see what they contain `gcms`, `scenarios`, `cvars`, and `periods` [[Answer](https://bit.ly/3kRUP5Y)].
+
+```{r chunk04}
+gcms
+
+scenarios
+
+cvars
+
+periods
+```
+
+**Pro Tip:**
+
+- not every combination of GCM, scenario, climate variable, and period has a data set
+
+- these constants are useful for constructing API requests for modeled climate data; they may not be needed for other datasets
+
+\
+
+## 2\. Examine an API Request
+
+To see what's in an API request object, type its name at the console:
+
+```{r chunk05}
+pt1_cap
+```
+
+**Pro Tip:**
+
+- you can customize the colors with `ca_settings()`. Let `console_colors` = `"dark"` or `light` depending on your RStudio color background.
+
+```{r chunk06}
+ca_settings(console_colors = "dark")
+pt1_cap
+```
+
+\
+
+You can double-check if your API request is complete by passing it to `ca_preflight()`:
+
+```{r chunk07}
+pt1_cap %>% ca_preflight()
+```
+
+\
+
+To verify the location in an API request, you can plot it:
+
+```{r chunk08}
+plot(pt1_cap)
+```
+
+**Pro Tip:**
+
+- To view the LOCA grid cells, add `locagrid = TRUE` to the plot command.
+
+```{r chunk09}
+plot(pt1_cap, locagrid = TRUE)
+```
+
+
+#### Your Turn:
+
+Where is this point located? [[Answer](https://bit.ly/3uqUx96)].
+
+Answer: 
+
+\
+
+## 3\. Fetch Data
+
+Now it's time to fetch data by feeding our API request into `ca_getvals_tbl()`. The object returned will be a tibble (data frame):  
+
+```{r chunk10, cache = TRUE}
+pt1_tbl <- pt1_cap %>% ca_getvals_tbl(quiet = TRUE)
+
+head(pt1_tbl)
+```
+
+\
+
+## 4\. Wrangle the Results for Plotting
+
+To produce the desired time series plot, we need to i) pull out just values for RCP 4.5, and ii) convert degrees to &#176;F. For the unit conversion, we can use the handy `set_units` function from the `units` package.
+
+```{r chunk11}
+pt1_rcp45_tbl <- pt1_tbl %>%
+  filter(scenario == "rcp45", cvar == "tasmax") %>%
+  mutate(temp_f = set_units(val, degF))
+
+pt1_rcp45_tbl %>% head()
+```
+
+\
+
+## 5\. Plot the Time Series
+
+Plot these with ggplot:
+
+```{r chunk12, cache = TRUE}
+ggplot(data = pt1_rcp45_tbl, aes(x = as.Date(dt), y = as.numeric(temp_f))) +
+  geom_line(aes(color=gcm)) +
+  labs(title = "Average Maximum Daily Temperature Per Year for RCP4.5", x = "year", y = "temp (F)")
+```
+
+### Challenge 1
+
+Modify the above to create a similar plot for RCP 8.5. [[Answer](https://bit.ly/3F4Vity)].
+
+```{r chunk13}
+## Your answer here
+
+
+```
+
+### Challenge 2
+
+For the same point, make a plot of average maximum temperature year for the same 4 GCMs for the period 1950-2005. [[Hint](https://bit.ly/3oWB12V)]. [[Answer](https://bit.ly/3I3ZVp2)].
+
+```{r chunk14}
+## Your answer here
+
+
+```
+
+

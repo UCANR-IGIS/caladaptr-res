@@ -1,0 +1,309 @@
+---
+title: "Large Queries and Caching Results"
+output:
+  html_notebook: 
+    css: https://ucanr-igis.github.io/caladaptr-res/assets/nb_css01.css
+    includes:
+      before_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_hdrsoln.html
+      after_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_footer01.html
+---
+
+# Overview
+
+This notebook will demonstrate two ways of dealing with larger volumes of data:
+
+- caching retrieved into a SQLite database  
+- downloading data as TIFFs
+
+A functional definition of "large data" might include:
+
+- any volume of data that you wouldn't want to download twice  
+- any volume of data that might bog down (or worse, crash) the Cal-Adapt server, and annoy the system administrators  
+
+## Saving Cal-Adapt Data to SQLite Database
+
+To manage large downloads and avoid downloading data twice, caladaptR provides `ca_getvals_db()`. `ca_getvals_db()` is very similar to `ca_getvals_tbl()`, but saves the data into a SQLite database file on your computer as it comes in. Before making an API request, it checks to see if the data have already been downloaded, and if so skips it. If you get disconnected during a download, you can run the command again and it'll just pick up where it left off. `ca_getvals_db()` returns a 'remote tibble', which functions very similar to a regular 'in-memory' tibble however it points to the SQLite database file on disk.
+
+For additional info on working with SQLite databases, see the Article on making [Large Queries](https://ucanr-igis.github.io/caladaptr/articles/large-queries.html).
+
+# Example: Download Daily Data for Congressional Disticts
+
+In this example we'll download daily temperature data for 16 Congressional Districts in the LA region. 
+
+\
+
+## Setup
+
+Load caladaptR and the other package we're going to need. (If you haven't installed these yet, see this [setup script](https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_oct21/scripts/caladaptr_setup.R)). 
+
+```{r chunk01, message=FALSE, warning=FALSE, results='hold'}
+library(caladaptr)
+library(units)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(sf)
+library(tidyr)
+library(tmap)
+library(conflicted)
+conflict_prefer("filter", "dplyr", quiet = TRUE)
+conflict_prefer("count", "dplyr", quiet = TRUE)
+conflict_prefer("select", "dplyr", quiet = TRUE)
+```
+
+\
+
+## Import the Congressional Districts Boundaries
+
+The LA Congressional district boundaries are saved in the 'data' folder as a geopackage:
+
+```{r chunk02}
+cdist_la_fn <- "./data/cdistricts_la.gpkg"
+file.exists(cdist_la_fn)
+
+cdist_la_sf <- st_read(cdist_la_fn)
+
+tmap_mode("view")
+tm_shape(cdist_la_sf) + tm_borders()
+```
+
+**Pro Tip:**
+
+- to use a sf object the location for an API Request, it must be in geographic coordinates (EPSG 4326)
+
+
+\
+
+## Create the API Request
+
+Here we use `ca_loc_sf()` as the location function for an API request for 30-years of modeled daily temperature data (minimum and maximum) for 4 GCMs and 2 RCPs:
+
+```{r chunk03}
+cdist_la_cap <- ca_loc_sf(loc = cdist_la_sf, idfld = "geoid") %>% 
+  ca_gcm(gcms[1:4]) %>%                                 
+  ca_scenario(c("rcp45", "rcp85")) %>%
+  ca_period("day") %>%
+  ca_years(start = 2070, end = 2099) %>%
+  ca_cvar(c("tasmin", "tasmax")) %>% 
+  ca_options(spatial_ag = "mean")
+
+cdist_la_cap
+```
+
+\
+
+Do the standard plotting and preflight checks:
+
+```{r chunk04}
+plot(cdist_la_cap, locagrid = TRUE)
+```
+
+
+```{r chunk05}
+cdist_la_cap %>% ca_preflight()
+```
+
+\
+
+## Fetch Data
+
+To copy downloaded data into a database, use `ca_getvals_db()` instead of `ca_getvals_tbl()`. `ca_getvals_db()` has two arguments which are mandatory:
+
+`db_fn` - the file name of a SQLite database (will be created if it doesn't exist)
+
+`db_tbl` - the name of a table inside the database where the values should be saved
+
+```{r chunk06}
+my_database_fn <- "./data/cdist_la_temp_data.sqlite"
+  
+cdist_la_rtbl <- cdist_la_cap %>% 
+  ca_getvals_db(db_fn = my_database_fn, 
+                db_tbl = "temp_data",
+                quiet = TRUE)
+```
+
+\
+
+Inspect the results:
+
+```{r chunk07}
+cdist_la_rtbl %>% head()
+```
+
+\
+
+The number of rows we retrieved:
+
+```{r chunk08}
+cdist_la_rtbl %>% count() %>% pull(n)
+```
+
+\
+
+## Wrangling a Remote Tibble
+
+Many of the base R operations that work with in-memory tibbles may or many not work with remote tibbles. For example as we saw above `cdist_la_rtbl %>% count()` works, but:
+
+```{r chunk09}
+dim(cdist_la_rtbl)
+nrow(cdist_la_rtbl)
+```
+
+\
+
+In general, the best way to work with remote tibbles is with 
+
+i) dplyr functions, or   
+ii) SQL statements passed using the `DBI` package 
+
+Simple filtering, sorting, grouping and simple numeric summaries generally work fine with dplyr verbs:
+
+```{r chunk10}
+cdist_la_rtbl %>% 
+  filter(geoid == "0632") %>% 
+  group_by(scenario, gcm, cvar) %>% 
+  summarize(mean_temp = mean(val, na.rm = TRUE))
+```
+
+\
+
+
+**Pro Tip:**
+
+- You can 'convert' a Remote Tibble to a regular in-memory Tibble by tacking on `collect()` at the end of a dplyr expression.
+
+\
+
+If your wrangling workflow involves a lot steps that are difficult or impossible to do with remote tibbles, a good strategy is to do your filtering and grouping with dplyr statements on the remote tibble, and then convert the results to a regular tibble with `collect()`.
+
+Below we convert the grouped summary table into a tibble so we can use `pivot_wider()` (which doesn't work on remote tibbles):
+
+```{r chunk11}
+temp_long_tbl <- cdist_la_rtbl %>% 
+  filter(geoid == "0632") %>% 
+  group_by(scenario, gcm, cvar) %>% 
+  summarize(mean_temp = mean(val, na.rm = TRUE)) %>% 
+  collect()
+
+class(temp_long_tbl)
+
+temp_wide_tbl <- temp_long_tbl %>% 
+  pivot_wider(names_from = cvar, values_from = mean_temp) %>% 
+  mutate(tas_range = tasmax - tasmin)
+
+temp_wide_tbl %>% head()
+```
+
+\
+
+#### Your Turn
+
+Create a histogram of the mean daily temperatures for one Congressional District and one emissions scenario, grouping the data by GCM. Does the distribution of mean average temperature look the same across GCMs? 
+
+```{r chunk12}
+## Your answer here
+```
+
+\
+
+# Downloading Rasters
+
+Another way to deal with large data needs is to download the data as raster or TIF files. The same API Request object can be used to get raster data if you feed it into `ca_getrst_stars()`.
+
+For additional info on downloading and analyzing rasters, see the 3 articles on [Downloading Rasters](https://ucanr-igis.github.io/caladaptr/articles/rasters-pt1.html).
+
+Below we get a raster of observed historic temperature data for the Sierra climate region:
+
+```{r chunk13}
+sierra_cap <- ca_loc_aoipreset(type = "climregions", idfld = "name", idval = "Sierra") %>% 
+  ca_livneh(TRUE) %>% 
+  ca_period("year") %>% 
+  ca_cvar("pr") %>% 
+  ca_years(start = 1970, end = 2010)
+
+sierra_cap
+
+plot(sierra_cap, locagrid = TRUE)
+
+sierra_cap %>% ca_preflight()
+```
+
+\
+
+To fetch the data as TIFs, use :
+
+```{r chunk14}
+tiff_dir <- "./data"
+
+sierra_tiff_fn <- sierra_cap %>% 
+  ca_getrst_stars(out_dir = tiff_dir, mask = TRUE, quiet = TRUE, overwrite = FALSE)
+```
+
+**Pro Tip:**
+
+ - to avoid downloading the same TIF multiple times, use the same output directory and set `overwrite = FALSE`
+ 
+\
+ 
+`ca_getrst_stars()` works differently than retrieving tabular climate values. It returns a vector of TIF files that were downloaded. To work with them, you next have to load them back into R as stars objects (space-time arrays) using `ca_stars_read()`:
+
+```{r chunk15, paged.print = FALSE}
+sierra_stars_lst <- ca_stars_read(sierra_tiff_fn)
+sierra_stars_lst[[1]]
+```
+
+\
+
+To plot a stars objects, you have to decide which layer(s) to plot. In this case, each layer represents a year from 1970 to 2010. Below we plot 4 of the 40 years:
+
+```{r chunk16}
+plot(sierra_stars_lst[[1]] %>% slice(index = seq(1,40,length.out =4), along = "year"), 
+     axes = TRUE,
+     main = attributes(sierra_stars_lst[[1]])$ca_metadata$slug)
+```
+
+Not sure what the units are? You can double-check by viewing the metadata for the slug from the catalog:
+
+```{r chunk17}
+ca_catalog_search("pr_year_livneh")
+```
+
+\
+
+There is a **lot** more you can do with rasters, including pixel summaries, combining them into higher dimensional data cubes, spatially mosaicing them, etc. For more info, see the Rasters articles on the [website](https://ucanr-igis.github.io/caladaptr/).
+ 
+\
+
+#### Your Turn
+
+Download historic precipitation data for the county where you live or work. [[Answer](https://bit.ly/3m7BcWM)]
+ 
+```{r chunk18, paged.print = FALSE}
+## Example: Mendocino County
+
+ca_aoipreset_geom("counties", quiet = TRUE) %>% 
+  st_drop_geometry() %>% 
+  filter(name == "Mendocino") %>% 
+  select(name, state_name, fips)
+
+mendocino_cap <- ca_loc_aoipreset(type = "counties", idfld = "fips", idval = "06045") %>% 
+  ca_livneh(TRUE) %>% 
+  ca_period("year") %>% 
+  ca_cvar("pr") %>% 
+  ca_years(start = 1970, end = 2010)
+
+plot(mendocino_cap)
+
+mendocino_fn <- mendocino_cap %>% 
+  ca_getrst_stars(out_dir = tempdir(), mask = TRUE, quiet = TRUE, overwrite = FALSE)
+
+mendocino_stars_lst <- ca_stars_read(mendocino_fn) 
+  
+mendocino_stars_lst[[1]]
+
+plot(mendocino_stars_lst[[1]] %>% slice(index = seq(1,40,length.out =4), along = "year"), 
+     axes = TRUE,
+     main = attributes(mendocino_stars_lst[[1]])$ca_metadata$slug)
+```
+ 
+
