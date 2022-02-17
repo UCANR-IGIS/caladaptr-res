@@ -196,8 +196,14 @@ p {
 <div id="rstudio-cloud" class="section level2">
 <h2>RStudio Cloud</h2>
 <p>The easiest way to do the workshop exercises is using <strong>RStudio Cloud</strong>. This is recommended for beginners and anyone who hasn’t touched R in a while. With RStudio Cloud, all you need to do is set up an account. You don’t have to install or update R and RStudio, install packages, download data, or any other set up. All the workshop materials will be waiting for you in a VM prepared by the instructor. If you never used RStudio Cloud before, it’s well-developed and looks and feels nearly identical to RStudio Desktop.</p>
-<p>You can create a free account on <a href="https://rstudio.cloud/" target="_blank" rel="noopener">RStudio Cloud</a> using an email address or your Google or GitHub credentials. The free plan offers 25 hours of usage per month, which is more than enough for the workshop. Once your account is setup, you’re done for now. If you want to verify its working, you can open <a href="https://rstudio.cloud/project/3567507" target="_blank" rel="noopener">this project</a> and open the sample script <em>caladaptr_test.R</em> to fetch and plot some Cal-Adapt climate data.</p>
-<p>The day before the workshop, the instructor will send out a link for the workshop VM, which you can click on to make a copy of it in your own RStudio Cloud workspace. All the required packages, R notebooks, and data will be ready to go.</p>
+<p>You can create a free account on <a href="https://rstudio.cloud/" target="_blank" rel="noopener"><strong>RStudio Cloud</strong></a> using an email address or your Google or GitHub credentials. The free plan offers 25 hours of usage per month, which is more than enough for the workshop. Once your account is setup, you’re done for now.</p>
+<!--------------------------
+If you want to verify its working, you can open [this project](https://rstudio.cloud/project/3567507){target="_blank" rel="noopener"} and open the sample script *caladaptr_test.R* to fetch and plot some Cal-Adapt climate data. 
+--------------------------->
+<!----------------
+The day before the workshop, the instructor will send out a link for the workshop VM, which you can click on to make a copy of it in your ow  n RStudio Cloud workspace. All the required packages, R notebooks, and data will be ready to go.
+--------->
+<p>To make your own copy of the workshop project, click on this link: <a href="https://rstudio.cloud/project/3606612" target="_blank" rel="noopener"><strong>https://rstudio.cloud/project/3606612</strong></a>. After the project opens in your RStudio Cloud workspace, click the ‘Save a permanent copy’ button. To find the exercise Notebooks, click on th ‘Notebooks’ directory in the files pane in RStudio.</p>
 </div>
 <div id="rstudio-desktop" class="section level2">
 <h2>RStudio Desktop</h2>
@@ -208,32 +214,16 @@ p {
 </p>
 <p><em>If you see this plot at the end of the setup script, it means everything is working:</em></p>
 <p><img src="setup_files/figure-html/test_calatapr-1.png" width="500" height="300" /></p>
+<p>Run the following lines to download the slides and notebooks. (You can also download the zip file from a browser). The zip file is about 30MB.</p>
+<div class="indented1">
+<pre class="r"><code>zip_url &lt;- &quot;https://ucdavis.box.com/shared/static/uxj3nzhk4aagtsc6mpbnq4buhh0j1mgm.zip&quot;
+
+## Update destdir to where you want the workshop folder to go, or omit it to expand to the desktop
+usethis::use_course(zip_url, destdir = &quot;c:/path/goes/here&quot;) </code></pre>
+</div>
 </div>
 </div>
 <p><!---- div class="indented1" ---></p>
-</div>
-<div id="workshop-data-and-materials" class="section level1">
-<h1>Workshop Data and Materials</h1>
-<p>All workshop materials will be posted <a href="https://ucanr-igis.github.io/caladaptr-res/workshops/ca_intro_feb22/" target="_blank" rel="noopener">on this website</a>.</p>
-<p>To download the R Notebooks and other files we’ll be using during the workshop, please do one of the following:</p>
-<p><strong>RStudio Cloud users</strong></p>
-<ul>
-<li>click on this link: <a href="https://rstudio.cloud/project/3606612" target="_blank" rel="noopener">https://rstudio.cloud/project/3606612</a></li>
-<li>after the project opens in your RStudio Cloud workspace, click the ‘Save a permanent copy’ button<br />
-</li>
-<li>click on the files pane in RStudio. The R Notebooks we’ll be using will be in the ‘Notebooks’ directory.</li>
-</ul>
-<p><br />
-</p>
-<p><strong>RStudio Desktop users</strong></p>
-<ul>
-<li>run the following command at the console, substituting where you want the workshop folder to go. The total size of the workshop data is ~28MB.</li>
-</ul>
-<div class="indented1">
-<pre><code>zip_url &lt;- &quot;https://ucdavis.box.com/shared/static/uxj3nzhk4aagtsc6mpbnq4buhh0j1mgm.zip&quot;
-usethis::use_course(zip_url, destdir = &quot;c:/path/goes/here&quot;) 
-## omit destdir to put the workshop folder on the desktop</code></pre>
-</div>
 </div>
 <div id="using-two-monitors" class="section level1">
 <h1>Using Two Monitors</h1>
