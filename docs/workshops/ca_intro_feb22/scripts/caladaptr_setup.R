@@ -7,7 +7,7 @@
 if (!require(sf)) install.packages("sf")
 
 # Install other CRAN packages as needed
-pkgs_req <- c("tidyverse", "conflicted", "leaflet", "rmarkdown", "scales")
+pkgs_req <- c("tidyverse", "conflicted", "leaflet", "rmarkdown", "scales", "usethis")
 pkgs_missing <- pkgs_req[!(pkgs_req %in% installed.packages()[,"Package"])]
 if (length(pkgs_missing)) install.packages(pkgs_missing)
 
