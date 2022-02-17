@@ -55,6 +55,8 @@ The following AOI Presets are available:
 aoipreset_types
 ```
 
+\
+
 **Pro Tip:**
 
  - all of the Preset AOIs can be imported into R as sf objects with `ca_aoipreset_geom()`.
@@ -337,6 +339,8 @@ Count the number of extreme heat days using a threshold of 110 Fahrenheit. Compu
 
 
 ```
+
+\
 
 **Pro Tip**
 

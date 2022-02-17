@@ -115,11 +115,11 @@ To copy downloaded data into a database, use `ca_getvals_db()` instead of `ca_ge
 
 ```{r chunk06}
 my_database_fn <- "./data/cdist_la_temp_data.sqlite"
-  
+
 cdist_la_rtbl <- cdist_la_cap %>% 
   ca_getvals_db(db_fn = my_database_fn, 
                 db_tbl = "temp_data",
-                quiet = TRUE)
+                quiet = FALSE)
 ```
 
 \
@@ -167,7 +167,6 @@ cdist_la_rtbl %>%
 
 \
 
-
 **Pro Tip:**
 
 - You can 'convert' a Remote Tibble to a regular in-memory Tibble by tacking on `collect()` at the end of a dplyr expression.
@@ -196,12 +195,13 @@ temp_wide_tbl %>% head()
 
 \
 
-#### Your Turn
+### Challenge
 
 Create a histogram of the mean daily temperatures for one Congressional District and one emissions scenario, grouping the data by GCM. Does the distribution of mean average temperature look the same across GCMs? 
 
 ```{r chunk12}
 ## Your answer here
+
 ```
 
 \
@@ -238,6 +238,8 @@ tiff_dir <- "./data"
 sierra_tiff_fn <- sierra_cap %>% 
   ca_getrst_stars(out_dir = tiff_dir, mask = TRUE, quiet = TRUE, overwrite = FALSE)
 ```
+
+\
 
 **Pro Tip:**
 

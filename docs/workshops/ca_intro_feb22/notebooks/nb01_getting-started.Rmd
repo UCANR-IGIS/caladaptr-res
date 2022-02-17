@@ -77,18 +77,13 @@ pt1_cap <- ca_loc_pt(coords = c(-119.168765, 35.487802)) %>%
 
 \
 
-#### Your turn
+### Challenge 1
 
 Enter the following constants to see what they contain `gcms`, `scenarios`, `cvars`, and `periods` [[Answer](https://bit.ly/3kRUP5Y)].
 
 ```{r chunk04}
-gcms
+## Your answer here
 
-scenarios
-
-cvars
-
-periods
 ```
 
 **Pro Tip:**
@@ -185,7 +180,7 @@ ggplot(data = pt1_rcp45_tbl, aes(x = as.Date(dt), y = as.numeric(temp_f))) +
   labs(title = "Average Maximum Daily Temperature Per Year for RCP4.5", x = "year", y = "temp (F)")
 ```
 
-### Challenge 1
+### Challenge 2
 
 Modify the above to create a similar plot for RCP 8.5. [[Answer](https://bit.ly/3F4Vity)].
 
@@ -195,7 +190,7 @@ Modify the above to create a similar plot for RCP 8.5. [[Answer](https://bit.ly/
 
 ```
 
-### Challenge 2
+### Challenge 3
 
 For the same point, make a plot of average maximum temperature year for the same 4 GCMs for the period 1950-2005. [[Hint](https://bit.ly/3oWB12V)]. [[Answer](https://bit.ly/3I3ZVp2)].
 

@@ -56,6 +56,8 @@ The following AOI Presets are available:
 aoipreset_types
 ```
 
+\
+
 **Pro Tip:**
 
  - all of the Preset AOIs can be imported into R as sf objects with `ca_aoipreset_geom()`.

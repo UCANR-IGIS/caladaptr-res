@@ -218,7 +218,7 @@ p {
 <p>To download the R Notebooks and other files we’ll be using during the workshop, please do one of the following:</p>
 <p><strong>RStudio Cloud users</strong></p>
 <ul>
-<li>click on this link: <em>coming soon</em> <!---- [](){target="_blank" rel="noopener"}  ----></li>
+<li>click on this link: <a href="https://rstudio.cloud/project/3606612" target="_blank" rel="noopener">https://rstudio.cloud/project/3606612</a></li>
 <li>after the project opens in your RStudio Cloud workspace, click the ‘Save a permanent copy’ button<br />
 </li>
 <li>click on the files pane in RStudio. The R Notebooks we’ll be using will be in the ‘Notebooks’ directory.</li>
@@ -230,7 +230,9 @@ p {
 <li>run the following command at the console, substituting where you want the workshop folder to go. The total size of the workshop data is ~28MB.</li>
 </ul>
 <div class="indented1">
-
+<pre><code>zip_url &lt;- &quot;https://ucdavis.box.com/shared/static/uxj3nzhk4aagtsc6mpbnq4buhh0j1mgm.zip&quot;
+usethis::use_course(zip_url, destdir = &quot;c:/path/goes/here&quot;) 
+## omit destdir to put the workshop folder on the desktop</code></pre>
 </div>
 </div>
 <div id="using-two-monitors" class="section level1">
