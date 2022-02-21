@@ -93,7 +93,7 @@ cdist_la_cap
 
 Do the standard plotting and preflight checks:
 
-```{r chunk04}
+```{r chunk04, cache = FALSE}
 plot(cdist_la_cap, locagrid = TRUE)
 ```
 
@@ -213,7 +213,7 @@ For additional info on downloading and analyzing rasters, see the 3 articles on 
 
 Below we get a raster of observed historic temperature data for the Sierra climate region:
 
-```{r chunk13}
+```{r chunk13, cache = FALSE}
 sierra_cap <- ca_loc_aoipreset(type = "climregions", idfld = "name", idval = "Sierra") %>% 
   ca_livneh(TRUE) %>% 
   ca_period("year") %>% 
@@ -255,7 +255,7 @@ sierra_stars_lst[[1]]
 
 To plot a stars objects, you have to decide which layer(s) to plot. In this case, each layer represents a year from 1970 to 2010. Below we plot 4 of the 40 years:
 
-```{r chunk16}
+```{r chunk16, cache = TRUE}
 plot(sierra_stars_lst[[1]] %>% slice(index = seq(1,40,length.out =4), along = "year"), 
      axes = TRUE,
      main = attributes(sierra_stars_lst[[1]])$ca_metadata$slug)

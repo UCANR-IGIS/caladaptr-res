@@ -109,7 +109,7 @@ cnty_cap %>% ca_preflight()
 
 As before, we can plot the API request to double-check we got the right location: 
 
-```{r chunk06, cache = TRUE}
+```{r chunk06, cache = FALSE}
 plot(cnty_cap, locagrid = TRUE)
 ```
 
@@ -260,7 +260,7 @@ lrec_tasmax_prj_cap <- ca_loc_pt(coords = c(-119.060, 36.359), id = 1) %>%
 lrec_tasmax_prj_cap %>% ca_preflight()
 ```
 
-```{r chunk16}
+```{r chunk16, cache = FALSE}
 plot(lrec_tasmax_prj_cap)
 ```
 
