@@ -384,9 +384,10 @@ ggplot(data = slo_mmday_tbl, aes(x = as.Date(dt), y = as.numeric(pr_mmday))) +
 <div id="the-dilemma-of-multiple-futures" class="slide section level1">
 <h1>The Dilemma of Multiple Futures</h1>
 <div style="display: flex;">
-<div style="width:580px; flex-grow:0;">
+<div style="width:630px; flex-grow:0;">
 <p>How do we make sense of multiple climate futures?</p>
 <p>How do we store data for multiple futures?</p>
+<p>Individual time series are not that helpful by themselves.</p>
 <p>What is the right order of operations for computing metrics, aggregating data, and doing comparisons?</p>
 </div>
 <div style="width:370px;">
@@ -405,10 +406,16 @@ ggplot(data = slo_mmday_tbl, aes(x = as.Date(dt), y = as.numeric(pr_mmday))) +
 <li>30 years<br />
 </li>
 <li>10 GCMs</li>
-<li>3 emissions scenarios (RCP 45, RCP85, historical)
+<li>3 emissions scenarios (RCP4.5, RCP8.5, historical)
 </div></li>
 </ul>
 <p>That’s 365 * 30 * 10 * 3 = <strong>328,500 values of tasmax</strong>, for <em>each</em> pixel in the county!</p>
+<p>In what order should we</p>
+<ol style="list-style-type: lower-roman">
+<li>identify heat days</li>
+<li>find consecutive heat days</li>
+<li>find the mean number of heat spells per i) GCP, ii) RCP, iii) county</li>
+</ol>
 <p><br />
 </p>
 <h2 id="general-order-of-operations">General Order of Operations</h2>

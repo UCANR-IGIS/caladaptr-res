@@ -1,0 +1,411 @@
+---
+title: "Getting Started with caladaptR"
+output:
+  html_notebook: 
+    css: https://ucanr-igis.github.io/caladaptr-res/assets/nb_css01.css
+    includes:
+      before_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_hdrsoln.html
+      after_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_footer01.html
+---
+
+# Overview
+
+This Notebook will demonstrate how you can use caladaptR to:
+
+- create an API Request using a preset area-of-interest (county)
+- use pivot_wider to go from a long to wide format  
+- add a trend line to a plot  
+- explore the Cal-Adapt data catalog  
+- specify Livneh datasets  
+- wrangle results for different summaries and visualizations  
+
+\
+
+# Setup
+
+The first thing we do is to load caladaptR and the other package we're going to need. (If you haven't installed these yet, see this [setup script](https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_oct21/scripts/caladaptr_setup.R)). 
+
+```{r chunk01, message=TRUE, warning=FALSE, results='hold'}
+library(caladaptr)
+library(units)
+library(ggplot2)
+library(dplyr)
+library(sf)
+library(tidyr)
+library(conflicted)
+conflict_prefer("filter", "dplyr", quiet = TRUE)
+conflict_prefer("count", "dplyr", quiet = TRUE)
+conflict_prefer("select", "dplyr", quiet = TRUE)
+```
+
+# Part I. Retrieve County Level Data 
+
+In this section, we'll fetch and retrieve average daily minimum temperature by year for a single county, and create a time-series plot showing the *difference* between RCP85 and RCP45:
+
+![](https://ucanr-igis.github.io/caladaptr-res/images/cnty_tasmin_diff_400x269x256.png){class='centered'}
+
+## Preset Areas-of-Interest
+
+For this exercise, we need to use a **Preset Area-of-Interest**. 
+
+The Cal-Adapt API has a number of 'preset' areas-of-interest (also called boundary layers) that you can use cookie-cutter style when retrieving climate data. The advantage of using an AOI Preset is that you don't need to import a GIS layer to query according to these common features. You just need to know the name or ID number of the feature(s) you're interested in.
+
+The following AOI Presets are available:
+
+```{r chunk02, cache = FALSE}
+aoipreset_types
+```
+
+\
+
+**Pro Tip:**
+
+ - all of the Preset AOIs can be imported into R as sf objects with `ca_aoipreset_geom()`.
+
+\
+
+## 1\. Find the FIPS code for Kings County
+
+To use an AOI Preset, you need to specify which feature(s) you're interested in by providing the value(s) for one of the id fields. The specific columns available for identifying features vary according to preset. You can view the id columns and their values for an AOI Preset using the built-in `aoipreset_idval` constant. For example the counties layer allows you to specify a county by name, fips code, or id. Remember that everything in R is case-sensitive!
+
+```{r chunk03, cache = TRUE}
+aoipreset_idval$counties
+```
+
+You can find county fips codes on Google - just be sure to use the 6-character version which includes the state. Alternately, you can View the attribute table of the counties preset layer: 
+
+```{r chunk04, message = FALSE}
+# ca_aoipreset_geom("counties") %>% View()
+```
+
+For this example, we'll look at **Kings County** (FIPS = `06031`).
+
+\
+
+## 2\. Create the API Request
+
+Let's create an API request for Kings County. Note below the inclusion of `ca_options()` to specify how we want to aggregate the pixels that fall within the country. This is required whenever you query polygon features.
+
+```{r chunk05, cache = TRUE}
+cnty_cap <- ca_loc_aoipreset(type="counties", idfld = "fips", idval = "06031") %>%
+  ca_gcm(gcms[1:4]) %>%
+  ca_scenario(c("rcp45", "rcp85")) %>%
+  ca_period("year") %>%
+  ca_years(start = 2030, end = 2080) %>%
+  ca_cvar(c("tasmin")) %>%
+  ca_options(spatial_ag = "max")
+
+cnty_cap
+
+cnty_cap %>% ca_preflight()
+```
+\
+
+**Pro Tip:**
+
+- An API request can have more than one location. If using AOI Presets, pass multiple values to `idval`, or omit `idval` completely and all features in the layer will be queried.
+
+\
+
+As before, we can plot the API request to double-check we got the right location: 
+
+```{r chunk06, cache = FALSE}
+plot(cnty_cap, locagrid = TRUE)
+```
+
+\
+
+## 3\. Fetch Data
+
+Fetch data with `ca_getvals_tbl()`:
+
+```{r chunk07, cache = TRUE}
+cnty_tbl <- cnty_cap %>% ca_getvals_tbl(quiet = TRUE)
+
+cnty_tbl %>% head()
+```
+
+\
+
+## 4\. Wrangle Results for Plotting
+
+To compute the difference between RCP 8.5 and RCP 4.5, we need to split them into separate columns. This is an example of going from a 'long' format to a 'wide' format. Fortunately, the tidyr package has a function called `pivot_wider` that can do this in single command. While we're at it we'll convert the temp to degrees Fahrenheit:
+
+```{r chunk08, cache = TRUE}
+cnty_diff_rcp85_45_tbl <- cnty_tbl %>% 
+  mutate(temp_f = set_units(val, degF)) %>% 
+  select(fips, gcm, scenario, dt, temp_f) %>% 
+  pivot_wider(names_from = scenario, values_from = temp_f)
+
+head(cnty_diff_rcp85_45_tbl)
+```
+
+\
+
+## 5\. Plot 
+
+Now we're ready to make the plot. Since we're mainly interested in the trend, we'll add a smoothing line using `geom_smooth()`:
+
+```{r chunk09, cache = TRUE}
+ggplot(data = cnty_diff_rcp85_45_tbl, aes(x = as.Date(dt), y = as.numeric(rcp85 - rcp45))) +
+  geom_line(aes(color=gcm)) +
+  geom_smooth(method=lm, formula = y ~ x) +
+  labs(title = "Difference between RCP8.5 and RCP4.5 in the Average Daily \nMinimum Temperature for Kings County", x = "year", y = "temp (F)")
+```
+
+This plot shows that as time goes on, the difference between RCP4.5 and RCP8.5 gets bigger and bigger.
+
+\
+
+# Part II. Finding Data
+
+Half the battle of working with climate data is finding the name of the dataset you're interested in.
+
+## Browsing the Cal-Adapt Data Catalog
+
+caladaptR comes with a copy of the Cal-Adapt raster series data catalog, which you can access with `ca_catalog_rs()`:
+
+```{r chunk10}
+# ca_catalog_rs() %>% View()
+```
+
+\
+
+### Challenge 1
+
+How many raster datasets are there in the Cal-Adapt catalog? [[Answer](https://bit.ly/3JvDLfy)]
+
+```{r chunk11}
+ca_catalog_rs() %>% nrow()
+```
+
+\
+
+**Pro Tip:**
+
+- you can download a fresh copy of the Cal-Adapt raster series catalog with `ca_catalog_fetch()` 
+
+\
+
+## Searching for a Dataset
+
+One way you can search for datasets is to use the filter boxes above each column in the RStudio View pane. For example search for layers whose name contains the word 'snow'.
+
+caladaptR also has a search function `ca_catalog_search()`. You can this function to find datasets using a key word or phrase. You can also use this function to see the details for a specific slug, example:
+
+```{r chunk12}
+ca_catalog_search("swe_day_ens32avg_rcp45")
+```
+
+\
+
+### Challenge 2
+
+How many datasets are from gridMET? [[Answer](https://bit.ly/3m7zMvA)]
+
+```{r chunk13}
+ca_catalog_search("gridmet", quiet = TRUE) %>% nrow()
+
+## Ans. 6
+```
+
+\
+
+## Specifying Datasets
+
+When you construct an API Request object, you can mix-and-match functions to specify the dataset you want:
+
+**LOCA downscaled modeled climate variables** (including all Scripps) and **their derivatives** (i.e., VIC) can be specified using the constructor functions: `ca_gcm()` + `ca_scenario()` + `ca_cvar()` + `ca_period()`.
+
+**Livneh data** (observed historical variables based on spatially interpolated measurements) can be specified with `ca_livneh()` + `ca_cvar()` + `ca_period()`.
+
+**everything else** can be specified by slug, using `ca_slug()`.
+
+\
+
+### Challenge 3
+
+What is the raster dataset with the slug `tmmn_day_gridmet`? For which years is it available? What are the units? [[Hint](https://bit.ly/3gQb6p0)] | [[Answer](https://bit.ly/3LJl0ay)]
+
+Ans. gridMET daily minimum temperature historical. 
+
+1979-2020
+
+Kelvin
+
+```{r chunk14}
+ca_catalog_search("tmmn_day_gridmet")
+```
+
+\
+
+# Explore the Climate Future of [Lindcove Research and Extension Center](http://lrec.ucanr.edu/)
+
+In this example, we'll explore daily projected climate data for a point location. We select the UC [**Lindcove Research and Extension Center**](http://lrec.ucanr.edu/) (LREC), a field station in the San Joaquin Valley which has been a leading center for citrus research for decades. The trees are getting old and need to be replaced soon so its worth asking - is citrus production still going to viable in this part of California at the end of the century?
+
+\
+
+## Create the API Request
+
+Let's start by getting 20 years worth of the daily maximum temperature for the 4 priority GCMs and 2 RCPs. 
+
+```{r  chunk15}
+lrec_tasmax_prj_cap <- ca_loc_pt(coords = c(-119.060, 36.359), id = 1) %>% 
+  ca_period("day") %>% 
+  ca_gcm(gcms[1:4]) %>% 
+  ca_scenario(c("rcp45", "rcp85")) %>% 
+  ca_cvar("tasmax") %>% 
+  ca_years(start = 2080, end = 2099)
+  
+lrec_tasmax_prj_cap %>% ca_preflight()
+```
+
+```{r chunk16, cache = FALSE}
+plot(lrec_tasmax_prj_cap)
+```
+
+\
+
+## Fetch Data
+
+Now we're ready to fetch data:
+
+```{r chunk17}
+lrec_tasmax_prj_tbl <- lrec_tasmax_prj_cap %>% ca_getvals_tbl(quiet = TRUE)
+
+## backup: lrec_tasmax_prj_tbl <- readRDS("data/lrec_tasmax_prj_tbl.rds")
+
+dim(lrec_tasmax_prj_tbl)
+head(lrec_tasmax_prj_tbl)
+```
+
+\
+
+## Create a Box Plot of the Maximum Daily Temperature Values by Month
+
+To make a box plot, we need to first add columns for Fahrenheit, month, and year:
+
+```{r chunk18}
+library(lubridate)
+lrec_tasmax_prj_tmpf_tbl <- lrec_tasmax_prj_tbl %>% 
+  mutate(temp_f = set_units(val, degF), month = month(dt), year = year(dt))
+head(lrec_tasmax_prj_tmpf_tbl)
+```
+
+For each month, let make a box plot of the temperature values for each emission scenario, treating all GCMs as equally likely:
+
+```{r chunk19}
+ggplot(lrec_tasmax_prj_tmpf_tbl, aes(x = as.factor(month), y = as.numeric(temp_f))) + 
+  geom_boxplot() +
+  facet_grid(scenario ~ .) +
+  labs(title = "Maximum Daily Temperature by Month", x = "month", y = "temp (F)",
+       subtitle = "Lindcove REC, 4 GCMs combined, 2080-2099")
+```
+
+\
+
+### Count Extreme Heat Days
+
+An extreme heat day is generally identified when the maximum temperature exceeds a threshold. The threshold can be chosen based on the historical range, or a biophysical process. For this example, we'll select 105 &#176;F.
+
+Let's count the total number of days the temperature exceeded 105 &#176;F for each RCP. We start by adding a logical column whether the temperature exceeded our threshold.
+
+```{r  chunk20}
+lrec_hotday_tbl <- lrec_tasmax_prj_tmpf_tbl %>% 
+  mutate(really_hot = (temp_f >= set_units(105, degF))) %>% 
+  select(-spag, -val, -month)
+
+head(lrec_hotday_tbl)
+```
+
+We can count the number of extreme heat days with a simple expression:
+
+```{r chunk21}
+num_hot_days <- lrec_hotday_tbl %>%
+  group_by(scenario, really_hot) %>% 
+  count()
+
+num_hot_days
+```
+
+We can improve the readability of this table by making each scenario a separate column. This is an example of [pivoting](https://tidyr.tidyverse.org/articles/pivot.html), which you can handle using `tidyr::pivot_wider`.
+
+```{r chunk22}
+num_hot_days %>% pivot_wider(names_from = scenario, values_from = n)
+```
+
+\
+
+### Challenge 4
+
+Count the number of extreme heat days using a threshold of 110 Fahrenheit. Compute the number of extreme heat days per month by scenario. [[Answer](https://bit.ly/3GPw2Hu)]
+
+```{r chunk23}
+lrec_hothotday_tbl <- lrec_tasmax_prj_tmpf_tbl %>% 
+  mutate(hot_hot = (temp_f >= set_units(110, degF))) %>% 
+  select(-spag, -val)
+
+head(lrec_hothotday_tbl)
+
+lrec_hothotday_tbl %>% 
+  filter(hot_hot) %>% 
+  group_by(month, scenario) %>% 
+  summarise(count = n()) %>% 
+  pivot_wider(names_from = month, values_from = count)
+```
+
+**Pro Tip**
+
+ - To see how to count the number consecutive heat days (i.e., heat spells), see [this notebook](https://ucanr-igis.github.io/caladaptr-res/notebooks/caladaptr_intro.nb.html#example-3-analyze-extreme-heat-in-a-census-tract). 
+ 
+\
+
+## Visualize the Distribution of Historical Observed Daily Precipitation by Decade
+
+Our goal here is to look at the distribution of daily precipitation by making a histogram for each decade. We'll use observed rainfall data from Livneh.
+
+```{r chunk24}
+lrec_pr_livn_cap <- ca_loc_pt(coords = c(-119.060, 36.359), id = 1) %>% 
+  ca_livneh(TRUE) %>% 
+  ca_period("day") %>% 
+  ca_cvar("pr") %>% 
+  ca_years(start = 1950, end = 2009)
+
+lrec_pr_livn_cap %>% ca_preflight()
+```
+```{r chunk25}
+lrec_pr_livn_tbl <- lrec_pr_livn_cap %>% 
+  ca_getvals_tbl() %>% 
+  rename(pr_mmday = val)  
+
+## backup: lrec_pr_prj_tbl <- readRDS("./data/lrec_pr_prj_tbl.rds")
+
+dim(lrec_pr_livn_tbl)
+head(lrec_pr_livn_tbl)
+```
+
+Finally, we'll plot histograms of the precipitation values, logged because of the highly skewed distribution.
+
+```{r chunk26}
+library(lubridate)
+
+lrec_prdec_livn_tbl <- lrec_pr_livn_tbl %>% 
+  mutate(pr_mmday_num = as.numeric(pr_mmday),
+         decade = floor(year(dt) / 10) * 10) %>% 
+  select(decade, pr_mmday_num)
+
+ggplot(lrec_prdec_livn_tbl, aes(x=log(pr_mmday_num))) + 
+  geom_histogram() +
+  facet_wrap( ~ decade)
+
+```
+
+# Conclusion
+
+Once you get climate data in R as data frames, there's a lot you can do with it!
+
+\
+
+
+
+

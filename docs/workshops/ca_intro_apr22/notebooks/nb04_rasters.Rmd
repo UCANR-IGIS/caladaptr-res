@@ -1,0 +1,112 @@
+---
+title: "Rasters"
+output:
+  html_notebook: 
+    css: https://ucanr-igis.github.io/caladaptr-res/assets/nb_css01.css
+    includes:
+      after_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb_footer01.html
+---
+
+# Overview
+
+This notebook will demonstrate how to download Cal-Adapt data as rasters.
+
+# Setup
+
+Load caladaptR and the other package we're going to need. (If you haven't installed these yet, see this [setup script](https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_oct21/scripts/caladaptr_setup.R)). 
+
+```{r chunk01, message=FALSE, warning=FALSE, results='hold'}
+library(caladaptr)
+library(units)
+library(dplyr)
+library(lubridate)
+library(sf)
+library(stars)
+library(conflicted)
+conflict_prefer("filter", "dplyr", quiet = TRUE)
+conflict_prefer("count", "dplyr", quiet = TRUE)
+conflict_prefer("select", "dplyr", quiet = TRUE)
+```
+
+\
+
+# Downloading Rasters
+
+The same API Request object can be used to get raster data if you feed it into `ca_getrst_stars()`.
+
+For additional info on downloading and analyzing rasters, see the 3 articles on [Downloading Rasters](https://ucanr-igis.github.io/caladaptr/articles/rasters-pt1.html).
+
+Below we get a raster of observed historic temperature data for the Sierra climate region:
+
+```{r chunk02, cache = FALSE}
+sierra_cap <- ca_loc_aoipreset(type = "climregions", idfld = "name", idval = "Sierra") %>% 
+  ca_livneh(TRUE) %>% 
+  ca_period("year") %>% 
+  ca_cvar("pr") %>% 
+  ca_years(start = 1970, end = 2010)
+
+sierra_cap
+
+plot(sierra_cap, locagrid = TRUE)
+
+sierra_cap %>% ca_preflight()
+```
+
+\
+
+To fetch the data as TIFs, use :
+
+```{r chunk03}
+tiff_dir <- "./data"
+
+sierra_tiff_fn <- sierra_cap %>% 
+  ca_getrst_stars(out_dir = tiff_dir, mask = TRUE, quiet = TRUE, overwrite = FALSE)
+```
+
+\
+
+**Pro Tip:**
+
+ - to avoid downloading the same TIF multiple times, use the same output directory and set `overwrite = FALSE`
+ 
+\
+ 
+`ca_getrst_stars()` works differently than retrieving tabular climate values. It returns a vector of TIF files that were downloaded. To work with them, you next have to load them back into R as stars objects (space-time arrays) using `ca_stars_read()`:
+
+```{r chunk04, paged.print = FALSE}
+sierra_stars_lst <- ca_stars_read(sierra_tiff_fn)
+sierra_stars_lst[[1]]
+```
+
+\
+
+To plot a stars objects, you have to decide which layer(s) to plot. In this case, each layer represents a year from 1970 to 2010. Below we plot 4 of the 40 years:
+
+```{r chunk05, cache = FALSE}
+plot(sierra_stars_lst[[1]] %>% slice(index = seq(1,40,length.out =4), along = "year"), 
+     axes = TRUE,
+     main = attributes(sierra_stars_lst[[1]])$ca_metadata$slug)
+```
+
+Not sure what the units are? You can double-check by viewing the metadata for the slug from the catalog:
+
+```{r chunk06}
+ca_catalog_search("pr_year_livneh")
+```
+
+\
+
+There is a **lot** more you can do with rasters, including pixel summaries, combining them into higher dimensional data cubes, spatially mosaicing them, etc. For more info, see the Rasters articles on the [website](https://ucanr-igis.github.io/caladaptr/).
+ 
+\
+
+#### Your Turn
+
+Download historic precipitation data for the county where you live or work. [[Answer](https://bit.ly/3m7BcWM)]
+ 
+```{r chunk07, paged.print = FALSE, cache=FALSE}
+# YOUR ANSWER HERE
+
+```
+ 
+
