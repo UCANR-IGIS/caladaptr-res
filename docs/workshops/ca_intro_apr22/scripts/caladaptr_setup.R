@@ -15,7 +15,7 @@ if (length(pkgs_missing)) install.packages(pkgs_missing)
 ## (this can take a while on Linux because many dependencies have to be compiled)
 options(repos = c(ajlyons = "https://ajlyons.r-universe.dev",
                   CRAN = "https://cloud.r-project.org"))
-install.packages(c('caladaptr', 'caladaptr.apps', 'wrkshputils'))
+install.packages(c("caladaptr", "caladaptr.apps"))
 
 ########################################################
 ## To verify caladaptR is working properly, run the following:
