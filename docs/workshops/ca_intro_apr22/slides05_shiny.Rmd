@@ -1,0 +1,93 @@
+---
+title: "<span style='color:#444; font-size:80%;'>Working with Cal-Adapt Climate Data in R: </span><br/>Shiny Apps"
+pagetitle: "Shiny Apps"
+author: "<a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr-hexlogo_173x200.gif' style='height:120px; width:104px; padding:1em;'/></a>"
+date: "<div style='width:900px; margin:0 auto;'><img src='images/igis-logo_550x58x256.png' style='padding:1em; float:left;'/><img src='images/cal-adapt-logo.svg' style='height:60px; padding:1em; float:right;'/></div>"
+output: 
+  slidy_presentation: 
+    self_contained: no
+    lib_dir: lib
+    keep_md: no
+    smart: no
+    df_print: paged
+    css: z_slidy.css
+    footer: "<a href='index.html' style='color:#777; margin-left:2em;'>Working with Cal-Adapt Climate Data in R</a>"
+    includes:
+      in_header: gtag_caladaptr-res.js
+---
+
+# Shiny Apps
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(caladaptr)
+library(DiagrammeR)  ## has a conflict with leaflet, must go high up in the pecking order
+library(knitr)
+library(kableExtra)
+library(magrittr)
+library(dplyr)
+library(tidyr)
+library(sf)
+library(leaflet)
+library(tmap)
+library(htmltools)
+library(ggplot2)
+library(units)
+```
+
+```{js echo = FALSE}
+w3c_slidy.mouse_click_enabled = false;
+```
+
+![](images/shiny-hex_87x100.png){style="float:right; padding:0.5em;"}
+
+- The Shiny package allows you to create browser-based apps that run R in the background.
+
+- You need to know to R, but you don't need to know JavaScript, HTML, CSS, network protocols, etc.
+
+- Can run them locally or online
+
+<div style="float:left; margin-left:2em;">![](images/chill-calculator_200x286x256.png){style="border:2px solid gray;"}</div>
+
+<div style="margin-left:1em; float:left;">
+Examples:
+
+- [Plot Annual Time Series](https://caladaptr.shinyapps.io/timeseries/) (online)
+- [Projected Chill Portions](https://ucanr-igis.shinyapps.io/chill/) (online)
+</div>
+
+<div style="clear:both;"></div>
+
+<div style="margin-left:2em;">
+
+- See samples in the [caladaptr.apps](https://github.com/ucanr-igis/caladaptr.apps/) package  
+
+<div style="margin:0 2em;">
+```
+library(caladaptr.apps)
+
+## Launch the time series app
+ca_launch("timeseries")
+
+## Launch the projected chill portions app
+ca_launch("chill")
+```
+</div>
+</div>
+
+# Notebook 5. Shiny Apps
+
+<div class="indented1 li-single">
+In Notebook 5, you will:
+
+<div class="indented1 li-single">
+- launch a Shiny app using the `caladaptr.apps` package  
+- explore the anatomy of a simple Shiny app  
+
+</div></div>
+
+[Notebook 5. Shiny Apps](./notebooks/nb05_shiny.nb.html){target="_blank" rel="noopener"}
+
+\
+
+# END!

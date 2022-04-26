@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Workshop: Working with Cal-Adapt Climate Data in R</title>
+
+<script src="lib/header-attrs-2.13/header-attrs.js"></script>
+<script src="lib/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="lib/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="lib/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="lib/navigation-1.1/tabsets.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SH51K99N57"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-SH51K99N57');
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr-hexlogo_173x200.gif' style='width:104px; height:120px; float:right;'/></a><span style="color:#777; font-size:60%; font-style:italic;">Workshop:</span><br/>Working with Cal-Adapt Climate Data in R</h1>
+<h4 class="date"><p>
+Andy Lyons
+</p>
+<p>
+April 26, 2022<br/>10:00a - 12:00p PDT
+</p></h4>
+
+</div>
+
+
+<style type="text/css">
+h1 {
+  font-size: 130%;
+  font-weight:bold;
+}
+div.inactive, a.inactive {
+  color:#777;
+}
+a.solutions {
+  font-size:75%;
+  font-style:italic;
+}
+h4 {
+  font-size: 14px;
+  font-style:italic;
+}
+p, li {
+  font-size: 120%;
+}
+
+div.msg {
+  border:4px solid #1E8449;
+  background-color: #D4EFDF;
+  margin:2em auto;
+  text-align:center;
+  padding:6px;
+  width:600px;
+  
+}
+</style>
+<!------
+<div style="width:580px; margin:2em auto 1em; font-style:italic; font-size:130%; color:darkgreen; text-align:center;">Thanks to everyone who attended the workshop!<br/>See the recording below. To jump to a specific section, open the video in YouTube and expand the description.</div>
+
+<center>
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/6dOPBhSw6pU?rel=0" title="Working with CalAdapt Climate Data in R Workshop" frameborder="0" allow="clipboard-write; encrypted-media; picture-in-picture" allowfullscreen style="border:2px solid gray; margin-bottom:2em;"></iframe>
+
+</center>
+------>
+<p><br />
+</p>
+<div id="preparing-for-the-workshop" class="section level1">
+<h1>Preparing for the Workshop</h1>
+<!-------- - Registration - *closed* ----->
+<ul>
+<li><a href="https://datalab.ucdavis.edu/eventscalendar/working-with-cal-adapt-climate-data-in-r-maptimedavis-d-rug/" target="_blank" rel="noopener">Registration</a><br />
+</li>
+<li><a href="setup.html" target="_blank" rel="noopener">Computer Setup</a></li>
+</ul>
+<!--------------------------
+- [Welcome Letter](welcome.html){target="_blank" rel="noopener"}
+------------------------>
+<p><br />
+</p>
+</div>
+<div id="part-i.-intro-to-climate-data-and-constructing-api-requests" class="section level1">
+<h1>Part I. Intro to Climate Data and Constructing API Requests</h1>
+<ul>
+<li><a href="slides01_api-requests.html" target="_blank" rel="noopener">Slides</a><br />
+</li>
+<li><a href="./notebooks/nb01_getting-started.nb.html" target="_blank" rel="noopener">Notebook 1. Getting Started</a> | <a href="./notebooks/nb01_getting-started_ans.nb.html" class="solutions" target="_blank" rel="noopener">solutions</a></li>
+</ul>
+<p><br />
+</p>
+</div>
+<div id="part-ii.-best-practices-finding-datasets-data-wrangling" class="section level1">
+<h1>Part II. Best Practices, Finding Datasets, Data Wrangling</h1>
+<ul>
+<li><a href="slides02_findingdata.html" target="_blank" rel="noopener">Slides</a><br />
+</li>
+<li><a href="./notebooks/nb02_find-wrangle.nb.html" target="_blank" rel="noopener">Notebook 2. Finding Data</a> | <a href="./notebooks/nb02_find-wrangle_ans.nb.html" class="solutions" target="_blank" rel="noopener">solutions</a></li>
+</ul>
+<p><br />
+</p>
+</div>
+<div id="part-iii.-large-queries" class="section level1">
+<h1>Part III. Large Queries</h1>
+<ul>
+<li><a href="slides03_large-qrys.html" target="_blank" rel="noopener">Slides</a><br />
+</li>
+<li><a href="./notebooks/nb04_large-queries.nb.html" target="_blank" rel="noopener">Notebook 3. Large Queries</a> | <a href="./notebooks/nb04_large-queries_ans.nb.html" class="solutions" target="_blank" rel="noopener">solutions</a></li>
+</ul>
+<p><br />
+</p>
+</div>
+<div id="part-iv.-working-with-rasters" class="section level1">
+<h1>Part IV. Working with Rasters</h1>
+<ul>
+<li><a href="slides04_rasters.html" target="_blank" rel="noopener">Slides</a><br />
+</li>
+<li><a href="./notebooks/nb04_large-queries.nb.html" target="_blank" rel="noopener">Notebook 4. Rasters</a> | <a href="./notebooks/nb04_large-queries_ans.nb.html" class="solutions" target="_blank" rel="noopener">solutions</a></li>
+</ul>
+<p><br />
+</p>
+</div>
+<div id="part-v.-shiny" class="section level1 inactive">
+<h1 class="inactive">Part V. Shiny</h1>
+<ul>
+<li><a href="slides05_shiny.html" class="inactive" target="_blank" rel="noopener">Slides</a></li>
+<li><a href="./notebooks/nb05_shiny.nb.html" class="inactive" target="_blank" rel="noopener">Notebook 5. Shiny Apps</a></li>
+</ul>
+<p><br />
+</p>
+<hr/>
+<div>
+<p><a href="https://cal-adapt.org/" target="_blank"><img src="images/cal-adapt-logo.svg" style="height:60px; width:204px; float:right;"></a></p>
+<p><a href="http://igis.ucanr.edu/" target="_blank"><img src="images/igis-logo_550x58x256.png" style="width:550px; height:58px;"/></a></p>
+</div>
+<div style="clear:both;">
+
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+</body>
+</html>

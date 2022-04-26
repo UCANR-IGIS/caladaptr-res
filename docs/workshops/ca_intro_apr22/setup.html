@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Computer Setup</title>
+
+<script src="lib/header-attrs-2.13/header-attrs.js"></script>
+<script src="lib/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="lib/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="lib/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="lib/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="z_basichtml.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Computer Setup</h1>
+
+</div>
+
+
+<p><br />
+</p>
+<div id="setting-up-rstudio" class="section level1">
+<h1>Setting up RStudio</h1>
+<p>If you would like to do the hands-on exercises during the workshop (recommended but not required), you have two options. You can run <strong>RStudio Desktop</strong> on your own laptop / desktop computer, or you can run a RStudio virtual machine from <strong>RStudio Cloud</strong> (i.e., in a browser). Both options are free and fairly easy to set up.</p>
+<div class="indented1">
+
+<div id="rstudio-cloud" class="section level2">
+<h2>RStudio Cloud</h2>
+<p>The easiest way to do the workshop exercises is using <strong>RStudio Cloud</strong>. This is recommended for beginners and anyone who hasn’t touched R in a while. With RStudio Cloud, all you need to do is set up an account. You don’t have to install or update R and RStudio, install packages, download data, or any other set up. All the workshop materials will be waiting for you in a VM prepared by the instructor. If you never used RStudio Cloud before, it’s well-developed and looks and feels nearly identical to RStudio Desktop.</p>
+<p>You can create a free account on <a href="https://rstudio.cloud/" target="_blank" rel="noopener"><strong>RStudio Cloud</strong></a> using an email address or your Google or GitHub credentials. The free plan offers 25 hours of usage per month, which is more than enough for the workshop. Once your account is setup, you’re done for now.</p>
+<p>If you want to verify its working, you can open <a href="https://rstudio.cloud/project/3567507" target="_blank" rel="noopener">this project</a> and open the sample script <em>caladaptr_test.R</em> to fetch and plot some Cal-Adapt climate data.</p>
+<p>The day before the workshop, the instructor will send out a link for the workshop VM, which you can click on to make a copy of it in your ow n RStudio Cloud workspace. All the required packages, R notebooks, and data will be ready to go.</p>
+<!-------------------------
+To make your own copy of the workshop project, click on this link: [**https://rstudio.cloud/project/3606612**](https://rstudio.cloud/project/3606612){target="_blank" rel="noopener"}. After the project opens in your RStudio Cloud workspace, click the 'Save a permanent copy' button. To find the exercise Notebooks, click on th 'Notebooks' directory in the files pane in RStudio.
+---------------------->
+</div>
+<div id="rstudio-desktop" class="section level2">
+<h2>RStudio Desktop</h2>
+<p>You can also run RStudio on your laptop. If its been more than 3 months since you updated <a href="https://cran.r-project.org/" target="_blank" rel="noopener">R</a> or <a href="https://rstudio.com/products/rstudio/download/" target="_blank" rel="noopener">RStudio Desktop</a>, please update them both. You should be using R version 4.0 or later. As far as we know, all of the packages we’ll be using (including caladaptR) should work fine on Windows, MacOS, and Linux.</p>
+<p>After you’ve updated R and RStudio, please run <a href="https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_apr22/scripts/caladaptr_setup.R" target="_blank" rel="noopener">this script</a> to install all the needed packages including <code>caladaptr</code> and <code>caladaptr.apps</code>. You can copy-paste the commands into RStudio and run the commands. This could take 15 minutes or longer so don’t wait until the day of the workshop to start. If you get an error message installing any of the packages, please contact the instructor.</p>
+<p>The setup script also fetches some data using the Cal-Adapt API, so if you see a plot at the end it means its working.</p>
+<p><br />
+</p>
+<center>
+<p><em>If you see this plot at the end of the setup script, it means everything is working:</em></p>
+<p><img src="setup_files/figure-html/test_calatapr-1.png" width="500" height="300" /></p>
+</center>
+<p><br />
+</p>
+<p>On the day of the workshop, the instructor will provide a link to the data and exercises.</p>
+<!-----------------------
+
+Run the following lines to download the slides and notebooks. (You can also download the zip file from a browser). The zip file is about 30MB.
+
+<div class="indented1">
+
+```r
+zip_url <- "https://ucdavis.box.com/shared/static/uxj3nzhk4aagtsc6mpbnq4buhh0j1mgm.zip"
+
+## Update destdir to where you want the workshop folder to go, or omit it to expand to the desktop
+usethis::use_course(zip_url, destdir = "c:/path/goes/here") 
+```
+</div>
+
+</div>  <! class indented >
+
+--------------------->
+</div>
+</div>
+<div id="using-two-monitors" class="section level1">
+<h1>Using Two Monitors</h1>
+<p>A second monitor is strongly recommended so you can view the instructor’s screen in one monitor while you run R on the other. A tablet might suffice as your ‘Zoom’ device while you run R on your laptop.</p>
+<p>If you’re truly limited to just one screen, check out <a href="workspace_tips.html">these tips</a> for viewing Zoom and an application window side-by-side.</p>
+</div>
+<div id="questions" class="section level1">
+<h1>Questions?</h1>
+<p>If you have any questions please contact the <a href="mailto:andlyons@ucanr.edu?subject=Climate%20Data%20Workshop">instructor</a>.</p>
+<p><br />
+</p>
+<p><br />
+</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+</body>
+</html>

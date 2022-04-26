@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="" />
+  <meta name="copyright" content="<a href='index.html' style='color:#777; margin-left:2em;'>Working with Cal-Adapt Climate Data in R</a>"/>
+  <title>Finding Data Best Practices</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+          </style>
+  <style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SH51K99N57"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SH51K99N57');
+  </script>
+  <script src="lib/header-attrs-2.13/header-attrs.js"></script>
+  <link href="lib/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="lib/slidy-2/scripts/slidy.js"></script>
+  <script src="lib/slidy_shiny-1/slidy_shiny.js"></script>
+  <link href="lib/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="lib/pagedtable-1.1/js/pagedtable.js"></script>
+  <script src="lib/kePrint-0.0.1/kePrint.js"></script>
+  <link href="lib/lightable-0.0.1/lightable.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="z_slidy.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title"><span style="color:#444; font-size:80%;">Working with Cal-Adapt Climate Data in R: </span><br/>Finding Data and Best Practices for Analyzing Climate Data</h1>
+  <p class="author">
+<a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr-hexlogo_173x200.gif' style='height:120px; width:104px; padding:1em;'/></a>
+  </p>
+  <p class="date"><div style="width:900px; margin:0 auto;">
+<img src='images/igis-logo_550x58x256.png' style='padding:1em; float:left;'/><img src='images/cal-adapt-logo.svg' style='height:60px; padding:1em; float:right;'/>
+</div></p>
+</div>
+<div id="finding-data-raster-series-catalog" class="slide section level1">
+<h1>Finding Data: Raster Series Catalog</h1>
+<script type="text/javascript">
+w3c_slidy.mouse_click_enabled = false;
+</script>
+<p>caladaptR comes with a copy of the Cal-Adapt raster series “data catalog”</p>
+<p>For each raster series you can see the:</p>
+<div class="indented1 li-single">
+<ul>
+<li>full name<br />
+</li>
+<li>slug (unique identifier)<br />
+</li>
+<li>begin and end date<br />
+</li>
+<li>temporal resolution<br />
+</li>
+<li>units<br />
+</li>
+<li>spatial extent<br />
+</li>
+<li>number of rasters<br />
+</li>
+</ul>
+</div>
+<p>The catalog can be retrieved using <code>ca_catalog_rs()</code> (returns a tibble).</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ca_catalog_rs</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>##  - using raster series catalog from cache</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["slug"],"name":[3],"type":["chr"],"align":["left"]},{"label":["url"],"name":[4],"type":["chr"],"align":["left"]},{"label":["begin"],"name":[5],"type":["chr"],"align":["left"]},{"label":["end"],"name":[6],"type":["chr"],"align":["left"]},{"label":["num_rast"],"name":[7],"type":["int"],"align":["right"]},{"label":["tres"],"name":[8],"type":["chr"],"align":["left"]},{"label":["units"],"name":[9],"type":["chr"],"align":["left"]},{"label":["xmin"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["xmax"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["ymin"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["ymax"],"name":[13],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"LOCA VIC drought daily baseflow HadGEM2-ES RCP 8.5 early century","3":"baseflow_day_drought_HadGEM2-ES_rcp85_early_century","4":"https://api.cal-adapt.org/api/series/baseflow_day_drought_HadGEM2-ES_rcp85_early_century/","5":"2018-01-01T00:00:00Z","6":"2046-12-31T00:00:00Z","7":"1","8":"daily","9":"mm","10":"-124.5625","11":"-113.375","12":"31.5625","13":"43.75","_rn_":"1"},{"1":"2","2":"LOCA VIC drought daily baseflow HadGEM2-ES RCP 8.5 late century","3":"baseflow_day_drought_HadGEM2-ES_rcp85_late_century","4":"https://api.cal-adapt.org/api/series/baseflow_day_drought_HadGEM2-ES_rcp85_late_century/","5":"2046-01-01T00:00:00Z","6":"2074-12-31T00:00:00Z","7":"1","8":"daily","9":"mm","10":"-124.5625","11":"-113.375","12":"31.5625","13":"43.75","_rn_":"2"},{"1":"3","2":"Livneh VIC daily baseflow","3":"baseflow_day_livneh_vic","4":"https://api.cal-adapt.org/api/series/baseflow_day_livneh_vic/","5":"1950-01-01T00:00:00Z","6":"2013-12-31T00:00:00Z","7":"1","8":"daily","9":"mm","10":"-124.5625","11":"-113.375","12":"31.5625","13":"43.75","_rn_":"3"},{"1":"4","2":"LOCA VIC monthly baseflow for ACCESS1-0 and modeled historical","3":"baseflow_month_ACCESS1-0_historical","4":"https://api.cal-adapt.org/api/series/baseflow_month_ACCESS1-0_historical/","5":"1950-01-01T00:00:00Z","6":"2005-12-31T00:00:00Z","7":"672","8":"monthly","9":"mm/day","10":"-124.5625","11":"-113.375","12":"31.5625","13":"43.75","_rn_":"4"},{"1":"5","2":"LOCA VIC monthly baseflow for ACCESS1-0 and RCP 4.5","3":"baseflow_month_ACCESS1-0_rcp45","4":"https://api.cal-adapt.org/api/series/baseflow_month_ACCESS1-0_rcp45/","5":"2006-01-01T00:00:00Z","6":"2099-12-31T00:00:00Z","7":"1128","8":"monthly","9":"mm/day","10":"-124.5625","11":"-113.375","12":"31.5625","13":"43.75","_rn_":"5"},{"1":"6","2":"LOCA VIC monthly baseflow for ACCESS1-0 and RCP 8.5","3":"baseflow_month_ACCESS1-0_rcp85","4":"https://api.cal-adapt.org/api/series/baseflow_month_ACCESS1-0_rcp85/","5":"2006-01-01T00:00:00Z","6":"2099-12-31T00:00:00Z","7":"1128","8":"monthly","9":"mm/day","10":"-124.5625","11":"-113.375","12":"31.5625","13":"43.75","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<p><br />
+</p>
+<div class="shaded-box">
+<p><strong>PRO TIP</strong></p>
+<p>The best way to browse the catalog is with RStudio’s View pane. You can then use the filter buttons to find the raster series you want.</p>
+<pre><code>ca_catalog_rs() %&gt;% View()</code></pre>
+</div>
+<p><br />
+</p>
+<p>To search the catalog using a keyword, you can use <code>ca_catalog_rs()</code></p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>all_snow_layers_df <span class="ot">&lt;-</span> <span class="fu">ca_catalog_search</span>(<span class="st">&quot;snow&quot;</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(all_snow_layers_df)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    94 obs. of  13 variables:
+##  $ slug    : chr  &quot;snowfall_day_livneh_vic&quot; &quot;snowfall_month_ACCESS1-0_historical&quot; &quot;snowfall_month_ACCESS1-0_rcp45&quot; &quot;snowfall_month_ACCESS1-0_rcp85&quot; ...
+##  $ name    : chr  &quot;Livneh VIC daily snowfall&quot; &quot;LOCA VIC monthly snowfall for ACCESS1-0 and modeled historical&quot; &quot;LOCA VIC monthly snowfall for ACCESS1-0 and RCP 4.5&quot; &quot;LOCA VIC monthly snowfall for ACCESS1-0 and RCP 8.5&quot; ...
+##  $ url     : chr  &quot;https://api.cal-adapt.org/api/series/snowfall_day_livneh_vic/&quot; &quot;https://api.cal-adapt.org/api/series/snowfall_month_ACCESS1-0_historical/&quot; &quot;https://api.cal-adapt.org/api/series/snowfall_month_ACCESS1-0_rcp45/&quot; &quot;https://api.cal-adapt.org/api/series/snowfall_month_ACCESS1-0_rcp85/&quot; ...
+##  $ tres    : chr  &quot;daily&quot; &quot;monthly&quot; &quot;monthly&quot; &quot;monthly&quot; ...
+##  $ begin   : chr  &quot;1950-01-01T00:00:00Z&quot; &quot;1950-01-01T00:00:00Z&quot; &quot;2006-01-01T00:00:00Z&quot; &quot;2006-01-01T00:00:00Z&quot; ...
+##  $ end     : chr  &quot;2013-12-31T00:00:00Z&quot; &quot;2005-12-31T00:00:00Z&quot; &quot;2099-12-31T00:00:00Z&quot; &quot;2099-12-31T00:00:00Z&quot; ...
+##  $ units   : chr  &quot;mm/day&quot; &quot;mm/day&quot; &quot;mm/day&quot; &quot;mm/day&quot; ...
+##  $ num_rast: int  1 672 1128 1128 672 1128 1128 672 1128 1128 ...
+##  $ id      : int  519 520 521 522 523 524 525 526 527 528 ...
+##  $ xmin    : num  -125 -125 -125 -125 -125 ...
+##  $ xmax    : num  -113 -113 -113 -113 -113 ...
+##  $ ymin    : num  31.6 31.6 31.6 31.6 31.6 ...
+##  $ ymax    : num  43.8 43.8 43.8 43.8 43.8 ...</code></pre>
+</div>
+<p><br />
+</p>
+<p>To see the properties of a specific dataset (e.g., to see the dates, or units), you can search on the slug:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ca_catalog_search</span>(<span class="st">&quot;snowfall_day_livneh_vic&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## snowfall_day_livneh_vic</code></pre>
+<pre><code>##   name: Livneh VIC daily snowfall</code></pre>
+<pre><code>##   url: https://api.cal-adapt.org/api/series/snowfall_day_livneh_vic/</code></pre>
+<pre><code>##   tres: daily</code></pre>
+<pre><code>##   begin: 1950-01-01T00:00:00Z</code></pre>
+<pre><code>##   end: 2013-12-31T00:00:00Z</code></pre>
+<pre><code>##   units: mm/day</code></pre>
+<pre><code>##   num_rast: 1</code></pre>
+<pre><code>##   id: 519</code></pre>
+<pre><code>##   xmin: -124.5625</code></pre>
+<pre><code>##   xmax: -113.375</code></pre>
+<pre><code>##   ymin: 31.5625</code></pre>
+<pre><code>##   ymax: 43.75</code></pre>
+</div>
+<p><br />
+</p>
+</div>
+<div id="using-climate-data-wisely" class="slide section level1">
+<h1>Using Climate Data <em>Wisely</em></h1>
+<p>Is this a wise or unwise use of climate data?</p>
+<div style="text-align:center; font-size:110%; line-height:110%; margin:1em auto; max-width:900px;">
+<em>According to Cal-Adapt, which weekend in February 2070 has the least chance of rain for my retirement party at the San Luis Obispo Country Club?</em>
+</div>
+<center>
+<p><img src="slides02_findingdata_files/figure-slidy/slo_rain-1.png" width="768" /></p>
+</center>
+<details style="margin-left:2em; cursor: pointer;">
+<summary style="color:#666; font-size:90%;">
+Make this plot
+</summary>
+<pre><code>library(caladaptr)
+library(dplyr)
+library(ggplot2)
+library(units)
+
+slo_cap &lt;- ca_loc_pt(coords = c(-120.6276, 35.2130)) %&gt;%
+  ca_cvar(&quot;pr&quot;) %&gt;%
+  ca_gcm(gcms[1:10]) %&gt;%
+  ca_scenario(&quot;rcp45&quot;) %&gt;%
+  ca_period(&quot;day&quot;) %&gt;%
+  ca_dates(start = &quot;2070-02-01&quot;, end = &quot;2070-02-28&quot;)
+
+slo_mmday_tbl &lt;- slo_cap %&gt;% 
+  ca_getvals_tbl(quiet = TRUE) %&gt;% 
+  mutate(pr_mmday = set_units(as.numeric(val) * 86400, mm/day))
+
+feb2070_weekends_df &lt;- data.frame(dt = as.Date(&quot;2070-02-01&quot;) + c(0,1,7,8,14,15,21,22), y = 50)
+
+ggplot(data = slo_mmday_tbl, aes(x = as.Date(dt), y = as.numeric(pr_mmday))) +
+  geom_col(data = feb2070_weekends_df, aes(x = dt, y = y), fill = &quot;red&quot;, alpha = 0.2) +
+  geom_point(aes(color=gcm)) + 
+  labs(title = &quot;Chance of Rain at the San Luis Obispo Country Club, February 2070&quot;, 
+       subtitle = &quot;Pink bars represent the weekends. Emissions scenario: RCP 4.5.&quot;,
+       x = &quot;date&quot;, y = &quot;mm&quot;) +
+  theme(plot.caption = element_text(hjust = 0)) 
+</code></pre>
+</details>
+<p><br />
+</p>
+</div>
+<div id="best-practices-analyzing-modeled-climate-data" class="slide section level1">
+<h1>Best Practices Analyzing Modeled Climate Data</h1>
+<h2 id="examine-20-30-year-time-periods">1) Examine 20-30 Year Time Periods</h2>
+<div class="indented2">
+<p>Climate models are designed to capture <em>trends</em> in <em>climate</em>.</p>
+<p>By definition, climate is weather averaged over <strong>30+ years</strong>.</p>
+<p>⇒ If you’re not averaging at least 20-30 years of data, you’re probably doing something wrong.</p>
+</div>
+<p><br />
+</p>
+<h2 id="look-at-multiple-models-emissions-scenarios">2) Look at multiple models &amp; emissions scenarios</h2>
+<div class="indented2">
+<p>There is variability among models.</p>
+<p>The biggest source of uncertainty (by far) is the future of emissions.</p>
+</div>
+<p><br />
+</p>
+<h2 id="look-at-both-central-tendency-and-the-range-of-variability">3) Look at both central tendency and the range of variability</h2>
+<div class="indented2">
+<p>Both are important.</p>
+<p>Variability can be within and/or between models.</p>
+</div>
+<p><img src="images/avg-min-temp_780x322x256.png" style="display:block; margin:1em auto; border:1px solid grey;" /></p>
+<p><br />
+</p>
+<h2 id="aggregate-aggregate-aggregate">4) Aggregate, aggregate, aggregate</h2>
+<div class="indented2 li-single">
+<ul>
+<li>don’t look at specific points in space or time<br />
+</li>
+<li>average years together<br />
+</li>
+<li>average models together<br />
+</li>
+<li>take rolling averages<br />
+</li>
+<li>interested in an area? spatially aggregate<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="compare-compare-compare">5) Compare, compare, compare</h2>
+<div class="indented2 li-single">
+<ul>
+<li>Compare projected future against historical conditions<br />
+</li>
+<li>Compare Place A vs Place B<br />
+</li>
+<li>Compare emission scenarios<br />
+</li>
+<li>Compare models</li>
+</ul>
+</div>
+<p><br />
+</p>
+<h2 id="consider-climate-analogues">6) Consider climate analogues</h2>
+<div class="indented2">
+<p><em>Where can I go right now to see the climate that my city will face in 50 years?</em></p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="comparing-the-past-to-the-future" class="slide section level1">
+<h1>Comparing the Past to the Future</h1>
+<p>What is the appropriate historic baseline for modeled future climate scenarios?</p>
+<p><br />
+</p>
+<p><strong>Observed historic record and modeled future</strong> - <em>different animals</em></p>
+<p><img src="images/climate-snapshot_hist-obs-fruit_713x690x256.png" border="1" /></p>
+<p><br />
+</p>
+<p><strong>Model historic climate and modeled future</strong> - <em>comparable</em></p>
+<p><img src="images/climate-snapshot_hist-mod-fruit_713x360x256.png" border="1" /></p>
+<p><br />
+</p>
+</div>
+<div id="the-dilemma-of-multiple-futures" class="slide section level1">
+<h1>The Dilemma of Multiple Futures</h1>
+<div style="display: flex;">
+<div style="width:580px; flex-grow:0;">
+<p>How do we make sense of multiple climate futures?</p>
+<p>How do we store data for multiple futures?</p>
+<p>What is the right order of operations for computing metrics, aggregating data, and doing comparisons?</p>
+</div>
+<div style="width:370px;">
+<p><img src="images/matrix_360x240.jpg" style="width:360px; height:240px;"></p>
+</div>
+</div>
+<p><br />
+</p>
+<h2 id="example-how-will-heat-spells-in-madera-county-change-under-climate-change-compared-to-historic-conditions">Example: <em>How will heat spells in Madera County change under climate change compared to historic conditions?</em></h2>
+<p>Source Data (example):</p>
+<div class = "indented2 li-single">
+
+<ul>
+<li>daily maximum temperature<br />
+</li>
+<li>30 years<br />
+</li>
+<li>10 GCMs</li>
+<li>3 emissions scenarios (RCP 45, RCP85, historical)
+</div></li>
+</ul>
+<p>That’s 365 * 30 * 10 * 3 = <strong>328,500 values of tasmax</strong>, for <em>each</em> pixel in the county!</p>
+<p><br />
+</p>
+<h2 id="general-order-of-operations">General Order of Operations</h2>
+<table class="borderme table" style="margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;width: 15em; font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+Operation
+</td>
+<td style="text-align:left;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+Example
+</td>
+<td style="text-align:left;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+R functions
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol style="list-style-type: decimal">
+<li>filter by space
+</td>
+<td style="text-align:left;">
+Madera County, Census tracts, etc.
+</td>
+<td style="text-align:left;">
+build into API request
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol start="2" style="list-style-type: decimal">
+<li>filter by year
+</td>
+<td style="text-align:left;">
+2070-2099
+</td>
+<td style="text-align:left;">
+build into API request
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol start="3" style="list-style-type: decimal">
+<li>filter by month or season
+</td>
+<td style="text-align:left;">
+Sep - June
+</td>
+<td style="text-align:left;">
+<code>dplyr::filter()</code>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol start="4" style="list-style-type: decimal">
+<li>group by time slices
+</td>
+<td style="text-align:left;">
+water year
+</td>
+<td style="text-align:left;">
+<code>dplyr::group_by()</code>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol start="5" style="list-style-type: decimal">
+<li>compute daily metrics
+</td>
+<td style="text-align:left;">
+‘extreme heat’ day
+</td>
+<td style="text-align:left;">
+<code>dplyr::mutate()</code>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol start="6" style="list-style-type: decimal">
+<li>tabluate ‘runs’
+</td>
+<td style="text-align:left;">
+heat spell = extreme heat for at least 3 days
+</td>
+<td style="text-align:left;">
+<code>rle()</code>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol start="7" style="list-style-type: decimal">
+<li>aggregate by time slice
+</td>
+<td style="text-align:left;">
+total # heat spells per water year
+</td>
+<td style="text-align:left;">
+<code>dplyr::summarise()</code>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol start="8" style="list-style-type: decimal">
+<li>aggregrate by GCM
+</td>
+<td style="text-align:left;">
+avg # heat spells per GCM
+</td>
+<td style="text-align:left;">
+<code>dplyr::summarise()</code>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol start="9" style="list-style-type: decimal">
+<li>aggregate by scenario
+</td>
+<td style="text-align:left;">
+avg # heat spells per emissions scenario
+</td>
+<td style="text-align:left;">
+<code>dplyr::summarise()</code>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+<ol start="10" style="list-style-type: decimal">
+<li>compare
+</td>
+<td style="text-align:left;">
+compare across scenarios, locations
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+</tbody>
+</table></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol>
+</div>
+<div id="data-wrangling" class="slide section level1">
+<h1>Data Wrangling</h1>
+<p>Cal-Adapt data always comes down in a “long” format:</p>
+<div class="indented2 indented2r">
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ca_loc_pt</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">117.0</span>, <span class="fl">33.1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_cvar</span>(<span class="fu">c</span>(<span class="st">&quot;tasmax&quot;</span>, <span class="st">&quot;tasmin&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_gcm</span>(gcms[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_scenario</span>(scenarios[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_period</span>(<span class="st">&quot;year&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_years</span>(<span class="at">start =</span> <span class="dv">2040</span>, <span class="at">end =</span> <span class="dv">2060</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ca_getvals_tbl</span>(<span class="at">quiet =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["cvar"],"name":[2],"type":["fct"],"align":["left"]},{"label":["period"],"name":[3],"type":["fct"],"align":["left"]},{"label":["gcm"],"name":[4],"type":["fct"],"align":["left"]},{"label":["scenario"],"name":[5],"type":["fct"],"align":["left"]},{"label":["spag"],"name":[6],"type":["fct"],"align":["left"]},{"label":["dt"],"name":[7],"type":["chr"],"align":["left"]},{"label":["val"],"name":[8],"type":["units"],"align":["right"]}],"data":[{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2040-12-31","8":"299.8598 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2041-12-31","8":"300.7306 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2042-12-31","8":"300.0857 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2043-12-31","8":"301.8524 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2044-12-31","8":"301.6147 [K]"},{"1":"1","2":"tasmax","3":"year","4":"HadGEM2-ES","5":"rcp45","6":"none","7":"2045-12-31","8":"300.5309 [K]"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<p><br />
+</p>
+<p>To make useful plots, maps, and summaries, you often have to ‘munge’ or ‘wrangle’ the data, which may include:</p>
+<div class="indented2 li-single">
+<ul>
+<li>selecting columns<br />
+</li>
+<li>filtering rows</li>
+<li>changing column data type<br />
+</li>
+<li>calculating new columns<br />
+</li>
+<li>grouping rows; summarizing<br />
+</li>
+<li>reshaping long to wide (aka pivoting)<br />
+</li>
+</ul>
+</div>
+<p><br />
+</p>
+<p>Fortunately you have a very robust toolbox:</p>
+<center>
+<table>
+<tr>
+<td class="cp">
+<img src="images/dplyr_129x150.png" /><br/> [<a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf">cheatsheet</a>]
+</td>
+<td class="cp">
+<img src="images/tidy-r_130x150.png" height="150" /><br/> [<a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/tidyr.pdf">cheatsheet</a>]
+</td>
+<td class="cp">
+<img src="images/sf-200x200.gif" height="150" /><br/> [<a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/sf.pdf">cheatsheet</a>]
+</td>
+<td class="cp">
+<img src="images/ggplot2_129x150.png" height="150" /><br/> [<a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf">cheatsheet</a>]
+</td>
+</tr>
+</table>
+</center>
+<p><br />
+</p>
+<h2 id="top-seven-data-wrangling-functions">Top-Seven Data Wrangling Functions</h2>
+<div class="indented2 li-single" style="font-family:monospace;">
+<ul>
+<li>filter()</li>
+<li>select()</li>
+<li>mutate()</li>
+<li>group_by()</li>
+<li>summarise()</li>
+<li>left_join()</li>
+<li>pivot_wider()</li>
+</ul>
+</div>
+<p><br />
+</p>
+<div class="shaded-box">
+<p><strong>PRO TIP</strong></p>
+<p><em>Qtn.</em> How do I know what data wrangling is needed?</p>
+<p><em>Ans.</em> Work backward from your analysis or visualization functions.</p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="notebook-2.-find-and-wrangle-data" class="slide section level1">
+<h1>Notebook 2. Find and Wrangle Data</h1>
+<p>In Notebook 2, you will:</p>
+<div class="indented1 li-single">
+<ul>
+<li>explore the Cal-Adapt data catalog<br />
+</li>
+<li>retrieve data using a slug<br />
+</li>
+<li>wrangle data for visualization and analysis<br />
+</li>
+<li>make histograms to visualize trends in variability<br />
+</li>
+</ul>
+</div>
+<p><a href="./notebooks/nb02_find-wrangle.nb.html" target="_blank" rel="noopener">Notebook 2. Finding Data</a> | <a href="./notebooks/nb02_find-wrangle_ans.nb.html" target="_blank" rel="noopener">solutions</a></p>
+</div>
+<div id="end" class="slide section level1">
+<h1>END!</h1>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

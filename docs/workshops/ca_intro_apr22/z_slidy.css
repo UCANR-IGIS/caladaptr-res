@@ -1,0 +1,81 @@
+div.slide.titlepage h1 {
+  padding-top:5%;
+}
+
+h1 {
+  color:darkgreen;
+}
+h1.title {
+  color:black;
+  font-size:130%;
+}
+h2, p.qtext {
+  color:#444;
+  font-size: 1.2em;
+  font-weight:bold;
+}
+span.revlabel {
+  border-radius:3px;
+  font-size:60%;
+  padding:2px 4px;
+  margin-right:1em;
+  background-color:MediumSeaGreen;
+  color:white;
+}
+span.chk {
+  color:DarkGreen;
+}
+
+.indented1 {
+  margin-left:1em;
+}
+div.indented2 {
+  margin-left:2em;
+}
+p.date {
+  text-align:left;
+}
+table.borderme {
+  border:2px solid #444;
+  border-collapse:collapse;
+}
+
+table.borderme td {
+  border: 1px solid #eee;
+}
+
+table.shademe td {
+  background:#eee;
+  padding:8px;
+}
+
+div.li-single li {
+  margin-bottom:0.1em;
+} 
+.test_delete {
+  line-height:0.7em;
+}
+pre {
+  font-weight:normal;
+  font-size:80%;
+}
+div.space_images > p > img {
+  margin-bottom:4em;
+}
+div.code-sample {
+  font-family: monospace;
+  font-weight: normal;
+  color:DarkOliveGreen;
+  margin-left:0;
+  margin-bottom:2em;
+}
+div.shaded-box {
+  margin:1em 2em;
+  border:5px solid #888;
+  background-color:#ddd;
+}
+img.stackme {
+  position:absolute;
+  top:0;
+  left:0;
+}

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="" />
+  <meta name="copyright" content="<a href='index.html' style='color:#777; margin-left:2em;'>Working with Cal-Adapt Climate Data in R</a>"/>
+  <title>Shiny Apps</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+              </style>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SH51K99N57"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SH51K99N57');
+  </script>
+  <script src="lib/header-attrs-2.13/header-attrs.js"></script>
+  <link href="lib/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="lib/slidy-2/scripts/slidy.js"></script>
+  <script src="lib/slidy_shiny-1/slidy_shiny.js"></script>
+  <link href="lib/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="lib/pagedtable-1.1/js/pagedtable.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="z_slidy.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title"><span style="color:#444; font-size:80%;">Working with Cal-Adapt Climate Data in R: </span><br/>Shiny Apps</h1>
+  <p class="author">
+<a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr-hexlogo_173x200.gif' style='height:120px; width:104px; padding:1em;'/></a>
+  </p>
+  <p class="date"><div style="width:900px; margin:0 auto;">
+<img src='images/igis-logo_550x58x256.png' style='padding:1em; float:left;'/><img src='images/cal-adapt-logo.svg' style='height:60px; padding:1em; float:right;'/>
+</div></p>
+</div>
+<div id="shiny-apps" class="slide section level1">
+<h1>Shiny Apps</h1>
+<script type="text/javascript">
+w3c_slidy.mouse_click_enabled = false;
+</script>
+<p><img src="images/shiny-hex_87x100.png" style="float:right; padding:0.5em;" /></p>
+<ul>
+<li><p>The Shiny package allows you to create browser-based apps that run R in the background.</p></li>
+<li><p>You need to know to R, but you don’t need to know JavaScript, HTML, CSS, network protocols, etc.</p></li>
+<li><p>Can run them locally or online</p></li>
+</ul>
+<div style="float:left; margin-left:2em;">
+<img src="images/chill-calculator_200x286x256.png" style="border:2px solid gray;" />
+</div>
+<div style="margin-left:1em; float:left;">
+<p>Examples:</p>
+<ul>
+<li><a href="https://caladaptr.shinyapps.io/timeseries/">Plot Annual Time Series</a> (online)</li>
+<li><a href="https://ucanr-igis.shinyapps.io/chill/">Projected Chill Portions</a> (online)</li>
+</ul>
+</div>
+<div style="clear:both;">
+
+</div>
+<div style="margin-left:2em;">
+<ul>
+<li>See samples in the <a href="https://github.com/ucanr-igis/caladaptr.apps/">caladaptr.apps</a> package</li>
+</ul>
+<div style="margin:0 2em;">
+<pre><code>library(caladaptr.apps)
+
+## Launch the time series app
+ca_launch(&quot;timeseries&quot;)
+
+## Launch the projected chill portions app
+ca_launch(&quot;chill&quot;)</code></pre>
+</div>
+</div>
+</div>
+<div id="notebook-5.-shiny-apps" class="slide section level1">
+<h1>Notebook 5. Shiny Apps</h1>
+<div class="indented1 li-single">
+<p>In Notebook 5, you will:</p>
+<div class="indented1 li-single">
+<ul>
+<li>launch a Shiny app using the <code>caladaptr.apps</code> package<br />
+</li>
+<li>explore the anatomy of a simple Shiny app</li>
+</ul>
+</div>
+</div>
+<p><a href="./notebooks/nb05_shiny.nb.html" target="_blank" rel="noopener">Notebook 5. Shiny Apps</a></p>
+<p><br />
+</p>
+</div>
+<div id="end" class="slide section level1">
+<h1>END!</h1>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

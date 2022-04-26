@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="" />
+  <meta name="copyright" content="<a href='index.html' style='color:#777; margin-left:2em;'>Working with Cal-Adapt Climate Data in R</a>"/>
+  <title>Rasters</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+              </style>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SH51K99N57"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SH51K99N57');
+  </script>
+  <script src="lib/header-attrs-2.13/header-attrs.js"></script>
+  <link href="lib/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="lib/slidy-2/scripts/slidy.js"></script>
+  <script src="lib/slidy_shiny-1/slidy_shiny.js"></script>
+  <link href="lib/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="lib/pagedtable-1.1/js/pagedtable.js"></script>
+  <script src="lib/kePrint-0.0.1/kePrint.js"></script>
+  <link href="lib/lightable-0.0.1/lightable.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="z_slidy.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title"><span style="color:#444; font-size:80%;">Working with Cal-Adapt Climate Data in R: </span><br/>Rasters</h1>
+  <p class="author">
+<a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr-hexlogo_173x200.gif' style='height:120px; width:104px; padding:1em;'/></a>
+  </p>
+  <p class="date"><div style="width:900px; margin:0 auto;">
+<img src='images/igis-logo_550x58x256.png' style='padding:1em; float:left;'/><img src='images/cal-adapt-logo.svg' style='height:60px; padding:1em; float:right;'/>
+</div></p>
+</div>
+<div id="why-rasters" class="slide section level1">
+<h1>Why Rasters?</h1>
+<script type="text/javascript">
+w3c_slidy.mouse_click_enabled = false;
+</script>
+<div style="display: flex;">
+<div style="width:400;">
+<p>Climate data are inherently raster</p>
+<p>Rasters can cover large areas</p>
+<p>Download once, use many times</p>
+<p>Easy to query locations</p>
+<p>Well-developed tools for manipulating and analyzing raster data</p>
+</div>
+<div style="width:310px;">
+<p><img src="images/gcm-grid_300x300x256.png" style="width:300px; height:300px;"></p>
+</div>
+</div>
+</div>
+<div id="challenges-with-climate-rasters" class="slide section level1">
+<h1>Challenges with Climate Rasters</h1>
+<p>Large file sizes</p>
+<p>Many layers and/or many files</p>
+<p>Analysis of multiple futures</p>
+<p>File format limitations (especially TIFs)</p>
+<p>Usual spatial data headaches (CRS, resolution)</p>
+</div>
+<div id="download-options" class="slide section level1">
+<h1>Download Options</h1>
+<table class="borderme table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align:left;width: 15em; font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+Feature
+</td>
+<td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+Cal-Adapt website
+</td>
+<td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+Cal-Adapt FTP
+</td>
+<td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+caladapt-py
+</td>
+<td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
+caladaptR
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+Download rasters
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+<td style="text-align:center;font-weight: bold;font-style: italic;background-color: #E6E6E6 !important;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+Statewide
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+User area-of-interest
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+10 recommended GCMs
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 15em; ">
+All 32 GCMs
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+<span class="chk">✔</span>
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p><img src="images/caladaptpy-logo.svg" style="height:70px;" /></p>
+<p><a href="https://ucanr-igis.github.io/caladapt-py/" class="uri">https://ucanr-igis.github.io/caladapt-py/</a></p>
+<div class="indented1 li-single">
+<ul>
+<li>Jupyter Notebooks<br />
+</li>
+<li>ArcGIS Pro toolbox<br />
+</li>
+<li>workshop recordings on YouTube</li>
+</ul>
+</div>
+<p><br />
+</p>
+<center>
+<img src="images/python_toolbox_351x333.png" /> <img src="images/voxel_694x540.jpg" style="margin-left:2em; height:333px;" />
+</center>
+</div>
+<div id="getting-rasters-with-caladaptr" class="slide section level1">
+<h1>Getting Rasters with caladaptR</h1>
+<h2 id="approach">Approach</h2>
+<div class="indented1">
+<p>The same API Request object can be used to fetch rasters</p>
+<p><br />
+</p>
+<p><code>ca_getrst_stars()</code></p>
+<div class="indented1 li-single">
+<ul>
+<li>save TIFs to disk</li>
+<li>save image metadata in sidecar files</li>
+</ul>
+</div>
+<p><br />
+</p>
+<p>Custom function to import TIFs and their metadata into R as <a href="https://r-spatial.github.io/stars/" target="_blank" rel="noopener">stars</a> objects</p>
+<p><br />
+</p>
+<p>Use stars methods for analysis:</p>
+<div style="display: flex;">
+<div class="indented1 li-single" style="width:360;">
+<ul>
+<li>dplyr style filtering</li>
+<li>spatial overlay / extract</li>
+<li>raster algebra<br />
+</li>
+<li>pixelwise summaries<br />
+</li>
+<li>spatial manipulations<br />
+</li>
+<li>plotting</li>
+</ul>
+</div>
+<div style="width:390px;">
+<p><a href="https://r-spatial.github.io/stars/" target="_blank" rel="noopener"><img src="images/stars_cube_384x200x256.png" style="width:384px;"/></a></p>
+</div>
+</div>
+<p><br />
+</p>
+<p>Convenience functions to help manage stars objects:</p>
+<div class="indented1 li-single">
+<ul>
+<li>create index</li>
+<li>multiple rasters → 6D array</li>
+<li>mosaic</li>
+</ul>
+</div>
+</div>
+<p><br />
+</p>
+</div>
+<div id="rasters-workflow" class="slide section level1">
+<h1>Rasters Workflow</h1>
+<div style='position:relative; border:none; height:768px;width:768px; margin:0 auto; '>
+<img src="images/rstwrkflw_01.png"/>
+<img src="images/rstwrkflw_02.png" class="incremental stackme"/>
+</div>
+<h2 id="vignettes">Vignettes</h2>
+<div class="indented2">
+<p><a href="https://ucanr-igis.github.io/caladaptr/articles/rasters-pt1.html" target="_blank" rel="noopener">Rasters Part I: Download, Combine, Subset, and Compute Pixel Summaries</a></p>
+<p><a href="https://ucanr-igis.github.io/caladaptr/articles/rasters-pt2.html" target="_blank" rel="noopener">Rasters Part II: Six-Dimensional Climate Data Cubes and Spatial Queries</a></p>
+<p><a href="https://ucanr-igis.github.io/caladaptr/articles/rasters-pt3.html" target="_blank" rel="noopener">Rasters Part III: Downloading Rasters for Large Areas</a></p>
+</div>
+</div>
+<div id="notebook-4-rasters" class="slide section level1">
+<h1>Notebook 4: Rasters</h1>
+<div class="indented2">
+<p>In Notebook 4 you will:</p>
+<div class="indented2">
+<ul>
+<li>query using a sf polygon object</li>
+<li>download climate values into a SQLite database<br />
+</li>
+<li>summarize the values in a remote tibble with dplyr statements<br />
+</li>
+<li>download climate data as stars rasters<br />
+</li>
+</ul>
+</div>
+<p><a href="./notebooks/nb04_large-queries.nb.html" target="_blank" rel="noopener">Notebook 4. Rasters</a> | <a href="./notebooks/nb04_large-queries_ans.nb.html" target="_blank" rel="noopener">solutions</a></p>
+</div>
+</div>
+<div id="end" class="slide section level1">
+<h1>END!</h1>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

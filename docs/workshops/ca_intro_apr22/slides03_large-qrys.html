@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="" />
+  <meta name="copyright" content="<a href='index.html' style='color:#777; margin-left:2em;'>Working with Cal-Adapt Climate Data in R</a>"/>
+  <title>Large Queries</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+              </style>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SH51K99N57"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SH51K99N57');
+  </script>
+  <script src="lib/header-attrs-2.13/header-attrs.js"></script>
+  <link href="lib/slidy-2/styles/slidy.css" rel="stylesheet" />
+  <script src="lib/slidy-2/scripts/slidy.js"></script>
+  <script src="lib/slidy_shiny-1/slidy_shiny.js"></script>
+  <link href="lib/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+  <script src="lib/pagedtable-1.1/js/pagedtable.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="z_slidy.css" />
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title"><span style="color:#444; font-size:80%;">Working with Cal-Adapt Climate Data in R: </span><br/>Large Queries</h1>
+  <p class="author">
+<a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr-hexlogo_173x200.gif' style='height:120px; width:104px; padding:1em;'/></a>
+  </p>
+  <p class="date"><div style="width:900px; margin:0 auto;">
+<img src='images/igis-logo_550x58x256.png' style='padding:1em; float:left;'/><img src='images/cal-adapt-logo.svg' style='height:60px; padding:1em; float:right;'/>
+</div></p>
+</div>
+<div id="querying-large-data" class="slide section level1">
+<h1>Querying Large Data</h1>
+<script type="text/javascript">
+w3c_slidy.mouse_click_enabled = false;
+</script>
+<p>Imagine you want to extract the climate data for 36,000 vernal pool locations.</p>
+<p>Issues that arise when querying large number (1000s) of locations:</p>
+<div class="indented1 li-single">
+<ul>
+<li>R tries to load everything in memory<br />
+</li>
+<li>long times to download data<br />
+</li>
+<li>server overload<br />
+</li>
+</ul>
+</div>
+<h2 id="general-strategies">General Strategies</h2>
+<div class="indented2">
+<p><strong>1) Aggregate point features by LOCA grid cells </strong></p>
+<div class="indented2">
+<ul>
+<li>The same API call can be used for all points in the same LOCA grid cell</li>
+</ul>
+</div>
+<p><strong>2) Download rasters</strong></p>
+<div class="indented2">
+<ul>
+<li><code>ca_getrst_stars()</code></li>
+<li>Although it will take longer to download, data extraction and geoprocessing may be faster locally</li>
+</ul>
+</div>
+<p><strong>3) Save values in a local SQLite database</strong></p>
+<div class="indented2">
+<ul>
+<li><code>ca_getvals_db()</code><br />
+</li>
+<li>values get saved as they are received</li>
+</ul>
+</div>
+</div>
+<p><br />
+</p>
+</div>
+<div id="saving-values-to-a-local-database" class="slide section level1">
+<h1>Saving Values to a Local Database</h1>
+<p>Use <code>ca_getvals_db()</code> Instead of <code>ca_getvals_tbl()</code></p>
+<div style="margin-left:1em;">
+<ul>
+<li>downloaded values will be saved into SQLite database as you go<br />
+</li>
+<li>slow connection? No problem - it will chug away on its own<br />
+</li>
+<li>disconnected? No problem - it will pick up where it left off<br />
+</li>
+<li>get back a remote tibble connected to the SQLite database<br />
+</li>
+<li>additional caladaptR functions help you view contents of the SQLite database, manage indices, etc.<br />
+</li>
+<li>standard dplyr verbs work thanks to <a href="https://dbplyr.tidyverse.org/" target="_blank" rel="noopener">dbplyr</a></li>
+</ul>
+</div>
+<p>Sample usage:</p>
+<div class="indented1 indented1r">
+<pre><code>my_vals &lt;- my_api_req %&gt;% 
+  ca_getvals_db(db_fn = &quot;my_data.sqlite&quot;,
+                db_tbl = &quot;daily_vals&quot;,
+                new_recs_only = TRUE)</code></pre>
+</div>
+<div class="indented1">
+<p><code>new_recs_only = TRUE</code> → will pick up where it left off if the connection interrupted</p>
+<p><code>ca_getvals_db()</code> returns a ‘remote tibble’ linked to a local database</p>
+<p>Work with ‘remote tibbles’ using many of the same techniques as regular tibbles (with a few exceptions)</p>
+<p><code>ca_db_info()</code> and <code>ca_db_indices()</code> help you view and manage database files</p>
+<p>See the <a href="https://ucanr-igis.github.io/caladaptr/articles/large-queries.html" target="_blank" rel="noopener"><em>Large Queries</em></a> Vignette for details</p>
+</div>
+<p><br />
+</p>
+</div>
+<div id="notebook-3-large-queries" class="slide section level1">
+<h1>Notebook 3: Large Queries</h1>
+<div class="indented2">
+<p>In Notebook 3 you will:</p>
+<div class="indented2">
+<ul>
+<li>query using a sf polygon object</li>
+<li>download climate values into a SQLite database<br />
+</li>
+<li>summarize the values in a remote tibble with dplyr statements<br />
+</li>
+</ul>
+</div>
+<p><a href="./notebooks/nb03_large-queries.nb.html" target="_blank" rel="noopener">Notebook 3. Large Queries and Rasters</a> | <a href="./notebooks/nb03_large-queries_ans.nb.html" target="_blank" rel="noopener">solutions</a></p>
+</div>
+</div>
+<div id="end" class="slide section level1">
+<h1>END!</h1>
+</div>
+
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

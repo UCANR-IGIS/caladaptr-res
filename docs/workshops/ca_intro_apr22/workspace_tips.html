@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Tips for Taking Software Workshops on Zoom</title>
+
+<script src="lib/header-attrs-2.11/header-attrs.js"></script>
+<script src="lib/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="lib/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="lib/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="lib/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Tips for Taking Software Workshops on Zoom</h1>
+
+</div>
+
+
+<style type="text/css">
+h1 {
+  font-size: 18px;
+  font-weight: bold;
+  color:navy;
+  margin-top:2em;
+}
+h1.title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #007020;
+}
+h2 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top:2em;
+}
+h3 {
+  font-size: 16px;
+  font-weight: normal;
+  font-style:italic;
+  margin-top:2em;
+}
+p {
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+}
+.workshop-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+}
+
+.indented1 {
+  margin-left:1em;
+}
+ol {
+  margin-left: 0px;
+}
+</style>
+<div style="margin-bottom:3em;">
+
+</div>
+<div id="setting-up-your-workspace" class="section level1">
+<h1>Setting Up Your Workspace</h1>
+<p>Try to find a spot which is <strong>comfortable</strong> and <strong>relatively free</strong> from <strong>distractions and background noise</strong>. Some people find a pair of headphones helps minimize distractions.</p>
+<p><strong>Ergonomics</strong> are important! If you’ve ever tried to work on a laptop while sitting on a couch for multiple hours, it isn’t ideal! We will take at least one short bio-break each session.</p>
+<p>A <strong>second screen</strong> is extremely helpful, especially for hands-on workshops where you’ll be working through a software exercise. With a second screen, you can view the instructor’s slides or demo on one screen, and open RStudio on the other.</p>
+<div style="width:660px; margin:2em auto; font-style:italic; font-size:120%; text-align:center;">
+<img src="images/external-monitor_650x350.jpg" style="border:1px solid grey;"/><br/> Connecting an external monitor to your computer is the best option for completing hands-on software workshops in Zoom
+</div>
+</div>
+<div id="zoom" class="section level1">
+<h1>Zoom</h1>
+<p>This workshop will be taught entirely online using the Zoom platform. The instructor will send you the Zoom link via email and/or a calendar invite.</p>
+<p>Please make sure you have the <a href="https://zoom.us/download" target="_blank" rel="noopener">Zoom client</a> (app) installed. You can verify you have it installed if you see it in the Start Menu (Windows), or Finder (Mac). Please <strong>make sure you have the latest version</strong>, as some of the buttons and features have changed.</p>
+<p style="text-align:center; font-style:italic;">
+<img src="images/zoom_update360x632x256.png" style="padding:10px; width:300px;"/><br/>Check for updates on the Zoom app
+</p>
+<p>A <strong>Zoom account</strong> is <em>not</em> required. A <strong>webcam</strong> is <em>not</em> required.</p>
+<div id="managing-zoom-audio" class="section level2">
+<h2>Managing Zoom Audio</h2>
+<p>If you find your Zoom audio is garbled, perhaps due to poor bandwidth, you can <strong>dial-in</strong> with a phone. Click the microphone button on Zoom for details. In that case, you should disconnect from the the audio on your laptop or tablet (to prevent echo).</p>
+<p><strong>Muting</strong> and <strong>unmuting</strong> yourself are essential skills for Zoom. It’s generally good practice to stay muted until you have something to say. If you’re using the Zoom app on Windows, click the microphone button. If you’re using the Zoom app for phones and tablets, tap the middle of the screen to make the controls visible. If you dial-in on a phone, you can use the ‘mute’ button on your phone app, or dial <code>*6</code> to mute or unmute yourself.</p>
+</div>
+</div>
+<div id="viewing-rstudio-and-zoom-simultaneously" class="section level1">
+<h1>Viewing RStudio and Zoom Simultaneously</h1>
+<div id="dual-monitors-best-option" class="section level2">
+<h2>Dual Monitors (Best Option)</h2>
+<p>If you have an <strong>external monitor</strong> for your laptop / computer, you’re all set. (Tip: turn on Zoom’s <em>dual monitors</em> option, see below). Many TVs can be used as a second monitor depending on the video connections.</p>
+<p>If you don’t have a second monitor, a <strong>tablet</strong> may come in handy for viewing the slides / speaker. Zoom is available for all major tablets and phones.</p>
+<p>Note however if you watch the slides on a tablet, you should <strong>also</strong> have Zoom running on your laptop so you can take the polls, click on links in the chat window, share your screen with the instructor, etc. In that scenario, you’ll be logged into the Zoom meeting on two different devices, but only join the audio on one of the devices otherwise you may get a lot of echo!.</p>
+</div>
+<div id="tips-for-using-zoom-on-a-single-screen" class="section level2">
+<h2>Tips for Using Zoom on a Single Screen</h2>
+<div id="tip-1.-turn-on-dual-monitors" class="section level3">
+<h3>Tip 1. Turn on ‘Dual Monitors’</h3>
+<p>The Zoom client for Windows has a ‘Dual Monitors’ option that will open up screen shares in a <strong>separate window</strong>. You don’t actually need two monitors to use this option. This option is really useful on a single monitor, because you can move and resize the screen share window anywhere you’d like (and even ‘pin’ it to stay on top, see below).</p>
+<p>To turn on Dual Monitors, click the gear icon (Settings) in the Zoom client, then check ‘Dual Monitors’.</p>
+<p><img src="images/zoom-client-setting-btn_300x522x256.png" style="display:block; margin:1em auto; border:1px solid grey;" /></p>
+<p><img src="images/zoom-client_dual-monitors_800x500x256.png" style="display:block; margin:1em auto; border:1px solid grey;" /></p>
+</div>
+<div id="tip-2.-place-windows-side-by-side" class="section level3">
+<h3>Tip 2. Place Windows Side-by-Side</h3>
+<p>You can arrange your windows so that you see both RStudio and Zoom side-by-side (see below for example). You can devote the entire width of the Zoom window to the screen share by going to ‘View Options’ and making sure side-by-side mode is turned <strong>off</strong>.</p>
+<p>A keyboard shortcut on Windows to move windows to the left or right is <em>windows key</em> + <em>left/right arrows</em>. You can then choose which of the remaining windows to put in the other half of the screen. By default, Windows will divide the screen into equal halves, but if you resize the width right after you use the shortcut, it will remember the setting.</p>
+<p><a href="./images/rstudio-zoom_side-by-side_1920x1024x256.png" target="_blank"><img src="images/rstudio-zoom_side-by-side_600x320x256.png" style="display:block; margin:1em auto; border:1px solid grey;"></a></p>
+<p style="text-align:center; font-style:italic;">
+Arranging RStudio and Zoom side-by-side on a single monitor on Windows
+</p>
+</div>
+<div id="tip-3.-use-a-utility-to-keep-the-zoom-window-on-top" class="section level3">
+<h3>Tip 3. Use a Utility to Keep the Zoom Window on Top</h3>
+<p>Surprisingly Zoom does not have an ‘always on top’ mode, but you can keep the Zoom client on top by using a 3rd party utility. Windows users can check out <a href="https://efotinis.neocities.org/deskpins/index.html" target="_blank" rel="noopener">DeskPins</a>, and Mac users can try <a href="https://rectangleapp.com/" target="_blank" rel="noopener">Rectangle</a>.</p>
+<div class="indented2" style="border:2px solid lightgray; padding:10px;">
+<p><strong>Example: Deskpins</strong></p>
+<p>In conjunction with Zoom’s Dual Monitor options, DeskPins let you ‘pin’ Zoom’s window with the presenter’s screen share on top, so you can watch the presenter’s demo while also working in your GIS program. Pinned windows can still be resized and moved around, so it doesn’t get in the way of what you’re working on.</p>
+<p><img src="images/deskpins_pinned-window_800x430.jpg" style="display:block; margin:1em auto; border:1px solid grey;" /></p>
+<p>To ‘pin’ a window, right-click on the DeskPins icon in the system tray, and select ‘Enter Pin Mode’. To ‘unpin’ a window, simply click the little ‘x’ button that appears when you hover over the pushpin icon.</p>
+</div>
+</div>
+<div id="tip-4.-use-sticky-notes" class="section level3">
+<h3>Tip 4. Use Sticky Notes</h3>
+<p>If you like to take notes during Zoom meetings, a Sticky Notes utility can help. Almost all sticky notes programs have an option to stay on top, so you don’t have to worry about your notes disappearing. Windows has a built-in ‘Sticky Notes’ app, but an even better one is <a href="https://www.zhornsoftware.co.uk/" target="_blank" rel="noopener">Stickies</a> from Zhorn Software.</p>
+</div>
+</div>
+<div id="sharing-your-screen" class="section level2">
+<h2>Sharing Your Screen</h2>
+<p>If needed, you can <strong>share your RStudio window</strong> with an instructor during an exercise to get help. Click the ‘Share Screen’ button on Zoom, and select your RStudio window. (Note: please don’t share the entire screen to avoid accidentally sharing other windows!)</p>
+<p><img src="images/zoom_share_screen_900x558.png" style="display:block; margin:1em auto; border:1px solid gray;" /><br />
+</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+</body>
+</html>
