@@ -14,7 +14,7 @@ This notebook will demonstrate how to download Cal-Adapt data as rasters.
 
 # Setup
 
-Load caladaptR and the other package we're going to need. (If you haven't installed these yet, see this [setup script](https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_oct21/scripts/caladaptr_setup.R)). 
+Load caladaptR and the other package we're going to need. (If you haven't installed these yet, see this [setup script](https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_apr22/scripts/caladaptr_setup.R)). 
 
 ```{r chunk01, message=FALSE, warning=FALSE, results='hold'}
 library(caladaptr)
@@ -48,9 +48,9 @@ sierra_cap <- ca_loc_aoipreset(type = "climregions", idfld = "name", idval = "Si
 
 sierra_cap
 
-plot(sierra_cap, locagrid = TRUE)
+sierra_cap %>% ca_preflight(check_for = "getrst")
 
-sierra_cap %>% ca_preflight()
+plot(sierra_cap, locagrid = TRUE)
 ```
 
 \
@@ -72,14 +72,17 @@ sierra_tiff_fn <- sierra_cap %>%
  
 \
  
-`ca_getrst_stars()` works differently than retrieving tabular climate values. It returns a vector of TIF files that were downloaded. To work with them, you next have to load them back into R as stars objects (space-time arrays) using `ca_stars_read()`:
+`ca_getrst_stars()` returns a vector of TIF files that were downloaded. To work with them, you next have to load them back into R as stars objects (space-time arrays) using `ca_stars_read()`:
 
 ```{r chunk04, paged.print = FALSE}
 sierra_stars_lst <- ca_stars_read(sierra_tiff_fn)
+length(sierra_stars_lst)
 sierra_stars_lst[[1]]
 ```
 
 \
+
+# Plot
 
 To plot a stars objects, you have to decide which layer(s) to plot. In this case, each layer represents a year from 1970 to 2010. Below we plot 4 of the 40 years:
 
@@ -97,6 +100,121 @@ ca_catalog_search("pr_year_livneh")
 
 \
 
+# Subset by Dimension
+
+Subsetting stars objects by a dimension is the counterpart to doing an attribute query in GIS. You can use dplyr filter function as you would a tibble. For example, to get the precipitation for only the 1990s:
+
+```{r chunk07}
+sierra_stars_lst[[1]] %>% filter(year >= 1990, year < 2000)
+```
+
+To get the values of a dimension, you can use
+
+```{r chunk08}
+(x_range <- sierra_stars_lst[[1]] %>% st_get_dimension_values("x"))
+(yr_range <- sierra_stars_lst[[1]] %>% st_get_dimension_values("year"))
+```
+
+\
+
+You can also use square bracket notation as you would an array. Just put an extra comma at the beginning of the bracket.
+
+```{r chunk09}
+sierra_stars_lst[[1]][ , , , which(yr_range >= 1990 & yr_range < 2000)]
+```
+
+\
+
+# Spatial Selection
+
+To spatially select, you can put a SF object in the first slot of the square bracket notation. Let's get the precipitation history for Yosemite NP:
+
+```{r chunk10}
+(ynp_bnd_sf <- st_read("https://raw.githubusercontent.com/ucanr-igis/caladaptr-res/main/geoms/ynp_bnd.geojson"))
+plot(ynp_bnd_sf$geometry, axes = TRUE)
+```
+
+\
+
+To do a spatial selection, put the sf object in the first slot in the square brackets:
+
+```{r chunk11}
+ynp_pr_stars <- sierra_stars_lst[[1]][ynp_bnd_sf , , , ]
+ynp_pr_stars
+```
+
+\
+
+Plot to verify:
+
+```{r chunk12}
+{plot(ynp_pr_stars %>% slice(index = 1, along = "year"), 
+     axes = TRUE, main = "Average Daily Precipitation in YNP (mm), 1970", reset = FALSE)
+plot(ynp_bnd_sf$geometry, border = "red", lwd = 2, add = TRUE)}
+```
+
+\
+
+# Convert Values / Raster Algebra
+
+Math operators (like `* / - +`) do 'pixelwise' operations on stars objects, just like regular arrays.
+
+To compute the yearly summary in inches, rather than daily average in mm, we just multiply the stars object by a conversion constant. A mm is 0.0393701 inches, so to go from daily averages in mm to annual total in inches:
+
+```{r chunk13}
+(ynp_prtotal_stars <- ynp_pr_stars * 0.0393701 * 365)
+```
+
+\
+
+Plot the first year to verify:
+
+```{r chunk14}
+{plot(ynp_prtotal_stars %>% slice(index = 1, along = "year"), 
+     axes = TRUE, main = "Total Precipitation in YNP (in), 1970", reset = FALSE)
+plot(ynp_bnd_sf$geometry, border = "red", lwd = 2, add = TRUE)}
+
+```
+
+\
+
+# Aggregate Across Time and Space
+
+To take the average precip per pixel for the entire time range, use `st_apply()`. The `MARGIN` argument should be the indices of the dimensions you want to *keep*:
+
+```{r chunk15}
+ynp_prtotal_stars %>% 
+  st_apply(MARGIN = 1:2, FUN = mean) %>% 
+  plot(axes = TRUE, main = "Average Total Annual Precipitation in YNP (in), 1970-2010")
+```
+
+\
+
+To take the average total precip of all pixels in the park per year, we simply change the value of `MARGIN` to 3 (because year is the third dimension). We also have to add `na.rm = TRUE` to tell the `mean` function to ignore all the NA values outside the park boundary:
+
+```{r chunk16}
+(ynp_pr_annual_avg_stars <- ynp_prtotal_stars %>% 
+  st_apply(MARGIN = 3, FUN = mean, na.rm = TRUE))
+```
+
+\
+
+stars objects can be converted to data frames:
+
+```{r chunk17}
+ynp_pr_annual_avg_df <- ynp_pr_annual_avg_stars %>% as.data.frame
+plot(ynp_pr_annual_avg_df, type="b", main = "YNP Total Precip Averaged Across Park (in)")
+```
+
+\
+
+To plot the distribution of values, we can grab the individual values with `[]` (just like an array) and make a histogram:
+
+```{r chunk18}
+hist(ynp_prtotal_stars, main = "Distribution of Total Annual Precip in YNP")
+```
+
+
 There is a **lot** more you can do with rasters, including pixel summaries, combining them into higher dimensional data cubes, spatially mosaicing them, etc. For more info, see the Rasters articles on the [website](https://ucanr-igis.github.io/caladaptr/).
  
 \
@@ -105,7 +223,7 @@ There is a **lot** more you can do with rasters, including pixel summaries, comb
 
 Download historic precipitation data for the county where you live or work. [[Answer](https://bit.ly/3m7BcWM)]
  
-```{r chunk07, paged.print = FALSE, cache=FALSE}
+```{r chunk19, paged.print = FALSE, cache=FALSE}
 ## Example: Mendocino County
 
 ca_aoipreset_geom("counties", quiet = TRUE) %>% 

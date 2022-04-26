@@ -168,7 +168,6 @@ pre code {
 <h1>Setting up RStudio</h1>
 <p>If you would like to do the hands-on exercises during the workshop (recommended but not required), you have two options. You can run <strong>RStudio Desktop</strong> on your own laptop / desktop computer, or you can run a RStudio virtual machine from <strong>RStudio Cloud</strong> (i.e., in a browser). Both options are free and fairly easy to set up.</p>
 <div class="indented1">
-
 <div id="rstudio-cloud" class="section level2">
 <h2>RStudio Cloud</h2>
 <p>The easiest way to do the workshop exercises is using <strong>RStudio Cloud</strong>. This is recommended for beginners and anyone who hasn’t touched R in a while. With RStudio Cloud, all you need to do is set up an account. You don’t have to install or update R and RStudio, install packages, download data, or any other set up. All the workshop materials will be waiting for you in a VM prepared by the instructor. If you never used RStudio Cloud before, it’s well-developed and looks and feels nearly identical to RStudio Desktop.</p>
@@ -192,25 +191,19 @@ The day before the workshop, the instructor will send out a link for the worksho
 </center>
 <p><br />
 </p>
-<p>On the day of the workshop, the instructor will provide a link to the data and exercises.</p>
 <!-----------------------
-
-Run the following lines to download the slides and notebooks. (You can also download the zip file from a browser). The zip file is about 30MB.
-
-<div class="indented1">
-
-```r
-zip_url <- "https://ucdavis.box.com/shared/static/uxj3nzhk4aagtsc6mpbnq4buhh0j1mgm.zip"
-
-## Update destdir to where you want the workshop folder to go, or omit it to expand to the desktop
-usethis::use_course(zip_url, destdir = "c:/path/goes/here") 
-```
-</div>
-
-</div>  <! class indented >
-
+On the day of the workshop, the instructor will provide a link to the data and exercises.
 --------------------->
+<p>Run the following lines to download the slides and notebooks. (You can also download the zip file from a browser). The zip file is about 30MB.</p>
+<div class="indented1">
+<pre class="r"><code>zip_url &lt;- &quot;https://ucdavis.box.com/shared/static/0r3qifknc46l6zlps2jktos5kb6zy5s5.zip&quot;
+
+## Update destdir to where you want the workshop folder to go. Or omit destdir to expand to the desktop
+usethis::use_course(zip_url, destdir = &quot;c:/path/goes/here&quot;) </code></pre>
 </div>
+</div>
+</div>
+<!----END div class="indented1"---->
 </div>
 <div id="using-two-monitors" class="section level1">
 <h1>Using Two Monitors</h1>

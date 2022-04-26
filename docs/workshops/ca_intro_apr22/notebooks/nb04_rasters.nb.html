@@ -226,7 +226,7 @@ pre code {
 </div>
 <div id="setup" class="section level1">
 <h1>Setup</h1>
-<p>Load caladaptR and the other package we’re going to need. (If you haven’t installed these yet, see this <a href="https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_oct21/scripts/caladaptr_setup.R">setup script</a>).</p>
+<p>Load caladaptR and the other package we’re going to need. (If you haven’t installed these yet, see this <a href="https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_apr22/scripts/caladaptr_setup.R">setup script</a>).</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShjYWxhZGFwdHIpXG5saWJyYXJ5KHVuaXRzKVxubGlicmFyeShkcGx5cilcbmxpYnJhcnkobHVicmlkYXRlKVxubGlicmFyeShzZilcbmxpYnJhcnkoc3RhcnMpXG5saWJyYXJ5KGNvbmZsaWN0ZWQpXG5jb25mbGljdF9wcmVmZXIoXCJmaWx0ZXJcIiwgXCJkcGx5clwiLCBxdWlldCA9IFRSVUUpXG5jb25mbGljdF9wcmVmZXIoXCJjb3VudFwiLCBcImRwbHlyXCIsIHF1aWV0ID0gVFJVRSlcbmNvbmZsaWN0X3ByZWZlcihcInNlbGVjdFwiLCBcImRwbHlyXCIsIHF1aWV0ID0gVFJVRSlcbmBgYCJ9 -->
@@ -253,7 +253,7 @@ conflict_prefer(&quot;select&quot;, &quot;dplyr&quot;, quiet = TRUE)</code></pre
 <p>Below we get a raster of observed historic temperature data for the Sierra climate region:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2llcnJhX2NhcCA8LSBjYV9sb2NfYW9pcHJlc2V0KHR5cGUgPSBcImNsaW1yZWdpb25zXCIsIGlkZmxkID0gXCJuYW1lXCIsIGlkdmFsID0gXCJTaWVycmFcIikgJT4lIFxuICBjYV9saXZuZWgoVFJVRSkgJT4lIFxuICBjYV9wZXJpb2QoXCJ5ZWFyXCIpICU+JSBcbiAgY2FfY3ZhcihcInByXCIpICU+JSBcbiAgY2FfeWVhcnMoc3RhcnQgPSAxOTcwLCBlbmQgPSAyMDEwKVxuXG5zaWVycmFfY2FwXG5cbnBsb3Qoc2llcnJhX2NhcCwgbG9jYWdyaWQgPSBUUlVFKVxuXG5zaWVycmFfY2FwICU+JSBjYV9wcmVmbGlnaHQoKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2llcnJhX2NhcCA8LSBjYV9sb2NfYW9pcHJlc2V0KHR5cGUgPSBcImNsaW1yZWdpb25zXCIsIGlkZmxkID0gXCJuYW1lXCIsIGlkdmFsID0gXCJTaWVycmFcIikgJT4lIFxuICBjYV9saXZuZWgoVFJVRSkgJT4lIFxuICBjYV9wZXJpb2QoXCJ5ZWFyXCIpICU+JSBcbiAgY2FfY3ZhcihcInByXCIpICU+JSBcbiAgY2FfeWVhcnMoc3RhcnQgPSAxOTcwLCBlbmQgPSAyMDEwKVxuXG5zaWVycmFfY2FwXG5cbnNpZXJyYV9jYXAgJT4lIGNhX3ByZWZsaWdodChjaGVja19mb3IgPSBcImdldHJzdFwiKVxuXG5wbG90KHNpZXJyYV9jYXAsIGxvY2FncmlkID0gVFJVRSlcbmBgYCJ9 -->
 <pre class="r"><code>sierra_cap &lt;- ca_loc_aoipreset(type = &quot;climregions&quot;, idfld = &quot;name&quot;, idval = &quot;Sierra&quot;) %&gt;% 
   ca_livneh(TRUE) %&gt;% 
   ca_period(&quot;year&quot;) %&gt;% 
@@ -262,9 +262,9 @@ conflict_prefer(&quot;select&quot;, &quot;dplyr&quot;, quiet = TRUE)</code></pre
 
 sierra_cap
 
-plot(sierra_cap, locagrid = TRUE)
+sierra_cap %&gt;% ca_preflight(check_for = &quot;getrst&quot;)
 
-sierra_cap %&gt;% ca_preflight()</code></pre>
+plot(sierra_cap, locagrid = TRUE)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -289,17 +289,21 @@ sierra_tiff_fn &lt;- sierra_cap %&gt;%
 </ul>
 <p><br />
 </p>
-<p><code>ca_getrst_stars()</code> works differently than retrieving tabular climate values. It returns a vector of TIF files that were downloaded. To work with them, you next have to load them back into R as stars objects (space-time arrays) using <code>ca_stars_read()</code>:</p>
+<p><code>ca_getrst_stars()</code> returns a vector of TIF files that were downloaded. To work with them, you next have to load them back into R as stars objects (space-time arrays) using <code>ca_stars_read()</code>:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2llcnJhX3N0YXJzX2xzdCA8LSBjYV9zdGFyc19yZWFkKHNpZXJyYV90aWZmX2ZuKVxuc2llcnJhX3N0YXJzX2xzdFtbMV1dXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2llcnJhX3N0YXJzX2xzdCA8LSBjYV9zdGFyc19yZWFkKHNpZXJyYV90aWZmX2ZuKVxubGVuZ3RoKHNpZXJyYV9zdGFyc19sc3QpXG5zaWVycmFfc3RhcnNfbHN0W1sxXV1cbmBgYCJ9 -->
 <pre class="r"><code>sierra_stars_lst &lt;- ca_stars_read(sierra_tiff_fn)
+length(sierra_stars_lst)
 sierra_stars_lst[[1]]</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p><br />
 </p>
+</div>
+<div id="plot" class="section level1">
+<h1>Plot</h1>
 <p>To plot a stars objects, you have to decide which layer(s) to plot. In this case, each layer represents a year from 1970 to 2010. Below we plot 4 of the 40 years:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
@@ -320,6 +324,147 @@ sierra_stars_lst[[1]]</code></pre>
 <!-- rnb-text-begin -->
 <p><br />
 </p>
+</div>
+<div id="subset-by-dimension" class="section level1">
+<h1>Subset by Dimension</h1>
+<p>Subsetting stars objects by a dimension is the counterpart to doing an attribute query in GIS. You can use dplyr filter function as you would a tibble. For example, to get the precipitation for only the 1990s:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2llcnJhX3N0YXJzX2xzdFtbMV1dICU+JSBmaWx0ZXIoeWVhciA+PSAxOTkwLCB5ZWFyIDwgMjAwMClcbmBgYCJ9 -->
+<pre class="r"><code>sierra_stars_lst[[1]] %&gt;% filter(year &gt;= 1990, year &lt; 2000)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>To get the values of a dimension, you can use</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuKHhfcmFuZ2UgPC0gc2llcnJhX3N0YXJzX2xzdFtbMV1dICU+JSBzdF9nZXRfZGltZW5zaW9uX3ZhbHVlcyhcInhcIikpXG4oeXJfcmFuZ2UgPC0gc2llcnJhX3N0YXJzX2xzdFtbMV1dICU+JSBzdF9nZXRfZGltZW5zaW9uX3ZhbHVlcyhcInllYXJcIikpXG5gYGAifQ== -->
+<pre class="r"><code>(x_range &lt;- sierra_stars_lst[[1]] %&gt;% st_get_dimension_values(&quot;x&quot;))
+(yr_range &lt;- sierra_stars_lst[[1]] %&gt;% st_get_dimension_values(&quot;year&quot;))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+<p>You can also use square bracket notation as you would an array. Just put an extra comma at the beginning of the bracket.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2llcnJhX3N0YXJzX2xzdFtbMV1dWyAsICwgLCB3aGljaCh5cl9yYW5nZSA+PSAxOTkwICYgeXJfcmFuZ2UgPCAyMDAwKV1cbmBgYCJ9 -->
+<pre class="r"><code>sierra_stars_lst[[1]][ , , , which(yr_range &gt;= 1990 &amp; yr_range &lt; 2000)]</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+</div>
+<div id="spatial-selection" class="section level1">
+<h1>Spatial Selection</h1>
+<p>To spatially select, you can put a SF object in the first slot of the square bracket notation. Let’s get the precipitation history for Yosemite NP:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuKHlucF9ibmRfc2YgPC0gc3RfcmVhZChcImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91Y2Fuci1pZ2lzL2NhbGFkYXB0ci1yZXMvbWFpbi9nZW9tcy95bnBfYm5kLmdlb2pzb25cIikpXG5wbG90KHlucF9ibmRfc2YkZ2VvbWV0cnksIGF4ZXMgPSBUUlVFKVxuYGBgIn0= -->
+<pre class="r"><code>(ynp_bnd_sf &lt;- st_read(&quot;https://raw.githubusercontent.com/ucanr-igis/caladaptr-res/main/geoms/ynp_bnd.geojson&quot;))
+plot(ynp_bnd_sf$geometry, axes = TRUE)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+<p>To do a spatial selection, put the sf object in the first slot in the square brackets:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxueW5wX3ByX3N0YXJzIDwtIHNpZXJyYV9zdGFyc19sc3RbWzFdXVt5bnBfYm5kX3NmICwgLCAsIF1cbnlucF9wcl9zdGFyc1xuYGBgIn0= -->
+<pre class="r"><code>ynp_pr_stars &lt;- sierra_stars_lst[[1]][ynp_bnd_sf , , , ]
+ynp_pr_stars</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+<p>Plot to verify:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxue3Bsb3QoeW5wX3ByX3N0YXJzICU+JSBzbGljZShpbmRleCA9IDEsIGFsb25nID0gXCJ5ZWFyXCIpLCBcbiAgICAgYXhlcyA9IFRSVUUsIG1haW4gPSBcIkF2ZXJhZ2UgRGFpbHkgUHJlY2lwaXRhdGlvbiBpbiBZTlAgKG1tKSwgMTk3MFwiLCByZXNldCA9IEZBTFNFKVxucGxvdCh5bnBfYm5kX3NmJGdlb21ldHJ5LCBib3JkZXIgPSBcInJlZFwiLCBsd2QgPSAyLCBhZGQgPSBUUlVFKX1cbmBgYCJ9 -->
+<pre class="r"><code>{plot(ynp_pr_stars %&gt;% slice(index = 1, along = &quot;year&quot;), 
+     axes = TRUE, main = &quot;Average Daily Precipitation in YNP (mm), 1970&quot;, reset = FALSE)
+plot(ynp_bnd_sf$geometry, border = &quot;red&quot;, lwd = 2, add = TRUE)}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+</div>
+<div id="convert-values-raster-algebra" class="section level1">
+<h1>Convert Values / Raster Algebra</h1>
+<p>Math operators (like <code>* / - +</code>) do ‘pixelwise’ operations on stars objects, just like regular arrays.</p>
+<p>To compute the yearly summary in inches, rather than daily average in mm, we just multiply the stars object by a conversion constant. A mm is 0.0393701 inches, so to go from daily averages in mm to annual total in inches:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuKHlucF9wcnRvdGFsX3N0YXJzIDwtIHlucF9wcl9zdGFycyAqIDAuMDM5MzcwMSAqIDM2NSlcbmBgYCJ9 -->
+<pre class="r"><code>(ynp_prtotal_stars &lt;- ynp_pr_stars * 0.0393701 * 365)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+<p>Plot the first year to verify:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxue3Bsb3QoeW5wX3BydG90YWxfc3RhcnMgJT4lIHNsaWNlKGluZGV4ID0gMSwgYWxvbmcgPSBcInllYXJcIiksIFxuICAgICBheGVzID0gVFJVRSwgbWFpbiA9IFwiVG90YWwgUHJlY2lwaXRhdGlvbiBpbiBZTlAgKGluKSwgMTk3MFwiLCByZXNldCA9IEZBTFNFKVxucGxvdCh5bnBfYm5kX3NmJGdlb21ldHJ5LCBib3JkZXIgPSBcInJlZFwiLCBsd2QgPSAyLCBhZGQgPSBUUlVFKX1cblxuYGBgIn0= -->
+<pre class="r"><code>{plot(ynp_prtotal_stars %&gt;% slice(index = 1, along = &quot;year&quot;), 
+     axes = TRUE, main = &quot;Total Precipitation in YNP (in), 1970&quot;, reset = FALSE)
+plot(ynp_bnd_sf$geometry, border = &quot;red&quot;, lwd = 2, add = TRUE)}
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+</div>
+<div id="aggregate-across-time-and-space" class="section level1">
+<h1>Aggregate Across Time and Space</h1>
+<p>To take the average precip per pixel for the entire time range, use <code>st_apply()</code>. The <code>MARGIN</code> argument should be the indices of the dimensions you want to <em>keep</em>:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxueW5wX3BydG90YWxfc3RhcnMgJT4lIFxuICBzdF9hcHBseShNQVJHSU4gPSAxOjIsIEZVTiA9IG1lYW4pICU+JSBcbiAgcGxvdChheGVzID0gVFJVRSwgbWFpbiA9IFwiQXZlcmFnZSBUb3RhbCBBbm51YWwgUHJlY2lwaXRhdGlvbiBpbiBZTlAgKGluKSwgMTk3MC0yMDEwXCIpXG5gYGAifQ== -->
+<pre class="r"><code>ynp_prtotal_stars %&gt;% 
+  st_apply(MARGIN = 1:2, FUN = mean) %&gt;% 
+  plot(axes = TRUE, main = &quot;Average Total Annual Precipitation in YNP (in), 1970-2010&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+<p>To take the average total precip of all pixels in the park per year, we simply change the value of <code>MARGIN</code> to 3 (because year is the third dimension). We also have to add <code>na.rm = TRUE</code> to tell the <code>mean</code> function to ignore all the NA values outside the park boundary:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuKHlucF9wcl9hbm51YWxfYXZnX3N0YXJzIDwtIHlucF9wcnRvdGFsX3N0YXJzICU+JSBcbiAgc3RfYXBwbHkoTUFSR0lOID0gMywgRlVOID0gbWVhbiwgbmEucm0gPSBUUlVFKSlcbmBgYCJ9 -->
+<pre class="r"><code>(ynp_pr_annual_avg_stars &lt;- ynp_prtotal_stars %&gt;% 
+  st_apply(MARGIN = 3, FUN = mean, na.rm = TRUE))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+<p>stars objects can be converted to data frames:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxueW5wX3ByX2FubnVhbF9hdmdfZGYgPC0geW5wX3ByX2FubnVhbF9hdmdfc3RhcnMgJT4lIGFzLmRhdGEuZnJhbWVcbnBsb3QoeW5wX3ByX2FubnVhbF9hdmdfZGYsIHR5cGU9XCJiXCIsIG1haW4gPSBcIllOUCBUb3RhbCBQcmVjaXAgQXZlcmFnZWQgQWNyb3NzIFBhcmsgKGluKVwiKVxuYGBgIn0= -->
+<pre class="r"><code>ynp_pr_annual_avg_df &lt;- ynp_pr_annual_avg_stars %&gt;% as.data.frame
+plot(ynp_pr_annual_avg_df, type=&quot;b&quot;, main = &quot;YNP Total Precip Averaged Across Park (in)&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br />
+</p>
+<p>To plot the distribution of values, we can grab the individual values with <code>[]</code> (just like an array) and make a histogram:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGlzdCh5bnBfcHJ0b3RhbF9zdGFycywgbWFpbiA9IFwiRGlzdHJpYnV0aW9uIG9mIFRvdGFsIEFubnVhbCBQcmVjaXAgaW4gWU5QXCIpXG5gYGAifQ== -->
+<pre class="r"><code>hist(ynp_prtotal_stars, main = &quot;Distribution of Total Annual Precip in YNP&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <p>There is a <strong>lot</strong> more you can do with rasters, including pixel summaries, combining them into higher dimensional data cubes, spatially mosaicing them, etc. For more info, see the Rasters articles on the <a href="https://ucanr-igis.github.io/caladaptr/">website</a>.</p>
 <p><br />
 </p>
@@ -328,8 +473,8 @@ sierra_stars_lst[[1]]</code></pre>
 <p>Download historic precipitation data for the county where you live or work. [<a href="https://bit.ly/3m7BcWM">Answer</a>]</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBZT1VSIEFOU1dFUiBIRVJFXG5cbmBgYCJ9 -->
-<pre class="r"><code># YOUR ANSWER HERE
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyMgWW91ciBhbnN3ZXIgaGVyZVxuXG5gYGAifQ== -->
+<pre class="r"><code>## Your answer here
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
@@ -338,7 +483,7 @@ sierra_stars_lst[[1]]</code></pre>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlJhc3RlcnMiDQpvdXRwdXQ6DQogIGh0bWxfbm90ZWJvb2s6IA0KICAgIGNzczogaHR0cHM6Ly91Y2Fuci1pZ2lzLmdpdGh1Yi5pby9jYWxhZGFwdHItcmVzL2Fzc2V0cy9uYl9jc3MwMS5jc3MNCiAgICBpbmNsdWRlczoNCiAgICAgIGFmdGVyX2JvZHk6IGh0dHBzOi8vdWNhbnItaWdpcy5naXRodWIuaW8vY2FsYWRhcHRyLXJlcy9hc3NldHMvbmJfZm9vdGVyMDEuaHRtbA0KLS0tDQoNCiMgT3ZlcnZpZXcNCg0KVGhpcyBub3RlYm9vayB3aWxsIGRlbW9uc3RyYXRlIGhvdyB0byBkb3dubG9hZCBDYWwtQWRhcHQgZGF0YSBhcyByYXN0ZXJzLg0KDQojIFNldHVwDQoNCkxvYWQgY2FsYWRhcHRSIGFuZCB0aGUgb3RoZXIgcGFja2FnZSB3ZSdyZSBnb2luZyB0byBuZWVkLiAoSWYgeW91IGhhdmVuJ3QgaW5zdGFsbGVkIHRoZXNlIHlldCwgc2VlIHRoaXMgW3NldHVwIHNjcmlwdF0oaHR0cHM6Ly9naXRodWIuY29tL3VjYW5yLWlnaXMvY2FsYWRhcHRyLXJlcy9ibG9iL21haW4vZG9jcy93b3Jrc2hvcHMvY2FfaW50cm9fb2N0MjEvc2NyaXB0cy9jYWxhZGFwdHJfc2V0dXAuUikpLiANCg0KYGBge3IgY2h1bmswMSwgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRSwgcmVzdWx0cz0naG9sZCd9DQpsaWJyYXJ5KGNhbGFkYXB0cikNCmxpYnJhcnkodW5pdHMpDQpsaWJyYXJ5KGRwbHlyKQ0KbGlicmFyeShsdWJyaWRhdGUpDQpsaWJyYXJ5KHNmKQ0KbGlicmFyeShzdGFycykNCmxpYnJhcnkoY29uZmxpY3RlZCkNCmNvbmZsaWN0X3ByZWZlcigiZmlsdGVyIiwgImRwbHlyIiwgcXVpZXQgPSBUUlVFKQ0KY29uZmxpY3RfcHJlZmVyKCJjb3VudCIsICJkcGx5ciIsIHF1aWV0ID0gVFJVRSkNCmNvbmZsaWN0X3ByZWZlcigic2VsZWN0IiwgImRwbHlyIiwgcXVpZXQgPSBUUlVFKQ0KYGBgDQoNClwNCg0KIyBEb3dubG9hZGluZyBSYXN0ZXJzDQoNClRoZSBzYW1lIEFQSSBSZXF1ZXN0IG9iamVjdCBjYW4gYmUgdXNlZCB0byBnZXQgcmFzdGVyIGRhdGEgaWYgeW91IGZlZWQgaXQgaW50byBgY2FfZ2V0cnN0X3N0YXJzKClgLg0KDQpGb3IgYWRkaXRpb25hbCBpbmZvIG9uIGRvd25sb2FkaW5nIGFuZCBhbmFseXppbmcgcmFzdGVycywgc2VlIHRoZSAzIGFydGljbGVzIG9uIFtEb3dubG9hZGluZyBSYXN0ZXJzXShodHRwczovL3VjYW5yLWlnaXMuZ2l0aHViLmlvL2NhbGFkYXB0ci9hcnRpY2xlcy9yYXN0ZXJzLXB0MS5odG1sKS4NCg0KQmVsb3cgd2UgZ2V0IGEgcmFzdGVyIG9mIG9ic2VydmVkIGhpc3RvcmljIHRlbXBlcmF0dXJlIGRhdGEgZm9yIHRoZSBTaWVycmEgY2xpbWF0ZSByZWdpb246DQoNCmBgYHtyIGNodW5rMDIsIGNhY2hlID0gRkFMU0V9DQpzaWVycmFfY2FwIDwtIGNhX2xvY19hb2lwcmVzZXQodHlwZSA9ICJjbGltcmVnaW9ucyIsIGlkZmxkID0gIm5hbWUiLCBpZHZhbCA9ICJTaWVycmEiKSAlPiUgDQogIGNhX2xpdm5laChUUlVFKSAlPiUgDQogIGNhX3BlcmlvZCgieWVhciIpICU+JSANCiAgY2FfY3ZhcigicHIiKSAlPiUgDQogIGNhX3llYXJzKHN0YXJ0ID0gMTk3MCwgZW5kID0gMjAxMCkNCg0Kc2llcnJhX2NhcA0KDQpwbG90KHNpZXJyYV9jYXAsIGxvY2FncmlkID0gVFJVRSkNCg0Kc2llcnJhX2NhcCAlPiUgY2FfcHJlZmxpZ2h0KCkNCmBgYA0KDQpcDQoNClRvIGZldGNoIHRoZSBkYXRhIGFzIFRJRnMsIHVzZSA6DQoNCmBgYHtyIGNodW5rMDN9DQp0aWZmX2RpciA8LSAiLi9kYXRhIg0KDQpzaWVycmFfdGlmZl9mbiA8LSBzaWVycmFfY2FwICU+JSANCiAgY2FfZ2V0cnN0X3N0YXJzKG91dF9kaXIgPSB0aWZmX2RpciwgbWFzayA9IFRSVUUsIHF1aWV0ID0gVFJVRSwgb3ZlcndyaXRlID0gRkFMU0UpDQpgYGANCg0KXA0KDQoqKlBybyBUaXA6KioNCg0KIC0gdG8gYXZvaWQgZG93bmxvYWRpbmcgdGhlIHNhbWUgVElGIG11bHRpcGxlIHRpbWVzLCB1c2UgdGhlIHNhbWUgb3V0cHV0IGRpcmVjdG9yeSBhbmQgc2V0IGBvdmVyd3JpdGUgPSBGQUxTRWANCiANClwNCiANCmBjYV9nZXRyc3Rfc3RhcnMoKWAgd29ya3MgZGlmZmVyZW50bHkgdGhhbiByZXRyaWV2aW5nIHRhYnVsYXIgY2xpbWF0ZSB2YWx1ZXMuIEl0IHJldHVybnMgYSB2ZWN0b3Igb2YgVElGIGZpbGVzIHRoYXQgd2VyZSBkb3dubG9hZGVkLiBUbyB3b3JrIHdpdGggdGhlbSwgeW91IG5leHQgaGF2ZSB0byBsb2FkIHRoZW0gYmFjayBpbnRvIFIgYXMgc3RhcnMgb2JqZWN0cyAoc3BhY2UtdGltZSBhcnJheXMpIHVzaW5nIGBjYV9zdGFyc19yZWFkKClgOg0KDQpgYGB7ciBjaHVuazA0LCBwYWdlZC5wcmludCA9IEZBTFNFfQ0Kc2llcnJhX3N0YXJzX2xzdCA8LSBjYV9zdGFyc19yZWFkKHNpZXJyYV90aWZmX2ZuKQ0Kc2llcnJhX3N0YXJzX2xzdFtbMV1dDQpgYGANCg0KXA0KDQpUbyBwbG90IGEgc3RhcnMgb2JqZWN0cywgeW91IGhhdmUgdG8gZGVjaWRlIHdoaWNoIGxheWVyKHMpIHRvIHBsb3QuIEluIHRoaXMgY2FzZSwgZWFjaCBsYXllciByZXByZXNlbnRzIGEgeWVhciBmcm9tIDE5NzAgdG8gMjAxMC4gQmVsb3cgd2UgcGxvdCA0IG9mIHRoZSA0MCB5ZWFyczoNCg0KYGBge3IgY2h1bmswNSwgY2FjaGUgPSBGQUxTRX0NCnBsb3Qoc2llcnJhX3N0YXJzX2xzdFtbMV1dICU+JSBzbGljZShpbmRleCA9IHNlcSgxLDQwLGxlbmd0aC5vdXQgPTQpLCBhbG9uZyA9ICJ5ZWFyIiksIA0KICAgICBheGVzID0gVFJVRSwNCiAgICAgbWFpbiA9IGF0dHJpYnV0ZXMoc2llcnJhX3N0YXJzX2xzdFtbMV1dKSRjYV9tZXRhZGF0YSRzbHVnKQ0KYGBgDQoNCk5vdCBzdXJlIHdoYXQgdGhlIHVuaXRzIGFyZT8gWW91IGNhbiBkb3VibGUtY2hlY2sgYnkgdmlld2luZyB0aGUgbWV0YWRhdGEgZm9yIHRoZSBzbHVnIGZyb20gdGhlIGNhdGFsb2c6DQoNCmBgYHtyIGNodW5rMDZ9DQpjYV9jYXRhbG9nX3NlYXJjaCgicHJfeWVhcl9saXZuZWgiKQ0KYGBgDQoNClwNCg0KVGhlcmUgaXMgYSAqKmxvdCoqIG1vcmUgeW91IGNhbiBkbyB3aXRoIHJhc3RlcnMsIGluY2x1ZGluZyBwaXhlbCBzdW1tYXJpZXMsIGNvbWJpbmluZyB0aGVtIGludG8gaGlnaGVyIGRpbWVuc2lvbmFsIGRhdGEgY3ViZXMsIHNwYXRpYWxseSBtb3NhaWNpbmcgdGhlbSwgZXRjLiBGb3IgbW9yZSBpbmZvLCBzZWUgdGhlIFJhc3RlcnMgYXJ0aWNsZXMgb24gdGhlIFt3ZWJzaXRlXShodHRwczovL3VjYW5yLWlnaXMuZ2l0aHViLmlvL2NhbGFkYXB0ci8pLg0KIA0KXA0KDQojIyMjIFlvdXIgVHVybg0KDQpEb3dubG9hZCBoaXN0b3JpYyBwcmVjaXBpdGF0aW9uIGRhdGEgZm9yIHRoZSBjb3VudHkgd2hlcmUgeW91IGxpdmUgb3Igd29yay4gW1tBbnN3ZXJdKGh0dHBzOi8vYml0Lmx5LzNtN0JjV00pXQ0KIA0KYGBge3IgY2h1bmswNywgcGFnZWQucHJpbnQgPSBGQUxTRSwgY2FjaGU9RkFMU0V9DQojIFlPVVIgQU5TV0VSIEhFUkUNCg0KYGBgDQogDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlJhc3RlcnMiDQpvdXRwdXQ6DQogIGh0bWxfbm90ZWJvb2s6IA0KICAgIGNzczogaHR0cHM6Ly91Y2Fuci1pZ2lzLmdpdGh1Yi5pby9jYWxhZGFwdHItcmVzL2Fzc2V0cy9uYl9jc3MwMS5jc3MNCiAgICBpbmNsdWRlczoNCiAgICAgIGFmdGVyX2JvZHk6IGh0dHBzOi8vdWNhbnItaWdpcy5naXRodWIuaW8vY2FsYWRhcHRyLXJlcy9hc3NldHMvbmJfZm9vdGVyMDEuaHRtbA0KLS0tDQoNCiMgT3ZlcnZpZXcNCg0KVGhpcyBub3RlYm9vayB3aWxsIGRlbW9uc3RyYXRlIGhvdyB0byBkb3dubG9hZCBDYWwtQWRhcHQgZGF0YSBhcyByYXN0ZXJzLg0KDQojIFNldHVwDQoNCkxvYWQgY2FsYWRhcHRSIGFuZCB0aGUgb3RoZXIgcGFja2FnZSB3ZSdyZSBnb2luZyB0byBuZWVkLiAoSWYgeW91IGhhdmVuJ3QgaW5zdGFsbGVkIHRoZXNlIHlldCwgc2VlIHRoaXMgW3NldHVwIHNjcmlwdF0oaHR0cHM6Ly9naXRodWIuY29tL3VjYW5yLWlnaXMvY2FsYWRhcHRyLXJlcy9ibG9iL21haW4vZG9jcy93b3Jrc2hvcHMvY2FfaW50cm9fYXByMjIvc2NyaXB0cy9jYWxhZGFwdHJfc2V0dXAuUikpLiANCg0KYGBge3IgY2h1bmswMSwgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRSwgcmVzdWx0cz0naG9sZCd9DQpsaWJyYXJ5KGNhbGFkYXB0cikNCmxpYnJhcnkodW5pdHMpDQpsaWJyYXJ5KGRwbHlyKQ0KbGlicmFyeShsdWJyaWRhdGUpDQpsaWJyYXJ5KHNmKQ0KbGlicmFyeShzdGFycykNCmxpYnJhcnkoY29uZmxpY3RlZCkNCmNvbmZsaWN0X3ByZWZlcigiZmlsdGVyIiwgImRwbHlyIiwgcXVpZXQgPSBUUlVFKQ0KY29uZmxpY3RfcHJlZmVyKCJjb3VudCIsICJkcGx5ciIsIHF1aWV0ID0gVFJVRSkNCmNvbmZsaWN0X3ByZWZlcigic2VsZWN0IiwgImRwbHlyIiwgcXVpZXQgPSBUUlVFKQ0KYGBgDQoNClwNCg0KIyBEb3dubG9hZGluZyBSYXN0ZXJzDQoNClRoZSBzYW1lIEFQSSBSZXF1ZXN0IG9iamVjdCBjYW4gYmUgdXNlZCB0byBnZXQgcmFzdGVyIGRhdGEgaWYgeW91IGZlZWQgaXQgaW50byBgY2FfZ2V0cnN0X3N0YXJzKClgLg0KDQpGb3IgYWRkaXRpb25hbCBpbmZvIG9uIGRvd25sb2FkaW5nIGFuZCBhbmFseXppbmcgcmFzdGVycywgc2VlIHRoZSAzIGFydGljbGVzIG9uIFtEb3dubG9hZGluZyBSYXN0ZXJzXShodHRwczovL3VjYW5yLWlnaXMuZ2l0aHViLmlvL2NhbGFkYXB0ci9hcnRpY2xlcy9yYXN0ZXJzLXB0MS5odG1sKS4NCg0KQmVsb3cgd2UgZ2V0IGEgcmFzdGVyIG9mIG9ic2VydmVkIGhpc3RvcmljIHRlbXBlcmF0dXJlIGRhdGEgZm9yIHRoZSBTaWVycmEgY2xpbWF0ZSByZWdpb246DQoNCmBgYHtyIGNodW5rMDIsIGNhY2hlID0gRkFMU0V9DQpzaWVycmFfY2FwIDwtIGNhX2xvY19hb2lwcmVzZXQodHlwZSA9ICJjbGltcmVnaW9ucyIsIGlkZmxkID0gIm5hbWUiLCBpZHZhbCA9ICJTaWVycmEiKSAlPiUgDQogIGNhX2xpdm5laChUUlVFKSAlPiUgDQogIGNhX3BlcmlvZCgieWVhciIpICU+JSANCiAgY2FfY3ZhcigicHIiKSAlPiUgDQogIGNhX3llYXJzKHN0YXJ0ID0gMTk3MCwgZW5kID0gMjAxMCkNCg0Kc2llcnJhX2NhcA0KDQpzaWVycmFfY2FwICU+JSBjYV9wcmVmbGlnaHQoY2hlY2tfZm9yID0gImdldHJzdCIpDQoNCnBsb3Qoc2llcnJhX2NhcCwgbG9jYWdyaWQgPSBUUlVFKQ0KYGBgDQoNClwNCg0KVG8gZmV0Y2ggdGhlIGRhdGEgYXMgVElGcywgdXNlIDoNCg0KYGBge3IgY2h1bmswM30NCnRpZmZfZGlyIDwtICIuL2RhdGEiDQoNCnNpZXJyYV90aWZmX2ZuIDwtIHNpZXJyYV9jYXAgJT4lIA0KICBjYV9nZXRyc3Rfc3RhcnMob3V0X2RpciA9IHRpZmZfZGlyLCBtYXNrID0gVFJVRSwgcXVpZXQgPSBUUlVFLCBvdmVyd3JpdGUgPSBGQUxTRSkNCmBgYA0KDQpcDQoNCioqUHJvIFRpcDoqKg0KDQogLSB0byBhdm9pZCBkb3dubG9hZGluZyB0aGUgc2FtZSBUSUYgbXVsdGlwbGUgdGltZXMsIHVzZSB0aGUgc2FtZSBvdXRwdXQgZGlyZWN0b3J5IGFuZCBzZXQgYG92ZXJ3cml0ZSA9IEZBTFNFYA0KIA0KXA0KIA0KYGNhX2dldHJzdF9zdGFycygpYCByZXR1cm5zIGEgdmVjdG9yIG9mIFRJRiBmaWxlcyB0aGF0IHdlcmUgZG93bmxvYWRlZC4gVG8gd29yayB3aXRoIHRoZW0sIHlvdSBuZXh0IGhhdmUgdG8gbG9hZCB0aGVtIGJhY2sgaW50byBSIGFzIHN0YXJzIG9iamVjdHMgKHNwYWNlLXRpbWUgYXJyYXlzKSB1c2luZyBgY2Ffc3RhcnNfcmVhZCgpYDoNCg0KYGBge3IgY2h1bmswNCwgcGFnZWQucHJpbnQgPSBGQUxTRX0NCnNpZXJyYV9zdGFyc19sc3QgPC0gY2Ffc3RhcnNfcmVhZChzaWVycmFfdGlmZl9mbikNCmxlbmd0aChzaWVycmFfc3RhcnNfbHN0KQ0Kc2llcnJhX3N0YXJzX2xzdFtbMV1dDQpgYGANCg0KXA0KDQojIFBsb3QNCg0KVG8gcGxvdCBhIHN0YXJzIG9iamVjdHMsIHlvdSBoYXZlIHRvIGRlY2lkZSB3aGljaCBsYXllcihzKSB0byBwbG90LiBJbiB0aGlzIGNhc2UsIGVhY2ggbGF5ZXIgcmVwcmVzZW50cyBhIHllYXIgZnJvbSAxOTcwIHRvIDIwMTAuIEJlbG93IHdlIHBsb3QgNCBvZiB0aGUgNDAgeWVhcnM6DQoNCmBgYHtyIGNodW5rMDUsIGNhY2hlID0gRkFMU0V9DQpwbG90KHNpZXJyYV9zdGFyc19sc3RbWzFdXSAlPiUgc2xpY2UoaW5kZXggPSBzZXEoMSw0MCxsZW5ndGgub3V0ID00KSwgYWxvbmcgPSAieWVhciIpLCANCiAgICAgYXhlcyA9IFRSVUUsDQogICAgIG1haW4gPSBhdHRyaWJ1dGVzKHNpZXJyYV9zdGFyc19sc3RbWzFdXSkkY2FfbWV0YWRhdGEkc2x1ZykNCmBgYA0KDQpOb3Qgc3VyZSB3aGF0IHRoZSB1bml0cyBhcmU/IFlvdSBjYW4gZG91YmxlLWNoZWNrIGJ5IHZpZXdpbmcgdGhlIG1ldGFkYXRhIGZvciB0aGUgc2x1ZyBmcm9tIHRoZSBjYXRhbG9nOg0KDQpgYGB7ciBjaHVuazA2fQ0KY2FfY2F0YWxvZ19zZWFyY2goInByX3llYXJfbGl2bmVoIikNCmBgYA0KDQpcDQoNCiMgU3Vic2V0IGJ5IERpbWVuc2lvbg0KDQpTdWJzZXR0aW5nIHN0YXJzIG9iamVjdHMgYnkgYSBkaW1lbnNpb24gaXMgdGhlIGNvdW50ZXJwYXJ0IHRvIGRvaW5nIGFuIGF0dHJpYnV0ZSBxdWVyeSBpbiBHSVMuIFlvdSBjYW4gdXNlIGRwbHlyIGZpbHRlciBmdW5jdGlvbiBhcyB5b3Ugd291bGQgYSB0aWJibGUuIEZvciBleGFtcGxlLCB0byBnZXQgdGhlIHByZWNpcGl0YXRpb24gZm9yIG9ubHkgdGhlIDE5OTBzOg0KDQpgYGB7ciBjaHVuazA3fQ0Kc2llcnJhX3N0YXJzX2xzdFtbMV1dICU+JSBmaWx0ZXIoeWVhciA+PSAxOTkwLCB5ZWFyIDwgMjAwMCkNCmBgYA0KDQpUbyBnZXQgdGhlIHZhbHVlcyBvZiBhIGRpbWVuc2lvbiwgeW91IGNhbiB1c2UNCg0KYGBge3IgY2h1bmswOH0NCih4X3JhbmdlIDwtIHNpZXJyYV9zdGFyc19sc3RbWzFdXSAlPiUgc3RfZ2V0X2RpbWVuc2lvbl92YWx1ZXMoIngiKSkNCih5cl9yYW5nZSA8LSBzaWVycmFfc3RhcnNfbHN0W1sxXV0gJT4lIHN0X2dldF9kaW1lbnNpb25fdmFsdWVzKCJ5ZWFyIikpDQpgYGANCg0KXA0KDQpZb3UgY2FuIGFsc28gdXNlIHNxdWFyZSBicmFja2V0IG5vdGF0aW9uIGFzIHlvdSB3b3VsZCBhbiBhcnJheS4gSnVzdCBwdXQgYW4gZXh0cmEgY29tbWEgYXQgdGhlIGJlZ2lubmluZyBvZiB0aGUgYnJhY2tldC4NCg0KYGBge3IgY2h1bmswOX0NCnNpZXJyYV9zdGFyc19sc3RbWzFdXVsgLCAsICwgd2hpY2goeXJfcmFuZ2UgPj0gMTk5MCAmIHlyX3JhbmdlIDwgMjAwMCldDQpgYGANCg0KXA0KDQojIFNwYXRpYWwgU2VsZWN0aW9uDQoNClRvIHNwYXRpYWxseSBzZWxlY3QsIHlvdSBjYW4gcHV0IGEgU0Ygb2JqZWN0IGluIHRoZSBmaXJzdCBzbG90IG9mIHRoZSBzcXVhcmUgYnJhY2tldCBub3RhdGlvbi4gTGV0J3MgZ2V0IHRoZSBwcmVjaXBpdGF0aW9uIGhpc3RvcnkgZm9yIFlvc2VtaXRlIE5QOg0KDQpgYGB7ciBjaHVuazEwfQ0KKHlucF9ibmRfc2YgPC0gc3RfcmVhZCgiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3VjYW5yLWlnaXMvY2FsYWRhcHRyLXJlcy9tYWluL2dlb21zL3lucF9ibmQuZ2VvanNvbiIpKQ0KcGxvdCh5bnBfYm5kX3NmJGdlb21ldHJ5LCBheGVzID0gVFJVRSkNCmBgYA0KDQpcDQoNClRvIGRvIGEgc3BhdGlhbCBzZWxlY3Rpb24sIHB1dCB0aGUgc2Ygb2JqZWN0IGluIHRoZSBmaXJzdCBzbG90IGluIHRoZSBzcXVhcmUgYnJhY2tldHM6DQoNCmBgYHtyIGNodW5rMTF9DQp5bnBfcHJfc3RhcnMgPC0gc2llcnJhX3N0YXJzX2xzdFtbMV1dW3lucF9ibmRfc2YgLCAsICwgXQ0KeW5wX3ByX3N0YXJzDQpgYGANCg0KXA0KDQpQbG90IHRvIHZlcmlmeToNCg0KYGBge3IgY2h1bmsxMn0NCntwbG90KHlucF9wcl9zdGFycyAlPiUgc2xpY2UoaW5kZXggPSAxLCBhbG9uZyA9ICJ5ZWFyIiksIA0KICAgICBheGVzID0gVFJVRSwgbWFpbiA9ICJBdmVyYWdlIERhaWx5IFByZWNpcGl0YXRpb24gaW4gWU5QIChtbSksIDE5NzAiLCByZXNldCA9IEZBTFNFKQ0KcGxvdCh5bnBfYm5kX3NmJGdlb21ldHJ5LCBib3JkZXIgPSAicmVkIiwgbHdkID0gMiwgYWRkID0gVFJVRSl9DQpgYGANCg0KXA0KDQojIENvbnZlcnQgVmFsdWVzIC8gUmFzdGVyIEFsZ2VicmENCg0KTWF0aCBvcGVyYXRvcnMgKGxpa2UgYCogLyAtICtgKSBkbyAncGl4ZWx3aXNlJyBvcGVyYXRpb25zIG9uIHN0YXJzIG9iamVjdHMsIGp1c3QgbGlrZSByZWd1bGFyIGFycmF5cy4NCg0KVG8gY29tcHV0ZSB0aGUgeWVhcmx5IHN1bW1hcnkgaW4gaW5jaGVzLCByYXRoZXIgdGhhbiBkYWlseSBhdmVyYWdlIGluIG1tLCB3ZSBqdXN0IG11bHRpcGx5IHRoZSBzdGFycyBvYmplY3QgYnkgYSBjb252ZXJzaW9uIGNvbnN0YW50LiBBIG1tIGlzIDAuMDM5MzcwMSBpbmNoZXMsIHNvIHRvIGdvIGZyb20gZGFpbHkgYXZlcmFnZXMgaW4gbW0gdG8gYW5udWFsIHRvdGFsIGluIGluY2hlczoNCg0KYGBge3IgY2h1bmsxM30NCih5bnBfcHJ0b3RhbF9zdGFycyA8LSB5bnBfcHJfc3RhcnMgKiAwLjAzOTM3MDEgKiAzNjUpDQpgYGANCg0KXA0KDQpQbG90IHRoZSBmaXJzdCB5ZWFyIHRvIHZlcmlmeToNCg0KYGBge3IgY2h1bmsxNH0NCntwbG90KHlucF9wcnRvdGFsX3N0YXJzICU+JSBzbGljZShpbmRleCA9IDEsIGFsb25nID0gInllYXIiKSwgDQogICAgIGF4ZXMgPSBUUlVFLCBtYWluID0gIlRvdGFsIFByZWNpcGl0YXRpb24gaW4gWU5QIChpbiksIDE5NzAiLCByZXNldCA9IEZBTFNFKQ0KcGxvdCh5bnBfYm5kX3NmJGdlb21ldHJ5LCBib3JkZXIgPSAicmVkIiwgbHdkID0gMiwgYWRkID0gVFJVRSl9DQoNCmBgYA0KDQpcDQoNCiMgQWdncmVnYXRlIEFjcm9zcyBUaW1lIGFuZCBTcGFjZQ0KDQpUbyB0YWtlIHRoZSBhdmVyYWdlIHByZWNpcCBwZXIgcGl4ZWwgZm9yIHRoZSBlbnRpcmUgdGltZSByYW5nZSwgdXNlIGBzdF9hcHBseSgpYC4gVGhlIGBNQVJHSU5gIGFyZ3VtZW50IHNob3VsZCBiZSB0aGUgaW5kaWNlcyBvZiB0aGUgZGltZW5zaW9ucyB5b3Ugd2FudCB0byAqa2VlcCo6DQoNCmBgYHtyIGNodW5rMTV9DQp5bnBfcHJ0b3RhbF9zdGFycyAlPiUgDQogIHN0X2FwcGx5KE1BUkdJTiA9IDE6MiwgRlVOID0gbWVhbikgJT4lIA0KICBwbG90KGF4ZXMgPSBUUlVFLCBtYWluID0gIkF2ZXJhZ2UgVG90YWwgQW5udWFsIFByZWNpcGl0YXRpb24gaW4gWU5QIChpbiksIDE5NzAtMjAxMCIpDQpgYGANCg0KXA0KDQpUbyB0YWtlIHRoZSBhdmVyYWdlIHRvdGFsIHByZWNpcCBvZiBhbGwgcGl4ZWxzIGluIHRoZSBwYXJrIHBlciB5ZWFyLCB3ZSBzaW1wbHkgY2hhbmdlIHRoZSB2YWx1ZSBvZiBgTUFSR0lOYCB0byAzIChiZWNhdXNlIHllYXIgaXMgdGhlIHRoaXJkIGRpbWVuc2lvbikuIFdlIGFsc28gaGF2ZSB0byBhZGQgYG5hLnJtID0gVFJVRWAgdG8gdGVsbCB0aGUgYG1lYW5gIGZ1bmN0aW9uIHRvIGlnbm9yZSBhbGwgdGhlIE5BIHZhbHVlcyBvdXRzaWRlIHRoZSBwYXJrIGJvdW5kYXJ5Og0KDQpgYGB7ciBjaHVuazE2fQ0KKHlucF9wcl9hbm51YWxfYXZnX3N0YXJzIDwtIHlucF9wcnRvdGFsX3N0YXJzICU+JSANCiAgc3RfYXBwbHkoTUFSR0lOID0gMywgRlVOID0gbWVhbiwgbmEucm0gPSBUUlVFKSkNCmBgYA0KDQpcDQoNCnN0YXJzIG9iamVjdHMgY2FuIGJlIGNvbnZlcnRlZCB0byBkYXRhIGZyYW1lczoNCg0KYGBge3IgY2h1bmsxN30NCnlucF9wcl9hbm51YWxfYXZnX2RmIDwtIHlucF9wcl9hbm51YWxfYXZnX3N0YXJzICU+JSBhcy5kYXRhLmZyYW1lDQpwbG90KHlucF9wcl9hbm51YWxfYXZnX2RmLCB0eXBlPSJiIiwgbWFpbiA9ICJZTlAgVG90YWwgUHJlY2lwIEF2ZXJhZ2VkIEFjcm9zcyBQYXJrIChpbikiKQ0KYGBgDQoNClwNCg0KVG8gcGxvdCB0aGUgZGlzdHJpYnV0aW9uIG9mIHZhbHVlcywgd2UgY2FuIGdyYWIgdGhlIGluZGl2aWR1YWwgdmFsdWVzIHdpdGggYFtdYCAoanVzdCBsaWtlIGFuIGFycmF5KSBhbmQgbWFrZSBhIGhpc3RvZ3JhbToNCg0KYGBge3IgY2h1bmsxOH0NCmhpc3QoeW5wX3BydG90YWxfc3RhcnMsIG1haW4gPSAiRGlzdHJpYnV0aW9uIG9mIFRvdGFsIEFubnVhbCBQcmVjaXAgaW4gWU5QIikNCmBgYA0KDQoNClRoZXJlIGlzIGEgKipsb3QqKiBtb3JlIHlvdSBjYW4gZG8gd2l0aCByYXN0ZXJzLCBpbmNsdWRpbmcgcGl4ZWwgc3VtbWFyaWVzLCBjb21iaW5pbmcgdGhlbSBpbnRvIGhpZ2hlciBkaW1lbnNpb25hbCBkYXRhIGN1YmVzLCBzcGF0aWFsbHkgbW9zYWljaW5nIHRoZW0sIGV0Yy4gRm9yIG1vcmUgaW5mbywgc2VlIHRoZSBSYXN0ZXJzIGFydGljbGVzIG9uIHRoZSBbd2Vic2l0ZV0oaHR0cHM6Ly91Y2Fuci1pZ2lzLmdpdGh1Yi5pby9jYWxhZGFwdHIvKS4NCiANClwNCg0KIyMjIyBZb3VyIFR1cm4NCg0KRG93bmxvYWQgaGlzdG9yaWMgcHJlY2lwaXRhdGlvbiBkYXRhIGZvciB0aGUgY291bnR5IHdoZXJlIHlvdSBsaXZlIG9yIHdvcmsuIFtbQW5zd2VyXShodHRwczovL2JpdC5seS8zbTdCY1dNKV0NCiANCmBgYHtyIGNodW5rMTksIHBhZ2VkLnByaW50ID0gRkFMU0UsIGNhY2hlPUZBTFNFfQ0KIyMgWW91ciBhbnN3ZXIgaGVyZQ0KDQpgYGANCiANCg0K</div>
 <hr />
 
 <div style="float:left; width:554x; text-align:left;">
