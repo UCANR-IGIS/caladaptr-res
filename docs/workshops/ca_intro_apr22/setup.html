@@ -11,7 +11,7 @@
 
 
 
-<title>Computer Setup</title>
+<title>Setup</title>
 
 <script src="lib/header-attrs-2.13/header-attrs.js"></script>
 <script src="lib/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -157,13 +157,32 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Computer Setup</h1>
+<h1 class="title toc-ignore"><span style="color:#444; font-size:80%;">Working with Cal-Adapt Climate Data in R: </span><br/>Computer Setup</h1>
 
 </div>
 
 
+<div id="quick-start-guide" class="section level1">
+<h1>Quick Start Guide:</h1>
+<div style="border:2px solid gray; padding:10px; background-color:#eee; margin-top:2em;">
+<p><strong>RStudio Cloud users (recommended)</strong>:</p>
+<p>Clone this project:</p>
+<p style="margin-left:2em; font-size:120%; font-family:monospace;">
+<a href="https://rstudio.cloud/project/3961696" class="uri">https://rstudio.cloud/project/3961696</a>
+</p>
 <p><br />
 </p>
+<p><strong>RStudio Desktop users</strong> (i.e., on your laptop):</p>
+<p>1) Run this script to install the required packages:</p>
+<p><a href="https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_apr22/scripts/caladaptr_setup.R" class="uri">https://github.com/ucanr-igis/caladaptr-res/blob/main/docs/workshops/ca_intro_apr22/scripts/caladaptr_setup.R</a></p>
+<p><br />
+</p>
+<p>2) Run the following in RStudio to download the exercises and data (~30 MB). Omit <code>destdir</code> to put the workshop folder on the desktop:</p>
+<pre><code>usethis::use_course(&quot;https://ucdavis.box.com/shared/static/0r3qifknc46l6zlps2jktos5kb6zy5s5.zip&quot;, destdir = &quot;./path/goes/here&quot;)</code></pre>
+</div>
+<p><br />
+</p>
+</div>
 <div id="setting-up-rstudio" class="section level1">
 <h1>Setting up RStudio</h1>
 <p>If you would like to do the hands-on exercises during the workshop (recommended but not required), you have two options. You can run <strong>RStudio Desktop</strong> on your own laptop / desktop computer, or you can run a RStudio virtual machine from <strong>RStudio Cloud</strong> (i.e., in a browser). Both options are free and fairly easy to set up.</p>

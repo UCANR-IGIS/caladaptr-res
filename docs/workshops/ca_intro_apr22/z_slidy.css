@@ -79,3 +79,7 @@ img.stackme {
   top:0;
   left:0;
 }
+a.solutions {
+  font-size:85%;
+  font-style:italic;
+}

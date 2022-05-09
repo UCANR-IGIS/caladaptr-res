@@ -53,11 +53,11 @@ w3c_slidy.mouse_click_enabled = false;
 </script>
 <div style="display: flex;">
 <div style="width:400;">
-<p>Climate data are inherently raster</p>
-<p>Rasters can cover large areas</p>
-<p>Download once, use many times</p>
-<p>Easy to query locations</p>
-<p>Well-developed tools for manipulating and analyzing raster data</p>
+<p>Climate data are inherently raster.</p>
+<p>Rasters can cover large areas.</p>
+<p>Download once, use many times.</p>
+<p>Querying locations is easy.</p>
+<p>There are many well-developed tools for<br/>manipulating and analyzing raster data.</p>
 </div>
 <div style="width:310px;">
 <p><img src="images/gcm-grid_300x300x256.png" style="width:300px; height:300px;"></p>
@@ -66,19 +66,18 @@ w3c_slidy.mouse_click_enabled = false;
 </div>
 <div id="challenges-with-climate-rasters" class="slide section level1">
 <h1>Challenges with Climate Rasters</h1>
-<p>Large file sizes</p>
-<p>Many layers and/or many files</p>
-<p>Analysis of multiple futures</p>
-<p>File format limitations (especially TIFs)</p>
-<p>Usual spatial data headaches (CRS, resolution)</p>
+<p>Large file sizes.</p>
+<p>Can wind up with one raster with many layers, and/or many rasters with one layer.</p>
+<p>File format limitations (especially TIFs).</p>
+<p>Typical spatial data headaches (CRS, resolution).</p>
+<p>Challenge of analyzing multiple futures.</p>
 </div>
-<div id="download-options" class="slide section level1">
-<h1>Download Options</h1>
+<div id="downloading-rasters" class="slide section level1">
+<h1>Downloading Rasters</h1>
 <table class="borderme table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <tbody>
 <tr>
 <td style="text-align:left;width: 15em; font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
-Feature
 </td>
 <td style="text-align:center;font-weight: bold;color: black !important;background-color: #CCCCCC !important;text-align: center;padding:0.5em 1em;">
 Cal-Adapt website
@@ -194,21 +193,21 @@ All 32 GCMs
 </div>
 <div id="getting-rasters-with-caladaptr" class="slide section level1">
 <h1>Getting Rasters with caladaptR</h1>
-<h2 id="approach">Approach</h2>
+<h2 id="overview">Overview</h2>
 <div class="indented1">
-<p>The same API Request object can be used to fetch rasters</p>
+<p>You can use the same API Request object to fetch rasters</p>
 <p><br />
 </p>
-<p><code>ca_getrst_stars()</code></p>
+<p>Feed the API Request into <code>ca_getrst_stars()</code></p>
 <div class="indented1 li-single">
 <ul>
-<li>save TIFs to disk</li>
-<li>save image metadata in sidecar files</li>
+<li>downloads and saves TIFs to disk</li>
+<li>stores raster metadata in sidecar files</li>
 </ul>
 </div>
 <p><br />
 </p>
-<p>Custom function to import TIFs and their metadata into R as <a href="https://r-spatial.github.io/stars/" target="_blank" rel="noopener">stars</a> objects</p>
+<p><code>ca_read_stars()</code> import the TIFs plus their metadata into R as <a href="https://r-spatial.github.io/stars/" target="_blank" rel="noopener">stars</a> objects</p>
 <p><br />
 </p>
 <p>Use stars methods for analysis:</p>
@@ -247,8 +246,13 @@ All 32 GCMs
 <div id="rasters-workflow" class="slide section level1">
 <h1>Rasters Workflow</h1>
 <div style='position:relative; border:none; height:768px;width:768px; margin:0 auto; '>
-<img src="images/rstwrkflw_01.png"/>
-<img src="images/rstwrkflw_02.png" class="incremental stackme"/>
+<img src="images/rst_wrkflw_02.png"/>
+<img src="images/rst_wrkflw_03.png" class="incremental stackme"/>
+<img src="images/rst_wrkflw_04.png" class="incremental stackme"/>
+<img src="images/rst_wrkflw_05.png" class="incremental stackme"/>
+<img src="images/rst_wrkflw_06.png" class="incremental stackme"/>
+<img src="images/rst_wrkflw_07.png" class="incremental stackme"/>
+<img src="images/rst_wrkflw_08.png" class="incremental stackme"/>
 </div>
 <h2 id="vignettes">Vignettes</h2>
 <div class="indented2">
@@ -274,11 +278,11 @@ All 32 GCMs
 <li>plot</li>
 </ul>
 </div>
-<p><a href="./notebooks/nb04_rasters.nb.html" target="_blank" rel="noopener">Notebook 4. Rasters</a> | <a href="./notebooks/nb04_rasters_ans.nb.html" target="_blank" rel="noopener">solutions</a></p>
+<p><a href="./notebooks/nb04_rasters.nb.html" target="_blank" rel="noopener">Notebook 4. Rasters</a> | <a href="./notebooks/nb04_rasters_ans.nb.html" class="solutions" target="_blank" rel="noopener">solutions</a></p>
 </div>
 </div>
-<div id="end" class="slide section level1">
-<h1>END!</h1>
+<div id="end-part-iv" class="slide section level1">
+<h1>END PART IV!</h1>
 </div>
 
   <!-- dynamically load mathjax for compatibility with self-contained -->
