@@ -1,0 +1,92 @@
+---
+title: "Importing Cal-Adapt Windspeed Datasets with caladaptR"
+output: html_notebook
+---
+
+# Load packages
+
+```{r}
+library(dplyr, quietly = TRUE)
+library(sf, quietly = TRUE)
+library(stars, quietly = TRUE)
+library(caladaptr, quietly = TRUE)
+packageVersion("caladaptr")
+```
+
+# Look for wind raster series 
+
+The following command doesn't work in a Notebook, but if you run it at the console it will open up the raster series catalog in RStudio pane. You can then use the 'Filter' button to search for datasets which have the word 'wind' in the name field.
+
+```{r}
+# ca_catalog_rs() %>% View()
+```
+
+\
+
+
+```{r}
+windrs_df <- ca_catalog_search("wind")
+```
+
+\
+
+View just the slugs:
+
+```{r}
+windrs_df$slug
+```
+
+\
+
+It would appear there are raster series datasets for modelled windspeed for the first four 'priority' GCM models (2006-2100), as well as modeled historical data (1950-2005) (which is what you should use to compare future modeled windspeed). There is also a raster series for daily maximum wind speed historical observed (`wspeed_day_hadisd`).
+
+\
+
+# Example 1: Query Modeled Future Windspeed Data
+
+Create an API request for future modeled wind speed. Because there isn't a convenience function to construct an API request object for windspeed, we can use the slugs:
+
+```{r}
+yose_wind_cap <- ca_loc_pt(coords = c(-119.591, 37.745)) %>% 
+  ca_slug(c("wspeed_day_CanESM2_rcp45",
+            "wspeed_day_CanESM2_rcp85",
+            "wspeed_day_CNRM-CM5_rcp45",
+            "wspeed_day_CNRM-CM5_rcp85",
+            "wspeed_day_HadGEM2-ES_rcp45",
+            "wspeed_day_HadGEM2-ES_rcp85",
+            "wspeed_day_MIROC5_rcp45",
+            "wspeed_day_MIROC5_rcp85")) %>% 
+  ca_years(start = 2070, end = 2099)
+
+yose_wind_cap
+```
+
+\
+
+Pre-flight checks:
+
+```{r}
+yose_wind_cap %>% ca_preflight()
+yose_wind_cap %>% plot()
+```
+
+\
+
+Grab values:
+
+```{r}
+yose_wind_tbl <- yose_wind_cap %>% 
+  ca_getvals_tbl(quiet = TRUE)
+```
+
+\
+
+Inspect the results:
+
+```{r}
+glimpse(yose_wind_tbl)
+```
+
+\
+
+
