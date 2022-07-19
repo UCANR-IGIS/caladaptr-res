@@ -12,7 +12,7 @@ output:
 
 This Code Recipe Notebook demonstrates how to import modeled windspeed datasets from Cal-Adapt into R using [caladaptR](https://ucanr-igis.github.io/caladaptr/).
 
-# Load packages
+# Load packages 
 
 ```{r setup, message = FALSE}
 library(dplyr, quietly = TRUE)
