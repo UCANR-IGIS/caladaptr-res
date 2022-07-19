@@ -1,15 +1,24 @@
 ---
-title: "Importing Cal-Adapt Windspeed Datasets with caladaptR"
-output: html_notebook
+title: "Importing Windspeed Datasets"
+date: "July 17, 2022"
+output:
+  html_notebook: 
+    css: https://ucanr-igis.github.io/caladaptr-res/assets/nb_css01.css
+    includes:
+      before_body: https://ucanr-igis.github.io/caladaptr-res/assets/nb-hdr_cde-rcps.html
 ---
+
+\
+
+This Code Recipe Notebook demonstrates how to import modeled windspeed datasets from Cal-Adapt into R using [caladaptR](https://ucanr-igis.github.io/caladaptr/).
 
 # Load packages
 
-```{r}
+```{r setup, message = FALSE}
 library(dplyr, quietly = TRUE)
-library(sf, quietly = TRUE)
-library(stars, quietly = TRUE)
-library(caladaptr, quietly = TRUE)
+library(sf)
+library(stars)
+library(caladaptr)
 packageVersion("caladaptr")
 ```
 
@@ -88,5 +97,81 @@ glimpse(yose_wind_tbl)
 ```
 
 \
+
+# Example 2: Download Modeled Windspeed Data for an Entire County as a TIF
+
+Next, we grab historic observed wind speed for Mono County.
+
+1) Find thing is we need to find the fips code for Mono County:
+
+```{r}
+mono_cnty_fips <- ca_aoipreset_geom("counties", quiet = TRUE) %>% 
+  st_drop_geometry() %>% 
+  filter(grepl("Mono", name)) %>% 
+  pull(fips)
+
+mono_cnty_fips
+```
+
+2) Create the API request:
+
+```{r}
+mono_wspeed_cap <- ca_loc_aoipreset(type = "counties",
+                                        idfld = "fips",
+                                        idval = "06051") %>% 
+  ca_slug(c("wspeed_day_CanESM2_rcp45",
+            "wspeed_day_CNRM-CM5_rcp45",
+            "wspeed_day_HadGEM2-ES_rcp45",
+            "wspeed_day_MIROC5_rcp45")) %>% 
+  ca_years(start = 2070, end = 2099)
+
+mono_wspeed_cap
+
+```
+
+\
+
+Preflight checks:
+
+```{r}
+mono_wspeed_cap %>% ca_preflight()
+mono_wspeed_cap %>% plot(locagrid = TRUE)
+```
+
+\
+
+Get the data as TIFs:
+
+```{r}
+tiff_dir <- tools::R_user_dir("caladaptr", which = "data") %>% file.path("Mono")
+if (!file.exists(tiff_dir)) dir.create(tiff_dir, recursive = TRUE)
+
+mono_wspeed_fn <- mono_wspeed_cap %>% 
+  ca_getrst_stars(out_dir = tiff_dir)
+
+mono_wspeed_fn
+```
+
+\
+
+Read the windspeed data back in:
+
+```{r}
+mono_wspeed_lst <- ca_stars_read(mono_wspeed_fn)
+names(mono_wspeed_lst)
+
+mono_wspeed_lst[[1]]
+```
+
+\
+
+Plot wind speed for the first week of January for the first raster: `wspeed_day_CanESM2_rcp45_fips-06051`:
+
+```{r}
+plot(mono_wspeed_lst[[1]] %>% slice(index = 1:7, along = "date"), 
+     axes = TRUE,
+     main = st_get_dimension_values(mono_wspeed_lst[[1]], "date")[1:7])
+```
+
 
 
