@@ -13,7 +13,7 @@
 
 <title>Workshop: Working with Cal-Adapt Climate Data in R</title>
 
-<script src="lib/header-attrs-2.13/header-attrs.js"></script>
+<script src="lib/header-attrs-2.16/header-attrs.js"></script>
 <script src="lib/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="lib/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -164,13 +164,11 @@ pre code {
 
 
 
-<h1 class="title toc-ignore"><a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr-hexlogo_173x200.gif' style='width:104px; height:120px; float:right;'/></a><span style="color:#777; font-size:60%; font-style:italic;">Workshop:</span><br/>Working with Cal-Adapt Climate Data in R</h1>
-<h4 class="date"><p>
-Andy Lyons
-</p>
-<p>
-April 26, 2022<br/>10:00a - 12:00p PDT
-</p></h4>
+<h1 class="title toc-ignore"><a href='https://ucanr-igis.github.io/caladaptr/' target='_blank' rel='noopener'><img src='images/caladaptr-hexlogo_173x200.gif' style='width:104px; height:120px; float:right;'/></a><span
+style="color:#777; font-size:60%; font-style:italic;">Workshop:</span><br/>Working
+with Cal-Adapt Climate Data in R</h1>
+<h4 class="date">Andy Lyons<br/>April 26, 2022<br/>10:00a - 12:00p
+PDT</h4>
 
 </div>
 
@@ -190,6 +188,7 @@ a.solutions {
 h4 {
   font-size: 14px;
   font-style:italic;
+  line-height: 1.5;
 }
 p, li {
   font-size: 120%;
@@ -217,13 +216,20 @@ div.msg {
 ------>
 <p><br />
 </p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/uYnguFmvSbE?t=2&amp;rel=0" title="YouTube video player" frameborder="1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="margin:1em auto; display:block;">
+</iframe>
+<p><br />
+</p>
 <div id="preparing-for-the-workshop" class="section level1">
 <h1>Preparing for the Workshop</h1>
 <!-------- - Registration - *closed* ----->
 <ul>
-<li><a href="https://datalab.ucdavis.edu/eventscalendar/working-with-cal-adapt-climate-data-in-r-maptimedavis-d-rug/" target="_blank" rel="noopener">Registration</a><br />
+<li><a
+href="https://datalab.ucdavis.edu/eventscalendar/working-with-cal-adapt-climate-data-in-r-maptimedavis-d-rug/"
+target="_blank" rel="noopener">Registration</a><br />
 </li>
-<li><a href="setup.html" target="_blank" rel="noopener">Computer Setup</a></li>
+<li><a href="setup.html" target="_blank" rel="noopener">Computer
+Setup</a></li>
 </ul>
 <!--------------------------
 - [Welcome Letter](welcome.html){target="_blank" rel="noopener"}
@@ -231,22 +237,32 @@ div.msg {
 <p><br />
 </p>
 </div>
-<div id="part-i.-intro-to-climate-data-and-constructing-api-requests" class="section level1">
+<div id="part-i.-intro-to-climate-data-and-constructing-api-requests"
+class="section level1">
 <h1>Part I. Intro to Climate Data and Constructing API Requests</h1>
 <ul>
-<li><a href="slides01_api-requests.html" target="_blank" rel="noopener">Slides</a><br />
+<li><a href="slides01_api-requests.html" target="_blank"
+rel="noopener">Slides</a><br />
 </li>
-<li><a href="./notebooks/nb01_getting-started.nb.html" target="_blank" rel="noopener">Notebook 1. Getting Started</a> | <a href="./notebooks/nb01_getting-started_ans.nb.html" class="solutions" target="_blank" rel="noopener">solutions</a></li>
+<li><a href="./notebooks/nb01_getting-started.nb.html" target="_blank"
+rel="noopener">Notebook 1. Getting Started</a> | <a
+href="./notebooks/nb01_getting-started_ans.nb.html" class="solutions"
+target="_blank" rel="noopener">solutions</a></li>
 </ul>
 <p><br />
 </p>
 </div>
-<div id="part-ii.-best-practices-finding-datasets-data-wrangling" class="section level1">
+<div id="part-ii.-best-practices-finding-datasets-data-wrangling"
+class="section level1">
 <h1>Part II. Best Practices, Finding Datasets, Data Wrangling</h1>
 <ul>
-<li><a href="slides02_findingdata.html" target="_blank" rel="noopener">Slides</a><br />
+<li><a href="slides02_findingdata.html" target="_blank"
+rel="noopener">Slides</a><br />
 </li>
-<li><a href="./notebooks/nb02_find-wrangle.nb.html" target="_blank" rel="noopener">Notebook 2. Finding Data</a> | <a href="./notebooks/nb02_find-wrangle_ans.nb.html" class="solutions" target="_blank" rel="noopener">solutions</a></li>
+<li><a href="./notebooks/nb02_find-wrangle.nb.html" target="_blank"
+rel="noopener">Notebook 2. Finding Data</a> | <a
+href="./notebooks/nb02_find-wrangle_ans.nb.html" class="solutions"
+target="_blank" rel="noopener">solutions</a></li>
 </ul>
 <p><br />
 </p>
@@ -254,9 +270,14 @@ div.msg {
 <div id="part-iii.-large-queries" class="section level1 inactive">
 <h1 class="inactive">Part III. Large Queries</h1>
 <ul>
-<li><a href="slides03_large-qrys.html" class="inactive" target="_blank" rel="noopener">Slides</a><br />
+<li><a href="slides03_large-qrys.html" class="inactive" target="_blank"
+rel="noopener">Slides</a><br />
 </li>
-<li><a href="./notebooks/nb03_large-queries.nb.html" class="inactive" target="_blank" rel="noopener">Notebook 3. Large Queries</a> | <a href="./notebooks/nb03_large-queries_ans.nb.html" class="inactive solutions" target="_blank" rel="noopener">solutions</a></li>
+<li><a href="./notebooks/nb03_large-queries.nb.html" class="inactive"
+target="_blank" rel="noopener">Notebook 3. Large Queries</a> | <a
+href="./notebooks/nb03_large-queries_ans.nb.html"
+class="inactive solutions" target="_blank"
+rel="noopener">solutions</a></li>
 </ul>
 <p><br />
 </p>
@@ -264,9 +285,13 @@ div.msg {
 <div id="part-iv.-working-with-rasters" class="section level1">
 <h1>Part IV. Working with Rasters</h1>
 <ul>
-<li><a href="slides04_rasters.html" target="_blank" rel="noopener">Slides</a><br />
+<li><a href="slides04_rasters.html" target="_blank"
+rel="noopener">Slides</a><br />
 </li>
-<li><a href="./notebooks/nb04_rasters.nb.html" target="_blank" rel="noopener">Notebook 4. Rasters</a> | <a href="./notebooks/nb04_rasters_ans.nb.html" class="solutions" target="_blank" rel="noopener">solutions</a></li>
+<li><a href="./notebooks/nb04_rasters.nb.html" target="_blank"
+rel="noopener">Notebook 4. Rasters</a> | <a
+href="./notebooks/nb04_rasters_ans.nb.html" class="solutions"
+target="_blank" rel="noopener">solutions</a></li>
 </ul>
 <p><br />
 </p>
@@ -274,8 +299,10 @@ div.msg {
 <div id="part-v.-shiny" class="section level1 inactive">
 <h1 class="inactive">Part V. Shiny</h1>
 <ul>
-<li><a href="slides05_shiny.html" class="inactive" target="_blank" rel="noopener">Slides</a></li>
-<li><a href="./notebooks/nb05_shiny.nb.html" class="inactive" target="_blank" rel="noopener">Notebook 5. Shiny Apps</a></li>
+<li><a href="slides05_shiny.html" class="inactive" target="_blank"
+rel="noopener">Slides</a></li>
+<li><a href="./notebooks/nb05_shiny.nb.html" class="inactive"
+target="_blank" rel="noopener">Notebook 5. Shiny Apps</a></li>
 </ul>
 <p><br />
 </p>
